@@ -1,85 +1,11 @@
 <template>
-  <AuthForm>
-    <!--  タイトル -->
-    <template v-slot:formType>
-      <button>Log In</button>
-      <button class="text-gray-500" @click="goSignUp">Sing Up</button>
-    </template>
-    <!-- メール -->
-    <template v-slot:mail
-      ><input
-        class="w-[200px] h-[50px] mb-10 focus:w-[300px] text-center text-white border-2 border-pink-300 rounded-full transition duration-150 "
-        type="email"
-        placeholder="email"
-        v-model="mail"
-    /></template>
-    <!-- パスワード -->
-    <template v-slot:pass
-      ><input
-        class=" w-[200px] h-[50px] mb-10 focus:w-[300px] text-center text-white border-2 border-pink-300 rounded-full transition duration-150 "
-        type="password"
-        placeholder="password"
-        v-model="pass"
-    /></template>
-    <!-- ボタン -->
-    <template v-slot:authBtn>
-      <button class="w-[100%] h-[100%] block" @click="signin">ログイン</button>
-    </template>
-    <!-- ボタン -->
-    <template v-slot:testBtn>
-      <button class="w-[100%] h-[100%] block" @click="testSignin">
-        テストログイン
-      </button>
-    </template>
-  </AuthForm>
+  <div>
+    <AuthForm></AuthForm>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, SetupContext } from "vue";
-import AuthForm from "./AuthForm.vue";
-const goSignUp = () => {};
-const signin = () => {};
-const testSignin = () => {};
+import AuthForm from "./AuthForm.vue"
 
-const pass = ref("");
-const mail = ref("");
-
-// import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-
-// // import setUserInfo from '~/composable/setUserInfo';
-
-//     const router = useRouter();
-//     const mail = ref("");
-//     const pass = ref("");
-
-//     const signin = () => {
-//       const auth = getAuth();
-//       signInWithEmailAndPassword(auth, mail.value, pass.value)
-//         .then(async (userCredential) => {
-//           const user = userCredential.user;
-//           await setUserInfo(ctx, user.uid);
-//           router.push("/home");
-//         })
-//         .catch((error) => {
-//           alert(error.message);
-//         });
-//     };
-
-//     const testSignin = () => {
-//       const auth = getAuth();
-//       signInWithEmailAndPassword(auth, "t@g.com", "11111111")
-//         .then(async (userCredential) => {
-//           const user = userCredential.user;
-//           await setUserInfo(ctx, user.uid);
-//           router.push("/home");
-//           router.push("/home");
-//         })
-//         .catch((error) => {
-//           alert(error.message);
-//         });
-//     };
-//     const goSignUp = () => {
-//       console.log("sinup");
-//       router.push("/sign_up");
-//     };
 </script>
+ï
