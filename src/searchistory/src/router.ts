@@ -4,15 +4,20 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import HelloWorld from "./components/HelloWorld.vue";
 import Hoge from "./components/Hoge.vue";
+import SignUp from "./components/Auth/SignUp.vue";
 
 const routes = [
   {
     path: "/",
-    component: HelloWorld, // HelloWorldコンポーネントルーティング
+    component: HelloWorld,
   },
   {
     path: "/hoge",
-    component: Hoge, // Hogeコンポーネントルーティング
+    component: Hoge,
+  },
+  {
+    path: "/signup",
+    component: SignUp,
   },
 ];
 
