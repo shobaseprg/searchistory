@@ -7,40 +7,42 @@
     </template>
     <!-- メール -->
     <template v-slot:mail
-      ><input class="inputBody" type="email" placeholder="email" v-model="mail"
+      ><input
+        class="w-[200px] h-[50px] mb-10 focus:w-[300px] text-center text-white border-2 border-pink-300 rounded-full transition duration-150 "
+        type="email"
+        placeholder="email"
+        v-model="mail"
     /></template>
     <!-- パスワード -->
     <template v-slot:pass
       ><input
-        class="inputBody"
+        class=" w-[200px] h-[50px] mb-10 focus:w-[300px] text-center text-white border-2 border-pink-300 rounded-full transition duration-150 "
         type="password"
         placeholder="password"
         v-model="pass"
     /></template>
     <!-- ボタン -->
     <template v-slot:authBtn>
-      <button class="btnBody" @click="signin">ログイン</button>
+      <button class="w-[100%] h-[100%] block" @click="signin">ログイン</button>
     </template>
     <!-- ボタン -->
     <template v-slot:testBtn>
-      <button class="btnBody" @click="testSignin">テストログイン</button>
+      <button class="w-[100%] h-[100%] block" @click="testSignin">
+        テストログイン
+      </button>
     </template>
   </AuthForm>
 </template>
 
 <script setup lang="ts">
 import { ref, SetupContext } from "vue";
-import AuthForm from './AuthForm.vue';
-const goSignUp = () => {
-}
-const signin = () => {
-}
-const testSignin = () => {
-}
+import AuthForm from "./AuthForm.vue";
+const goSignUp = () => {};
+const signin = () => {};
+const testSignin = () => {};
 
-const pass = ref("")
-const mail = ref("")
-
+const pass = ref("");
+const mail = ref("");
 
 // import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
