@@ -7,12 +7,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.2.25"
+    "axios": "^0.21.1",
+    "@vue/cli": "^4.5.15",
+    "vue": "^3.2.25",
+    "vue-router": "^4.0.12",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.0.0",
+    "@vue/cli-plugin-router": "^4.5.15",
     "typescript": "^4.4.4",
     "vite": "^2.7.2",
-    "vue-tsc": "^0.29.8"
+    "vue-tsc": "^0.29.8",
+    "@vue/compiler-sfc": "^3.1.4",
+    "scss": "^0.2.4",
+    "scss-loader": "^0.0.1"
   }
 }
