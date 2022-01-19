@@ -1,18 +1,17 @@
 <template>
-  <router-view></router-view>
+  <div id="app">
+    <Header></Header>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script setup lang="ts">
-import HelloWorld from "./components/HelloWorld.vue";
+import Header from "./components/layout/Header.vue";
 </script>
 
 <style>
+@import "./css/reset.scss";
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  border: solid 3px red;
 }
 </style>
