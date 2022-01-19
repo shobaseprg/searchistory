@@ -19,4 +19,9 @@ const firebaseConfig: FirebaseOptions = {
 const firebaseApp: FirebaseApp = !getApps().length
   ? initializeApp(firebaseConfig)
   : getApp();
-export { firebaseApp };
+
+
+import { getFirestore} from "firebase/firestore";
+const db = getFirestore(firebaseApp);
+
+export { firebaseApp ,db};

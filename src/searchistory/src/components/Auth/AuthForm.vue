@@ -1,18 +1,91 @@
 <template>
+  <p>{{ getPageTitle() }}</p>
   <div>
-    <input type="text" class="border-black border-2" />
+    <p>メール</p>
+    <input type="text" v-model="email" class="border-black border-2" />
   </div>
   <div>
-    <input type="text" class="border-black border-2" />
+    <p>パスワード</p>
+    <input type="text" v-model="password" class="border-black border-2" />
   </div>
-  <div>
-    <input type="text" class="border-black border-2" />
-  </div>
-
-  <button>新規登録</button>
+  <button @click="getActionButton()">{{ getPageTitle() }}</button>
 </template>
 
 <script setup lang="ts">
 
+import { ref } from "vue";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, User } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from "../../firebase/config";
+
+interface Props {
+  isSignUp: boolean;
+}
+
+const props = defineProps<Props>();
+
+const auth = getAuth();
+
+const email = ref("");
+const password = ref("");
+
+const createUser = async (user: User) => {
+  await setDoc(doc(db, 'user', user.uid), {
+    uid: user.uid,
+  })
+}
+
+const getActionButton = () => {
+  props.isSignUp ? signup() : signin()
+}
+
+const getPageTitle = () => {
+  return props.isSignUp ? "新規登録" : "ログイン";
+}
+
+const signin = () => {
+  signInWithEmailAndPassword(auth, email.value, password.value)
+    .then(async (userCredential) => {
+      const user = userCredential.user;
+      console.log("ok");
+      // await setUserInfo(ctx, user.uid);
+      // router.push('/home');
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+};
+
+const testSignin = () => {
+
+  signInWithEmailAndPassword(auth, 't@g.com', '11111111')
+    .then(async (userCredential) => {
+      const user = userCredential.user;
+      // await setUserInfo(ctx, user.uid);
+      // router.push('/home');
+      // router.push('/home');
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+};
+
+
+const signup = () => {
+  const auth = getAuth();
+  createUserWithEmailAndPassword(auth, email.value, password.value)
+    .then(async (userCredential) => {
+      const user = userCredential.user;
+      await createUser(user);
+      console.log(user.uid);
+      console.log("signup");
+      // setUserInfo(ctx, user.uid);
+      // router.push('/home');
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+
+}
 
 </script>

@@ -5,6 +5,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HelloWorld from "./components/HelloWorld.vue";
 import Hoge from "./components/Hoge.vue";
 import SignUp from "./components/Auth/SignUp.vue";
+import SignIn from "./components/Auth/SignIn.vue";
 
 const routes = [
   {
@@ -18,6 +19,10 @@ const routes = [
   {
     path: "/signup",
     component: SignUp,
+  },
+    {
+    path: "/signin",
+    component: SignIn,
   },
 ];
 
