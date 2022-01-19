@@ -19,13 +19,11 @@ const routes = [
   },
   {
     name: "SignUp",
-
     path: "/signup",
     component: SignUp,
   },
   {
     name: "SignIn",
-
     path: "/signin",
     component: SignIn,
   },
