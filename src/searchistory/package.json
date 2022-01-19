@@ -22,6 +22,7 @@
     "autoprefixer": "^10.4.2",
     "eslint": "^8.7.0",
     "eslint-plugin-tailwindcss": "^3.3.0",
+    "mavon-editor": "^3.0.0-beta",
     "postcss": "^8.4.5",
     "prettier": "^2.5.1",
     "prettier-plugin-tailwind": "^2.2.12",
