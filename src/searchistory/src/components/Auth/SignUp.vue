@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="border-2 border-green-400">
     <AuthForm :isSignUp="true"></AuthForm>
   </div>
 </template>

@@ -1,15 +1,18 @@
 <template>
-  <p>{{ getPageTitle() }}</p>
-  <div>
-    <p>メール</p>
-    <input type="text" v-model="email" class="border-black border-2" />
+  <div class="bg-gray-300 h-[100%] flex justify-center items-center">
+    <div class="border-2 border-red-500 w-[500px] h-[300px]">
+      <p>{{ getPageTitle() }}</p>
+      <InputForm formTitle="メール" :formModel="email"></InputForm>
+      <InputForm formTitle="パスワード" :formModel="password"></InputForm>
+
+      <div>
+        <button @click="getActionButton()">{{ getPageTitle() }}</button>
+      </div>
+      <div>
+        <button v-if="isSignUp === false" @click="signin(true)">テストログイン</button>
+      </div>
+    </div>
   </div>
-  <div>
-    <p>パスワード</p>
-    <input type="text" v-model="password" class="border-black border-2" />
-  </div>
-  <button @click="getActionButton()">{{ getPageTitle() }}</button>
-  <button v-if="isSignUp === false" @click="signin(true)">テストログイン</button>
 </template>
 
 <script setup lang="ts">
@@ -19,6 +22,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, User } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from "../../firebase/config";
+import InputForm from "./module/inputForm.vue";
 
 const router = useRouter()
 const route = useRoute()

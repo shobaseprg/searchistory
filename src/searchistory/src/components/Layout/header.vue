@@ -11,7 +11,6 @@ import { useRoute, useRouter } from 'vue-router'
 const auth = getAuth();
 const router = useRouter()
 
-
 const signout = () => {
   signOut(auth).then(() => {
     router.push('/signin');
