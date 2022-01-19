@@ -9,14 +9,19 @@
     <input type="text" v-model="password" class="border-black border-2" />
   </div>
   <button @click="getActionButton()">{{ getPageTitle() }}</button>
+  <button v-if="isSignUp === false" @click="signin(true)">テストログイン</button>
 </template>
 
 <script setup lang="ts">
 
 import { ref } from "vue";
+import { useRoute, useRouter } from 'vue-router'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, User } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from "../../firebase/config";
+
+const router = useRouter()
+const route = useRoute()
 
 interface Props {
   isSignUp: boolean;
@@ -43,33 +48,22 @@ const getPageTitle = () => {
   return props.isSignUp ? "新規登録" : "ログイン";
 }
 
-const signin = () => {
+const signin = (isTest: boolean = false) => {
+  if (isTest) {
+    email.value = "1@g.com";
+    password.value = "11111111";
+  }
   signInWithEmailAndPassword(auth, email.value, password.value)
     .then(async (userCredential) => {
       const user = userCredential.user;
       console.log("ok");
       // await setUserInfo(ctx, user.uid);
-      // router.push('/home');
+      router.push('/home');
     })
     .catch((error) => {
       alert(error.message);
     });
 };
-
-const testSignin = () => {
-
-  signInWithEmailAndPassword(auth, 't@g.com', '11111111')
-    .then(async (userCredential) => {
-      const user = userCredential.user;
-      // await setUserInfo(ctx, user.uid);
-      // router.push('/home');
-      // router.push('/home');
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-};
-
 
 const signup = () => {
   const auth = getAuth();
@@ -80,7 +74,7 @@ const signup = () => {
       console.log(user.uid);
       console.log("signup");
       // setUserInfo(ctx, user.uid);
-      // router.push('/home');
+      router.push('/home');
     })
     .catch((error) => {
       alert(error.message);
