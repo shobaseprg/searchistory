@@ -4,7 +4,6 @@
       <p>{{ getPageTitle() }}</p>
       <InputForm formTitle="メール" :formModel="email"></InputForm>
       <InputForm formTitle="パスワード" :formModel="password"></InputForm>
-
       <div>
         <button @click="getActionButton()">{{ getPageTitle() }}</button>
       </div>

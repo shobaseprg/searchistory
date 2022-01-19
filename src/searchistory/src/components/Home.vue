@@ -1,7 +1,8 @@
 <template>
   <div>{{ nameRef }}</div>
   <p>home</p>
-  <button>事案新規作成</button>
+  <button @click="controlModal(true)">事案新規作成</button>
+  <createTopicModal v-if="isOpenCreateTopicModal" :controlModal="controlModal" />
 </template>
 
 <script setup lang="ts">
@@ -10,6 +11,8 @@ import { firebaseApp } from "../firebase/config";
 import { getAuth, signOut } from 'firebase/auth';
 import { getFirestore, getDocs, collection } from "firebase/firestore";
 import { useRoute, useRouter } from 'vue-router'
+
+import createTopicModal from "./Topic/createTopicModal.vue";
 
 const router = useRouter()
 const db = getFirestore(firebaseApp);
@@ -26,9 +29,10 @@ onBeforeMount(async () => {
   });
 });
 
-const signout = () => {
-  signOut(auth).then(() => {
-    router.push('/signin');
-  });
-};
+const isOpenCreateTopicModal = ref(false)
+
+const controlModal = (flag: boolean) => {
+  isOpenCreateTopicModal.value = flag;
+}
+
 </script>
