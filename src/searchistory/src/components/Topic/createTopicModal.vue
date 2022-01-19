@@ -36,8 +36,17 @@ const title = ref("");
 const author = ref("");
 const content = ref("");
 
-const registerTopic = () => {
-  TopicModel.register(title.value, content.value, author.value, "testUID")
+const registerTopic = async () => {
+  await TopicModel.register(title.value, content.value, author.value, "testUID")
+  clearForm();
+  alert("登録しました。");
+  controlModal(false);
+}
+
+const clearForm = () => {
+  title.value = "";
+  author.value = "";
+  content.value = "";
 }
 
 const markdownOption = {
