@@ -45,7 +45,7 @@ router.beforeEach((to, from, next) => {
       if (user) {
         next()
       } else {
-        next({ name: 'Signin' })
+        next({ path: '/signin' })
       }
     })
   } else {
