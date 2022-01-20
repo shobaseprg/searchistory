@@ -74,9 +74,7 @@ const signup = () => {
     .then(async (userCredential) => {
       const user = userCredential.user;
       await createUser(user);
-      console.log(user.uid);
-      console.log("signup");
-      // setUserInfo(ctx, user.uid);
+
       router.push('/home');
     })
     .catch((error) => {
