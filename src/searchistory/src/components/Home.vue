@@ -1,7 +1,7 @@
 <template>
   <button class="border-2 border-black" @click="controlOpen(true, 'create')">事案新規作成</button>
-  <createTopicModal v-if="isOpenCreateRef" :controlModal="controlOpen" />
-  <!-- <confirmTopicModal v-if="isOpenConfirmTopicModal" :controlModal="controlModal" /> -->
+  <CreateTopicModal v-if="isOpenCreateRef" :controlModal="controlOpen" />
+  <ConfirmTopicModal v-if="isOpenConfirmRef" :controlModal="controlOpen" />
   <table class="w-[100%]" border="1">
     <!-- テーブルヘッダー -->
     <thead>
@@ -21,7 +21,7 @@
           <StatusSelect :status="topic.getTopic.status" :docID="topic.getTopic.docID" />
         </td>
         <td>{{ topic.getTopic.updatedAt.format("YYYY-MM-DD") }}</td>
-        <td>事案確認</td>
+        <td @click="controlOpen(true, 'confirm')">事案確認</td>
       </tr>
     </tbody>
   </table>
@@ -36,7 +36,9 @@ import { storeToRefs } from 'pinia';
 import useUserStore from "../store/useUserStore";
 const userStore = useUserStore();
 
-import createTopicModal from "./Topic/createTopicModal.vue";
+import CreateTopicModal from "./Topic/createTopicModal.vue";
+import ConfirmTopicModal from "./Topic/confirmTopicModal.vue";
+
 import { TopicModel } from "../models/TopicModel"
 import StatusSelect from "./module/StatusSelect.vue"
 
@@ -60,9 +62,6 @@ const unitModalControl = {
     }
   }
 } as const
-
-
-
 
 const myTopics = ref<Array<TopicModel>>([])
 
