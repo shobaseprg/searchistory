@@ -7,55 +7,52 @@ import {
 } from 'firebase/firestore';
 import { db } from "../firebase/config";
 
-// type topicType = {
-//   author: string;
-//   content: string;
-//   title: string;
-//   uid: string;
-//   status: string;
-//   authorizedUsers: Array<String>;
-//   createdAt: Date;
-//   updatedAt: Date;
-//   docID: string;
-// };
+import moment from 'moment';
+
+type TopicStatus = 'pending' | 'finish'
 
 const TOPIC_STATUS = {
   PENDING: 'pending',
   FINISH: 'finish',
 } as const;
 
-// type TopicStatus = 'pending' | 'finish';
+type TopicStatusWord = '未決' | '解決済'
+
+const disWord = {
+  pending: "未決",
+  finish: "解決済"
+} as const
 
 class TopicModel {
-  private _author: string;
   private _content: string;
   private _title: string;
   private _uid: string;
-  private _status: string;
+  private _status: TopicStatus;
+  private _statusWord: TopicStatusWord;
   private _authorizedUsers: Array<String>;
-  private _createdAt: Date;
-  private _updatedAt: Date;
+  private _createdAt: moment.Moment;
+  private _updatedAt: moment.Moment;
   private _docID: string;
 
   constructor(topicObj: DocumentData) {
-    this._author = topicObj.author;
     this._content = topicObj.content;
     this._title = topicObj.title;
     this._uid = topicObj.uid;
     this._status = topicObj.status;
+    this._statusWord = disWord[this._status];
     this._authorizedUsers = topicObj.authorizedUsers;
-    this._createdAt = topicObj.createdAt.toDate();
-    this._updatedAt = topicObj.updatedAt.toDate();
+    this._createdAt = moment(topicObj.createdAt.toDate());
+    this._updatedAt = moment(topicObj.updatedAt.toDate());
     this._docID = topicObj.docID;
   }
 
   get getTopic() {
     return {
-      author: this._author,
       content: this._content,
       title: this._title,
       uid: this._uid,
       status: this._status,
+      statusWord: this._statusWord,
       authorizedUsers: this._authorizedUsers,
       createdAt: this._createdAt,
       updatedAt: this._updatedAt,
@@ -66,7 +63,6 @@ class TopicModel {
   static async register(
     title: string,
     content: string,
-    author: string,
     uid: string
   ) {
     const newTopicRef = doc(collection(db, 'topic'));
@@ -74,7 +70,6 @@ class TopicModel {
     await setDoc(newTopicRef, {
       title,
       content,
-      author,
       uid,
       authorizedUsers: [],
       status: TOPIC_STATUS.PENDING,
@@ -84,4 +79,4 @@ class TopicModel {
     });
   }
 }
-export default TopicModel;
+export { TopicModel, TopicStatus, TOPIC_STATUS, disWord };

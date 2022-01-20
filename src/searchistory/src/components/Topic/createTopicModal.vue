@@ -7,8 +7,6 @@
     <div class="z-[2] w-[50%] p-[1em] bg-white" @click="stopEvent">
       <p>タイトル</p>
       <input type="text" v-model="title" />
-      <p>著者</p>
-      <input type="text" v-model="author" />
       <div>
         <mavon-editor :toolbars="markdownOption" language="en" v-model="content" />
       </div>
@@ -22,7 +20,9 @@
 <script setup lang="ts">
 import 'mavon-editor/dist/css/index.css'
 import { ref } from "vue";
-import TopicModel from "../../models/TopicModel"
+import { TopicModel } from "../../models/TopicModel"
+import useUserStore from "../../store/useUserStore";
+const userStore = useUserStore();
 
 interface Props {
   controlModal: (flag: boolean) => void
@@ -33,11 +33,10 @@ const stopEvent = (event: any) => {
 };
 
 const title = ref("");
-const author = ref("");
 const content = ref("");
 
 const registerTopic = async () => {
-  await TopicModel.register(title.value, content.value, author.value, "testUID")
+  await TopicModel.register(title.value, content.value, userStore.uid)
   clearForm();
   alert("登録しました。");
   controlModal(false);
@@ -45,7 +44,6 @@ const registerTopic = async () => {
 
 const clearForm = () => {
   title.value = "";
-  author.value = "";
   content.value = "";
 }
 
