@@ -10,7 +10,7 @@
 import { ref } from "vue";
 import { firebaseApp } from "../../firebase/config";
 import { getAuth, signOut } from 'firebase/auth';
-import { setDoc, getFirestore, getDocs, collection, doc } from "firebase/firestore";
+import { setDoc, getFirestore, getDocs, collection, doc, serverTimestamp } from "firebase/firestore";
 import { useRoute, useRouter } from 'vue-router'
 const router = useRouter()
 const db = getFirestore(firebaseApp);
@@ -26,10 +26,9 @@ const { status, docID } = defineProps<Props>();
 const selectedStatus = ref(status);
 
 const statusChange = async () => {
-  console.log(docID)
-  console.log(status)
   await setDoc(doc(db, "topic", docID), {
-    status: selectedStatus.value
+    status: selectedStatus.value,
+    updatedAt: serverTimestamp(),
   }, { merge: true });
 }
 </script>

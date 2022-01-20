@@ -10,10 +10,13 @@
     </thead>
     <!-- 1行 -->
     <tbody>
-      <tr v-for="(topic, index) in myTopics" :key="index" class="border-2 border-black">
+      <tr
+        v-for="(topic, index) in myTopics"
+        :key="topic.getTopic.docID"
+        class="border-2 border-black"
+      >
         <td>{{ topic.getTopic.title }}</td>
         <td>
-          {{ topic.getTopic.statusWord }}
           <StatusSelect :status="topic.getTopic.status" :docID="topic.getTopic.docID" />
         </td>
         <td>{{ topic.getTopic.updatedAt.format("YYYY-MM-DD") }}</td>
