@@ -1,7 +1,7 @@
 <template>
   <!-- モーダル時背景 -->
   <div
-    @click="controlModal(false)"
+    @click="controlModal(false, 'create')"
     class="z-[1] w-[100%] h-[100%] bg-opacity-[0.5] fixed left-0 top-0 flex items-center justify-center bg-black"
   >
     <div class="z-[2] w-[50%] p-[1em] bg-white" @click="stopEvent">
@@ -12,7 +12,7 @@
       </div>
       <button @click="registerTopic">登録</button>
 
-      <button @click="controlModal(false)">閉じる</button>
+      <button @click="controlModal(false, 'create')">閉じる</button>
     </div>
   </div>
 </template>
@@ -25,7 +25,7 @@ import useUserStore from "../../store/useUserStore";
 const userStore = useUserStore();
 
 interface Props {
-  controlModal: (flag: boolean) => void
+  controlModal: (flag: boolean, type: string) => void
 }
 const { controlModal } = defineProps<Props>();
 const stopEvent = (event: any) => {
@@ -39,7 +39,7 @@ const registerTopic = async () => {
   await TopicModel.register(title.value, content.value, userStore.uid)
   clearForm();
   alert("登録しました。");
-  controlModal(false);
+  controlModal(false, "create");
 }
 
 const clearForm = () => {

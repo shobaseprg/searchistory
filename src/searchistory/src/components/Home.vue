@@ -1,6 +1,7 @@
 <template>
-  <button class="border-2 border-black" @click="controlModal(true)">事案新規作成</button>
-  <createTopicModal v-if="isOpenCreateTopicModal" :controlModal="controlModal" />
+  <button class="border-2 border-black" @click="controlOpen(true, 'create')">事案新規作成</button>
+  <createTopicModal v-if="isOpenCreateRef" :controlModal="controlOpen" />
+  <!-- <confirmTopicModal v-if="isOpenConfirmTopicModal" :controlModal="controlModal" /> -->
   <table class="w-[100%]" border="1">
     <!-- テーブルヘッダー -->
     <thead>
@@ -20,6 +21,7 @@
           <StatusSelect :status="topic.getTopic.status" :docID="topic.getTopic.docID" />
         </td>
         <td>{{ topic.getTopic.updatedAt.format("YYYY-MM-DD") }}</td>
+        <td>事案確認</td>
       </tr>
     </tbody>
   </table>
@@ -32,23 +34,35 @@ import { orderBy, onSnapshot, getFirestore, getDocs, collection, query, where, U
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia';
 import useUserStore from "../store/useUserStore";
+const userStore = useUserStore();
 
 import createTopicModal from "./Topic/createTopicModal.vue";
 import { TopicModel } from "../models/TopicModel"
 import StatusSelect from "./module/StatusSelect.vue"
 
-const sectionModalControl = () => {
-  const isOpenCreateTopicModal = ref(false)
-
-  const controlModal = (flag: boolean) => {
-    isOpenCreateTopicModal.value = flag;
-  }
-  return { isOpenCreateTopicModal, controlModal }
-}
-
 const headers = ['タイトル', '状態', '更新日'];
 
-const userStore = useUserStore();
+const unitModalControl = {
+  isOpenCreateRef: ref(false),
+  isOpenConfirmRef: ref(false),
+
+  controlOpen(flag: boolean, type: string) {
+    switch (type) {
+      case "create":
+        unitModalControl.isOpenCreateRef.value = flag;
+        break;
+      case "confirm":
+        unitModalControl.isOpenConfirmRef.value = flag;
+        break;
+
+      default:
+        break;
+    }
+  }
+} as const
+
+
+
 
 const myTopics = ref<Array<TopicModel>>([])
 
@@ -67,7 +81,6 @@ onBeforeMount(async () => {
 });
 onBeforeUnmount(() => { unsubscribe() })
 
-const { isOpenCreateTopicModal, controlModal } = sectionModalControl()
-
+const { isOpenCreateRef, isOpenConfirmRef, controlOpen } = unitModalControl
 
 </script>
