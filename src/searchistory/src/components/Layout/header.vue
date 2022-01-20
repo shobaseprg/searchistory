@@ -1,5 +1,6 @@
 <template>
   <div class="border-black border-2">
+    <p>{{ userStore.name }}さん</p>
     <button @click="signout()">ログアウト</button>
   </div>
 </template>
@@ -7,6 +8,9 @@
 <script setup lang="ts">
 import { getAuth, signOut } from 'firebase/auth';
 import { useRoute, useRouter } from 'vue-router'
+
+import useUserStore from "../../store/useUserStore";
+const userStore = useUserStore();
 
 const auth = getAuth();
 const router = useRouter()

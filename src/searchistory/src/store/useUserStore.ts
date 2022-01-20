@@ -1,16 +1,19 @@
 import { defineStore } from "pinia";
-
+import { getFirestore, getDocs, collection, getDoc, doc } from "firebase/firestore";
+import { db } from "../firebase/config"
 
 type User = {
   uid: string;
   email: string;
+  name: string;
 };
 
 export default defineStore("useUserStore", {
   state: () => {
     return {
-      uid: "test_init_uid",
-      email: "test_init_email",
+      name: "",
+      uid: "",
+      email: "",
     };
   },
   getters: {
@@ -18,8 +21,15 @@ export default defineStore("useUserStore", {
   },
   actions: {
     change_uid(uid: string) {
-      console.log(uid);
       this.uid = uid;
     },
+    async setUserInfo(uid: string) {
+      const docRef = doc(db, "user", uid);
+      const docSnap = await getDoc(docRef);
+      const userData = docSnap.data() ?? {};
+      this.uid = userData.uid;
+      this.email = userData.email;
+      this.name = userData.name;
+    }
   },
 });

@@ -2,8 +2,34 @@
   <div class="bg-gray-300 h-[100%] flex justify-center items-center">
     <div class="border-2 border-red-500 w-[500px] h-[300px]">
       <p>{{ getPageTitle() }}</p>
-      <InputForm formTitle="メール" :formModel="email"></InputForm>
-      <InputForm formTitle="パスワード" :formModel="password"></InputForm>
+      <!-- 名前 -->
+      <div v-if="isSignUp">
+        <p>名前</p>
+        <input
+          class="w-[300px] h-[50px] mb-10 text-center border-2 border-pink-300 rounded-full duration-75;"
+          type="text"
+          v-model="name"
+        />
+      </div>
+      <!-- メール -->
+      <div>
+        <p>メール</p>
+        <input
+          class="w-[300px] h-[50px] mb-10 text-center border-2 border-pink-300 rounded-full duration-75;"
+          type="text"
+          v-model="email"
+        />
+      </div>
+      <!-- パスワード -->
+      <div>
+        <p>パスワード</p>
+        <input
+          class="w-[300px] h-[50px] mb-10 text-center border-2 border-pink-300 rounded-full duration-75;"
+          type="text"
+          v-model="password"
+        />
+      </div>
+      <!-- ボタン -->
       <div>
         <button @click="getActionButton()">{{ getPageTitle() }}</button>
       </div>
@@ -21,8 +47,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, User } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from "../../firebase/config";
-import InputForm from "./module/inputForm.vue";
+import useUserStore from "../../store/useUserStore";
 
+const userStore = useUserStore();
 const router = useRouter()
 const route = useRoute()
 
@@ -34,12 +61,15 @@ const props = defineProps<Props>();
 
 const auth = getAuth();
 
+const name = ref("");
 const email = ref("");
 const password = ref("");
 
-const createUser = async (user: User) => {
-  await setDoc(doc(db, 'user', user.uid), {
-    uid: user.uid,
+const createUser = async (uid: string, email: string) => {
+  await setDoc(doc(db, 'user', uid), {
+    name: name.value,
+    uid: uid,
+    email: email,
   })
 }
 
@@ -59,8 +89,7 @@ const signin = (isTest: boolean = false) => {
   signInWithEmailAndPassword(auth, email.value, password.value)
     .then(async (userCredential) => {
       const user = userCredential.user;
-      console.log("ok");
-      // await setUserInfo(ctx, user.uid);
+      await userStore.setUserInfo(user.uid)
       router.push('/home');
     })
     .catch((error) => {
@@ -70,11 +99,12 @@ const signin = (isTest: boolean = false) => {
 
 const signup = () => {
   const auth = getAuth();
+  console.log(email.value);
   createUserWithEmailAndPassword(auth, email.value, password.value)
     .then(async (userCredential) => {
       const user = userCredential.user;
-      await createUser(user);
-
+      await createUser(user.uid, user.email ?? "");
+      await userStore.setUserInfo(user.uid)
       router.push('/home');
     })
     .catch((error) => {
