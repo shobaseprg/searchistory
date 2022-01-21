@@ -23,41 +23,45 @@ const disWord = {
   finish: "解決済"
 } as const
 
+type Topic = {
+  content: string,
+  title: string,
+  uid: string,
+  status: TopicStatus,
+  authorizedUsers: Array<String>,
+  createdAt: moment.Moment,
+  updatedAt: moment.Moment,
+  docID: string,
+}
+
 class TopicModel {
-  private _content: string;
-  private _title: string;
-  private _uid: string;
-  private _status: TopicStatus;
-  private _statusWord: TopicStatusWord;
-  private _authorizedUsers: Array<String>;
-  private _createdAt: moment.Moment;
-  private _updatedAt: moment.Moment;
-  private _docID: string;
+  readonly content: string = "";
+  readonly title: string = "";
+  readonly uid: string = "";
+  readonly status: TopicStatus = "pending";
+  readonly statusWord: TopicStatusWord = "未決";
+  readonly authorizedUsers: Array<String> = [];
+  readonly createdAt: moment.Moment = moment();
+  readonly updatedAt: moment.Moment = moment();
+  readonly docID: string = "";
 
-  constructor(topicObj: DocumentData) {
-    this._content = topicObj.content;
-    this._title = topicObj.title;
-    this._uid = topicObj.uid;
-    this._status = topicObj.status;
-    this._statusWord = disWord[this._status];
-    this._authorizedUsers = topicObj.authorizedUsers;
-    this._createdAt = moment(topicObj.createdAt.toDate());
-    this._updatedAt = moment(topicObj.updatedAt.toDate());
-    this._docID = topicObj.docID;
-  }
+  constructor(topicObj: DocumentData | "default") {
+    switch (typeof topicObj) {
+      case "string":
+        break;
 
-  get getTopic() {
-    return {
-      content: this._content,
-      title: this._title,
-      uid: this._uid,
-      status: this._status,
-      statusWord: this._statusWord,
-      authorizedUsers: this._authorizedUsers,
-      createdAt: this._createdAt,
-      updatedAt: this._updatedAt,
-      docID: this._docID,
-    };
+      default:
+        this.content = topicObj.content;
+        this.title = topicObj.title;
+        this.uid = topicObj.uid;
+        this.status = topicObj.status;
+        this.statusWord = disWord[this.status];
+        this.authorizedUsers = topicObj.authorizedUsers;
+        this.createdAt = moment(topicObj.createdAt.toDate());
+        this.updatedAt = moment(topicObj.updatedAt.toDate());
+        this.docID = topicObj.docID;
+    }
+
   }
 
   static async register(
@@ -77,6 +81,20 @@ class TopicModel {
       updatedAt: serverTimestamp(),
       docID: newTopicRef.id,
     });
+  }
+
+  static async update(
+    title: string,
+    content: string,
+    docID: string
+  ) {
+    const updateTopicRef = doc(db, 'topic', docID);
+
+    await setDoc(updateTopicRef, {
+      title,
+      content,
+      updatedAt: serverTimestamp(),
+    }, { merge: true });
   }
 }
 export { TopicModel, TopicStatus, TOPIC_STATUS, disWord };

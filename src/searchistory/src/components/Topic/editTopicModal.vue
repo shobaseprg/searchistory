@@ -1,8 +1,8 @@
 <template>
   <!-- モーダル時背景 -->
   <div
-    @click="controlModal(false, 'create')"
-    class="z-[1] w-[100%] h-[100%] bg-opacity-[0.5] fixed left-0 top-0 flex items-center justify-center bg-black"
+    @click="controlOpen(false, 'edit')"
+    class="z-[1] w-[100%] h-[100%] fixed left-0 top-0 flex items-center justify-center"
   >
     <div class="z-[2] w-[50%] p-[1em] bg-white" @click="stopEvent">
       <p>タイトル</p>
@@ -10,9 +10,9 @@
       <div>
         <mavon-editor :toolbars="markdownOption" language="en" v-model="content" />
       </div>
-      <button @click="registerTopic">登録</button>
+      <button @click="updateTopic">登録</button>
 
-      <button @click="controlModal(false, 'create')">閉じる</button>
+      <button @click="controlOpen(false, 'edit')">閉じる</button>
     </div>
   </div>
 </template>
@@ -22,25 +22,27 @@ import 'mavon-editor/dist/css/index.css'
 import { ref } from "vue";
 import { TopicModel } from "../../models/TopicModel"
 import useUserStore from "../../store/useUserStore";
-const userStore = useUserStore();
 import markdownOption from "./markdownOption";
 
+const userStore = useUserStore();
+
 interface Props {
-  controlModal: (flag: boolean, type: string) => void
+  controlOpen: (flag: boolean, type: string) => void
+  targetTopic: TopicModel
 }
-const { controlModal } = defineProps<Props>();
+const { controlOpen, targetTopic } = defineProps<Props>();
 const stopEvent = (event: any) => {
   event.stopPropagation();
 };
 
-const title = ref("");
-const content = ref("");
+const title = ref(targetTopic.title);
+const content = ref(targetTopic.content);
 
-const registerTopic = async () => {
-  await TopicModel.register(title.value, content.value, userStore.uid)
+const updateTopic = async () => {
+  await TopicModel.update(title.value, content.value, targetTopic.docID)
   clearForm();
   alert("登録しました。");
-  controlModal(false, "create");
+  controlOpen(false, "create");
 }
 
 const clearForm = () => {
