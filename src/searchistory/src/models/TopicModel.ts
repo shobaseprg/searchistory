@@ -5,6 +5,10 @@ import {
   setDoc,
   DocumentData,
 } from 'firebase/firestore';
+
+import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+const storage = getStorage();
+
 import { db } from "../firebase/config";
 
 import moment from 'moment';
@@ -95,6 +99,11 @@ class TopicModel {
       content,
       updatedAt: serverTimestamp(),
     }, { merge: true });
+  }
+
+  static async uploadImg(file: File) {
+    const storageRef = ref(storage, 'images/rivers.jpg');
+    uploadBytesResumable(storageRef, file);
   }
 }
 export { TopicModel, TopicStatus, TOPIC_STATUS, disWord };

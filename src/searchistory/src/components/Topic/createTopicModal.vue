@@ -8,7 +8,7 @@
       <p>タイトル</p>
       <input type="text" v-model="title" />
       <div>
-        <mavon-editor :toolbars="markdownOption" language="en" v-model="content" />
+        <mavon-editor :toolbars="markdownOption" @imgAdd="imgAdd" language="en" v-model="content" />
       </div>
       <button @click="registerTopic">登録</button>
 
@@ -42,6 +42,16 @@ const registerTopic = async () => {
   alert("登録しました。");
   controlModal(false, "create");
 }
+
+const imgAdd = async (filename: string, imgfile: File) => {
+  console.log("imageadd")
+  const fileData = {
+    file: imgfile,
+    fileName: imgfile.name,
+    content: content.value,
+  }
+  await TopicModel.uploadImg(fileData.file)
+};
 
 const clearForm = () => {
   title.value = "";

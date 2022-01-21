@@ -10,7 +10,7 @@
       <div>
         <mavon-editor :toolbars="markdownOption" language="en" v-model="content" />
       </div>
-      <button @click="updateTopic">登録</button>
+      <button @click="updateTopic">更新</button>
 
       <button @click="controlOpen(false, 'edit')">閉じる</button>
     </div>
@@ -41,8 +41,9 @@ const content = ref(targetTopic.content);
 const updateTopic = async () => {
   await TopicModel.update(title.value, content.value, targetTopic.docID)
   clearForm();
-  alert("登録しました。");
-  controlOpen(false, "create");
+  alert("更新しました。");
+  controlOpen(false, "preview");
+  controlOpen(false, "edit");
 }
 
 const clearForm = () => {
