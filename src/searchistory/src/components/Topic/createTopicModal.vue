@@ -44,7 +44,6 @@ const registerTopic = async () => {
 }
 
 const imgAdd = async (filename: string, imgfile: File) => {
-  console.log("imageadd")
   const fileData = {
     file: imgfile,
     fileName: imgfile.name,

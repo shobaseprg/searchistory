@@ -6,7 +6,7 @@ import {
   DocumentData,
 } from 'firebase/firestore';
 
-import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 const storage = getStorage();
 
 import { db } from "../firebase/config";
@@ -103,7 +103,11 @@ class TopicModel {
 
   static async uploadImg(file: File) {
     const storageRef = ref(storage, 'images/rivers.jpg');
-    uploadBytesResumable(storageRef, file);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+      console.log('File available at', downloadURL);
+    });
   }
 }
 export { TopicModel, TopicStatus, TOPIC_STATUS, disWord };
