@@ -7,16 +7,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/moment": "^2.13.0",
     "@vue/cli": "^4.5.15",
     "axios": "^0.21.1",
     "firebase": "^9.6.3",
     "firebase-tools": "^10.1.0",
     "pinia": "^2.0.9",
+    "uuid": "^8.3.2",
     "vue": "^3.2.25",
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
+    "@types/uuid": "^8.3.4",
     "@vitejs/plugin-vue": "^2.0.0",
     "@vue/cli-plugin-router": "^4.5.15",
     "@vue/compiler-sfc": "^3.1.4",

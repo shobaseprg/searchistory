@@ -11,6 +11,9 @@ const storage = getStorage();
 
 import { db } from "../firebase/config";
 
+import { v4 as uuidv4 } from 'uuid'
+
+
 import moment from 'moment';
 
 type TopicStatus = 'pending' | 'finish'
@@ -36,6 +39,12 @@ type Topic = {
   createdAt: moment.Moment,
   updatedAt: moment.Moment,
   docID: string,
+}
+
+interface FileData {
+  file: File,
+  fileName: string,
+  content: string,
 }
 
 class TopicModel {
@@ -101,13 +110,17 @@ class TopicModel {
     }, { merge: true });
   }
 
-  static async uploadImg(file: File) {
-    const storageRef = ref(storage, 'images/rivers.jpg');
-    const uploadTask = uploadBytesResumable(storageRef, file);
+  static async uploadImg(fileData: FileData) {
+    const id = uuidv4()
 
-    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-      console.log('File available at', downloadURL);
-    });
+    const storageRef = ref(storage, `images/${id}.jpg`);
+    const uploadTask = await uploadBytesResumable(storageRef, fileData.file);
+
+    const downloadURL = await getDownloadURL(uploadTask.ref)
+    console.log('File available at', downloadURL);
+    const reg = new RegExp('\\([.\\d]+?\\)', 'g');
+    const afterContent = fileData.content + fileData.content.replace(reg, `(${downloadURL})`);
+    return afterContent;
   }
 }
 export { TopicModel, TopicStatus, TOPIC_STATUS, disWord };

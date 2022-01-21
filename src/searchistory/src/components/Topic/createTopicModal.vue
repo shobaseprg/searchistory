@@ -49,7 +49,9 @@ const imgAdd = async (filename: string, imgfile: File) => {
     fileName: imgfile.name,
     content: content.value,
   }
-  await TopicModel.uploadImg(fileData.file)
+  const a = await TopicModel.uploadImg(fileData);
+  console.log(a);
+  content.value = a;
 };
 
 const clearForm = () => {
