@@ -4,13 +4,14 @@
     @click="controlOpen(false, 'edit')"
     class="z-[1] w-[100%] h-[100%] fixed left-0 top-0 flex items-center justify-center"
   >
+  <p>編集</p>
     <div class="z-[2] w-[50%] p-[1em] bg-white" @click="stopEvent">
       <p>タイトル</p>
       <input type="text" v-model="title" />
       <div>
-        <mavon-editor :toolbars="markdownOption" language="en" v-model="content" />
+        <mavon-editor :toolbars="markdownOption"  @imgAdd="imgAdd" language="en" v-model="content" />
       </div>
-      <button @click="updateTopic">更新</button>
+      <button @click="updateTopic(controlOpen,targetTopic)">更新</button>
 
       <button @click="controlOpen(false, 'edit')">閉じる</button>
     </div>
@@ -19,39 +20,23 @@
 
 <script setup lang="ts">
 import 'mavon-editor/dist/css/index.css'
-import { ref } from "vue";
-import { TopicModel,FileInfo } from "../../models/TopicModel"
-import useUserStore from "../../store/useUserStore";
+import { TopicModel } from "../../models/TopicModel"
 import markdownOption from "./markdownOption";
-
-const userStore = useUserStore();
+import {title, content, updateTopic, imgAdd, files}from "../../composable/postTopic"
 
 interface Props {
   controlOpen: (flag: boolean, type: string) => void
   targetTopic: TopicModel
 }
 const { controlOpen, targetTopic } = defineProps<Props>();
+
+title.value = targetTopic.title;
+content.value = targetTopic.content;
+files.value = targetTopic.files;
+
 const stopEvent = (event: any) => {
   event.stopPropagation();
 };
-
-const title = ref(targetTopic.title);
-const content = ref(targetTopic.content);
-const files=ref<FileInfo[]>([]);
-
-
-const updateTopic = async () => {
-  await TopicModel.update(title.value, content.value, targetTopic.docID)
-  clearForm();
-  alert("更新しました。");
-  controlOpen(false, "preview");
-  controlOpen(false, "edit");
-}
-
-const clearForm = () => {
-  title.value = "";
-  content.value = "";
-}
 
 </script>
 

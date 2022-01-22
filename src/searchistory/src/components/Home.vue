@@ -1,6 +1,6 @@
 <template>
   <button class="border-2 border-black" @click="controlOpen(true, 'create')">事案新規作成</button>
-  <CreateTopicModal v-if="isOpenCreateRef" :controlModal="controlOpen" />
+  <CreateTopicModal v-if="isOpenCreateRef" :controlOpen="controlOpen" />
   <PreviewTopicModal v-if="isOpenPreviewRef" :targetTopic="targetTopic" :controlOpen="controlOpen" />
   <EditTopicModal v-if="isOpenEditRef" :targetTopic="targetTopic" :controlOpen="controlOpen" />
   <table class="w-[100%]" border="1">
@@ -25,11 +25,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount, computed, onBeforeUnmount } from "vue";
+import { ref, onBeforeMount, onBeforeUnmount } from "vue";
 import { db } from "../firebase/config";
-import { orderBy, onSnapshot, getFirestore, getDocs, collection, query, where, Unsubscribe } from "firebase/firestore";
-import { useRouter } from 'vue-router'
-import { storeToRefs } from 'pinia';
+import { orderBy, onSnapshot, collection, query, where, Unsubscribe } from "firebase/firestore";
 import useUserStore from "../store/useUserStore";
 
 

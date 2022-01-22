@@ -29,17 +29,6 @@ const disWord = {
   finish: "解決済"
 } as const
 
-type Topic = {
-  content: string,
-  title: string,
-  uid: string,
-  status: TopicStatus,
-  authorizedUsers: Array<String>,
-  createdAt: moment.Moment,
-  updatedAt: moment.Moment,
-  docID: string,
-}
-
 interface FileData {
   file: File,
   content: string,
@@ -76,6 +65,7 @@ const _splitFiles = (files: FileInfo[], content: string) => {
 class TopicModel {
   readonly content: string = "";
   readonly title: string = "";
+  readonly files: FileInfo[] = [];
   readonly uid: string = "";
   readonly status: TopicStatus = "pending";
   readonly statusWord: TopicStatusWord = "未決";
@@ -93,6 +83,7 @@ class TopicModel {
         this.content = topicObj.content;
         this.title = topicObj.title;
         this.uid = topicObj.uid;
+        this.files = topicObj.files;
         this.status = topicObj.status;
         this.statusWord = disWord[this.status];
         this.authorizedUsers = topicObj.authorizedUsers;
