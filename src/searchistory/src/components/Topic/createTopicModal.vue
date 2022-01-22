@@ -20,10 +20,11 @@
 <script setup lang="ts">
 import 'mavon-editor/dist/css/index.css'
 import { ref } from "vue";
-import { TopicModel } from "../../models/TopicModel"
+import { TopicModel,FileInfo } from "../../models/TopicModel"
 import useUserStore from "../../store/useUserStore";
-const userStore = useUserStore();
 import markdownOption from "./markdownOption";
+
+const userStore = useUserStore();
 
 interface Props {
   controlModal: (flag: boolean, type: string) => void
@@ -35,23 +36,23 @@ const stopEvent = (event: any) => {
 
 const title = ref("");
 const content = ref("");
+const files=ref<FileInfo[]>([]);
 
 const registerTopic = async () => {
-  await TopicModel.register(title.value, content.value, userStore.uid)
+  await TopicModel.register(title.value, content.value, userStore.uid,files.value)
   clearForm();
   alert("登録しました。");
   controlModal(false, "create");
 }
 
-const imgAdd = async (filename: string, imgfile: File) => {
+const imgAdd = async (_: string, imgfile: File) => {
   const fileData = {
     file: imgfile,
-    fileName: imgfile.name,
     content: content.value,
   }
-  const a = await TopicModel.uploadImg(fileData);
-  console.log(a);
-  content.value = a;
+  const {afterContent,afterFiles} = await TopicModel.uploadImg(fileData, files.value);
+  content.value = afterContent;
+  files.value = afterFiles;
 };
 
 const clearForm = () => {

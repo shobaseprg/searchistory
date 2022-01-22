@@ -12,11 +12,7 @@
     </thead>
     <!-- 1行 -->
     <tbody>
-      <tr
-        v-for="(topic: TopicModel, index) in myTopics"
-        :key="topic.docID"
-        class="border-2 border-black"
-      >
+      <tr v-for="(topic, index) in myTopics" :key="topic.docID" class="border-2 border-black">
         <td>{{ topic.title }}</td>
         <td>
           <StatusSelect :status="topic.status" :docID="topic.docID" />
@@ -35,7 +31,7 @@ import { orderBy, onSnapshot, getFirestore, getDocs, collection, query, where, U
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia';
 import useUserStore from "../store/useUserStore";
-const userStore = useUserStore();
+
 
 import CreateTopicModal from "./Topic/createTopicModal.vue";
 import PreviewTopicModal from "./Topic/previewTopicModal.vue";
@@ -44,6 +40,7 @@ import EditTopicModal from "./Topic/editTopicModal.vue";
 import { TopicModel } from "../models/TopicModel"
 import StatusSelect from "./module/StatusSelect.vue"
 const headers = ['タイトル', '状態', '更新日'];
+const userStore = useUserStore();
 
 const targetTopic = ref<TopicModel>(new TopicModel("default"));
 
@@ -74,7 +71,6 @@ const unitModalControl = {
 } as const
 
 const { isOpenCreateRef, isOpenPreviewRef, isOpenEditRef, controlOpen } = unitModalControl
-
 
 const myTopics = ref<Array<TopicModel>>([])
 
