@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import 'mavon-editor/dist/css/index.css'
 import { ref } from "vue";
-import { TopicModel } from "../../models/TopicModel"
+import { TopicModel,FileInfo } from "../../models/TopicModel"
 import useUserStore from "../../store/useUserStore";
 import markdownOption from "./markdownOption";
 
@@ -37,6 +37,8 @@ const stopEvent = (event: any) => {
 
 const title = ref(targetTopic.title);
 const content = ref(targetTopic.content);
+const files=ref<FileInfo[]>([]);
+
 
 const updateTopic = async () => {
   await TopicModel.update(title.value, content.value, targetTopic.docID)
