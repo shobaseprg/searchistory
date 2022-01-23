@@ -8,27 +8,28 @@ import {
 
 import { db } from "../firebase/config";
 
-type TopicStatus = 'pending' | 'finish'
+type HistoryStatus = 'pending' | 'unsolved' | 'solved'
 
-const TOPIC_STATUS = {
+const HISTORY_STATUS = {
   PENDING: 'pending',
-  FINISH: 'finish',
+  UNSOLVED: 'unsolved',
+  SOLVED: 'solved',
 } as const;
 
-type TopicStatusWord = '未決' | '解決済'
+type HistoryStatusWord = '未調査' | '未解決' | '解決'
 
-const TOPIC_STATUS_WORD = {
-  pending: "未決",
-  finish: "解決済"
+const HISTORY_STATUS_WORD = {
+  pending: "未調査",
+  unsolved: "未解決",
+  solved: "解決"
 } as const
 
 import { PostCoreModel, FileInfo } from "./PostCoreModel"
 
-class TopicModel extends PostCoreModel {
-  readonly title: string = "";
-  readonly status: TopicStatus = "pending";
-  readonly statusWord: TopicStatusWord = "未決";
-  readonly authorizedUsers: Array<String> = [];
+class HistoryModel extends PostCoreModel {
+  readonly url: string = "";
+  readonly status: HistoryStatus = "pending";
+  readonly statusWord: HistoryStatusWord = "未調査";
 
   constructor(topicObj: DocumentData | "default") {
     super(topicObj);
@@ -37,50 +38,50 @@ class TopicModel extends PostCoreModel {
         break;
 
       default:
-        this.title = topicObj.title;
+        this.url = topicObj.title;
         this.status = topicObj.status;
-        this.statusWord = TOPIC_STATUS_WORD[this.status];
-        this.authorizedUsers = topicObj.authorizedUsers;
+        this.statusWord = HISTORY_STATUS_WORD[this.status];
     }
   }
 
   static async register(
-    title: string,
+    url: string,
     content: string,
     uid: string,
     name: string,
-    files: FileInfo[]
+    files: FileInfo[],
+    topicDocID: string,
   ) {
     const { existFiles, deleteFiles } = super.splitFiles(files, content);
     super.deleteImgFromStorage(deleteFiles);
-    const newTopicRef = doc(collection(db, 'topic'));
+    const newHistoryRef = doc(collection(db, 'topic', topicDocID, 'history'));
 
-    await setDoc(newTopicRef, {
-      title,
+    await setDoc(newHistoryRef, {
+      url,
       content,
       uid,
       name,
-      authorizedUsers: [],
-      status: TOPIC_STATUS.PENDING,
+      status: HISTORY_STATUS.PENDING,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
-      docID: newTopicRef.id,
-      files: existFiles
+      docID: newHistoryRef.id,
+      files: existFiles,
+      topicDocID
     });
   }
 
   static async update(
-    title: string,
+    url: string,
     content: string,
     docID: string
   ) {
     const updateTopicRef = doc(db, 'topic', docID);
 
     await setDoc(updateTopicRef, {
-      title,
+      url,
       content,
       updatedAt: serverTimestamp(),
     }, { merge: true });
   }
 }
-export { TopicModel, TopicStatus, TOPIC_STATUS, TOPIC_STATUS_WORD };
+export { HistoryModel, HistoryStatus, HISTORY_STATUS, HISTORY_STATUS_WORD };

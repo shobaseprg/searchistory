@@ -9,7 +9,7 @@
       <p>タイトル</p>
       <input type="text" v-model="title" />
       <div>
-        <mavon-editor :toolbars="markdownOption"  @imgAdd="imgAdd" language="en" v-model="content" />
+        <mavon-editor :toolbars="createToolbar"  @imgAdd="imgAdd" language="en" v-model="content" />
       </div>
       <button @click="updateTopic(controlOpen,targetTopic)">更新</button>
 
@@ -20,19 +20,17 @@
 
 <script setup lang="ts">
 import 'mavon-editor/dist/css/index.css'
-import markdownOption from "./markdownOption";
+import { createToolbar } from '../../settings/mavonEditor';
 import useTargetTopicStore from "../../store/useTargetTopicStore";
-import {title, content, updateTopic, imgAdd, files}from "../../composable/postTopic"
+import {title, content, updateTopic, imgAdd, files}from "../../composable/post"
 import{controlOpen}from"../../composable/modalControl"
 import { computed } from 'vue';
 
 const targetTopicStore = useTargetTopicStore();
-// const targetTopic =targetTopicStore.targetTopic;
 
 const targetTopic= computed(() => {
   return targetTopicStore.targetTopic;
 });
-
 
 title.value = targetTopic.value.title;
 content.value = targetTopic.value.content;

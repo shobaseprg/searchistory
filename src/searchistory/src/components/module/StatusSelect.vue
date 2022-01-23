@@ -1,7 +1,7 @@
 <template>
   <select v-model="selectedStatus" v-on:change="statusChange()">
-    <option :value="TOPIC_STATUS.PENDING">{{ disWord[TOPIC_STATUS.PENDING] }}</option>
-    <option :value="TOPIC_STATUS.FINISH">{{ disWord[TOPIC_STATUS.FINISH] }}</option>
+    <option :value="TOPIC_STATUS.PENDING">{{ TOPIC_STATUS_WORD[TOPIC_STATUS.PENDING] }}</option>
+    <option :value="TOPIC_STATUS.FINISH">{{ TOPIC_STATUS_WORD[TOPIC_STATUS.FINISH] }}</option>
   </select>
 </template>
 
@@ -12,12 +12,11 @@ import { firebaseApp } from "../../firebase/config";
 import { getAuth, signOut } from 'firebase/auth';
 import { setDoc, getFirestore, getDocs, collection, doc, serverTimestamp } from "firebase/firestore";
 import { useRoute, useRouter } from 'vue-router'
+import { TOPIC_STATUS, TOPIC_STATUS_WORD, TopicStatus } from "../../models/TopicModel"
+
 const router = useRouter()
 const db = getFirestore(firebaseApp);
 const auth = getAuth();
-
-import { TOPIC_STATUS, disWord, TopicStatus } from "../../models/TopicModel"
-
 interface Props {
   status: TopicStatus,
   docID: string,

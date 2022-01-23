@@ -8,9 +8,9 @@
       <p>タイトル</p>
       <input type="text" v-model="title" />
       <div>
-        <mavon-editor :toolbars="markdownOption" @imgAdd="imgAdd" language="en" v-model="content" />
+        <mavon-editor :toolbars="createToolbar" @imgAdd="imgAdd" language="en" v-model="content" />
       </div>
-      <button @click="registerTopic(controlOpen,userStore.uid)">登録</button>
+      <button @click="registerTopic(controlOpen,userStore.uid,userStore.name)">登録</button>
 
       <button @click="controlOpen(false, 'create')">閉じる</button>
     </div>
@@ -20,8 +20,8 @@
 <script setup lang="ts">
 import 'mavon-editor/dist/css/index.css'
 import useUserStore from "../../store/useUserStore";
-import markdownOption from "./markdownOption";
-import {title, content, registerTopic, imgAdd,stopEvent}from "../../composable/postTopic"
+import {createToolbar} from "../../settings/mavonEditor";
+import {title, content, registerTopic, imgAdd,stopEvent}from "../../composable/post"
 import{controlOpen}from"../../composable/modalControl"
 
 const userStore = useUserStore();

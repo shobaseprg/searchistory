@@ -1,4 +1,4 @@
-export default {
+const createToolbar = {
   bold: true,
   italic: true,
   header: true,
@@ -33,3 +33,5 @@ export default {
   subfield: true,
   preview: true,
 };
+
+export { createToolbar }
