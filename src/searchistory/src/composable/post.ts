@@ -18,7 +18,7 @@ const registerTopic = async (uid: string, name: string) => {
 }
 // topic更新
 const updateTopic = async (targetTopic: TopicModel) => {
-  await TopicModel.update(title.value, content.value, files.value, targetTopic.files, targetTopic.docID)
+  await TopicModel.update(title.value, content.value, files.value, targetTopic.docID)
   clearForm();
   alert("更新しました。");
   controlOpen(false, "edit");
@@ -46,6 +46,9 @@ const imgAdd = async (_: string, imgfile: File) => {
   const { afterContent, afterFiles } = await PostCoreModel.uploadImg(fileData, files.value);
   content.value = afterContent;
   files.value = afterFiles;
+  console.log("▼【ログ】files.value");
+  console.log(files.value);
+
 };
 // フォームリセット
 const clearForm = () => {
