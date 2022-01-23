@@ -11,9 +11,9 @@
       <div>
         <mavon-editor :toolbars="createToolbar"  @imgAdd="imgAdd" language="en" v-model="content" />
       </div>
-      <button @click="updateTopic(controlOpen,targetTopic)">更新</button>
+      <button @click="updateTopic(targetTopic)">更新</button>
 
-      <button @click="controlOpen(false, 'edit')">閉じる</button>
+      <button @click="controlOpen(false, 'edit');clearForm()">閉じる</button>
     </div>
   </div>
 </template>
@@ -25,11 +25,10 @@ import 'mavon-editor/dist/css/index.css'
 //firebase
 //store
 import useTargetTopicStore from "../../store/useTargetTopicStore";
-
 //component
 //composable
 import { createToolbar } from '../../settings/mavonEditor';
-import {title, content, updateTopic, imgAdd, files}from "../../composable/post"
+import {title, content, updateTopic, imgAdd, files,clearForm}from "../../composable/post"
 import{controlOpen}from"../../composable/modalControl"
 //model
 //define

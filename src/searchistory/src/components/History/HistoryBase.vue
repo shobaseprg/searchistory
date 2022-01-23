@@ -33,12 +33,9 @@
           <tr  @click="setTargetHistory(history)" v-for="(history) in histories" :key="history.docID" class="border-2 border-black">
             <td>{{ history.url }}</td>
             <td>
-              <!-- <StatusSelect :status="history.status" :docID="history.docID" /> -->
               <p>historyStatus</p>
             </td>
             <td>{{ history.updatedAt.format("YYYY-MM-DD") }}</td>
-            <!-- <td @click="setTargetTopic(topic); controlOpen(true, 'preview')">事案確認</td> -->
-            <!-- <td @click="setTargetTopic(topic); router.push('/history')">事案確認</td> -->
           </tr>
         </tbody>
       </table>
@@ -102,7 +99,6 @@ onBeforeMount(async () => {
 });
 
 const setTargetHistory=(history:HistoryModel)=>{
-  console.log(history);
   targetHistoryStore.setTargetHistory(history);
   controlOpen(true, 'previewHistory')
 }

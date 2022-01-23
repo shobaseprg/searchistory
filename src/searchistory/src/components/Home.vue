@@ -76,6 +76,5 @@ onBeforeMount(async () => {
     });
   });
 });
-onBeforeUnmount(() => { unsubscribe() })
 
 </script>

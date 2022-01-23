@@ -10,9 +10,9 @@
       <div>
         <mavon-editor :toolbars="createToolbar" @imgAdd="imgAdd" language="en" v-model="content" />
       </div>
-      <button @click="registerTopic(controlOpen,userStore.uid,userStore.name)">登録</button>
+      <button @click="registerTopic(userStore.uid,userStore.name)">登録</button>
 
-      <button @click="controlOpen(false, 'create')">閉じる</button>
+      <button @click="controlOpen(false, 'create');clearForm()">閉じる</button>
     </div>
   </div>
 </template>
@@ -21,7 +21,7 @@
 import 'mavon-editor/dist/css/index.css'
 import useUserStore from "../../store/useUserStore";
 import {createToolbar} from "../../settings/mavonEditor";
-import {title, content, registerTopic, imgAdd,stopEvent}from "../../composable/post"
+import {title, content, registerTopic, imgAdd,stopEvent,clearForm}from "../../composable/post"
 import{controlOpen}from"../../composable/modalControl"
 
 const userStore = useUserStore();

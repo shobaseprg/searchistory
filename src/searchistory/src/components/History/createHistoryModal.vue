@@ -10,7 +10,7 @@
         <mavon-editor class="z-[2] w-[80%] h-[80%]" :toolbars="createToolbar" @imgAdd="imgAdd" language="en" v-model="content" />
       <button @click="registerHistory(userStore.uid,userStore.name,targetTopicStore.targetTopic.docID)">登録</button>
 
-      <button @click="controlOpen(false, 'createHistory')">閉じる</button>
+      <button @click="controlOpen(false, 'createHistory');clearForm();">閉じる</button>
     </div>
   </div>
 </template>
@@ -24,7 +24,7 @@ import useUserStore from "../../store/useUserStore";
 import useTargetTopicStore from "../../store/useTargetTopicStore";
 //component
 //composable
-import {url, content, registerHistory, imgAdd,stopEvent}from "../../composable/post";
+import {url, content, registerHistory, imgAdd,stopEvent,clearForm}from "../../composable/post";
 import {controlOpen}from "../../composable/modalControl";
 import {createToolbar}from "../../settings/mavonEditor";
 //model

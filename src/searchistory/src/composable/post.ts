@@ -16,15 +16,13 @@ const registerTopic = async (uid: string, name: string) => {
   alert("登録しました。");
   controlOpen(false, "create");
 }
-
 // topic更新
 const updateTopic = async (targetTopic: TopicModel) => {
-  await TopicModel.update(title.value, content.value, targetTopic.docID)
+  await TopicModel.update(title.value, content.value, files.value, targetTopic.files, targetTopic.docID)
   clearForm();
   alert("更新しました。");
   controlOpen(false, "edit");
 }
-
 // history登録
 const registerHistory = async (uid: string, name: string, topicDocID: string) => {
   await HistoryModel.register(url.value, content.value, uid, name, files.value, topicDocID)
@@ -32,7 +30,6 @@ const registerHistory = async (uid: string, name: string, topicDocID: string) =>
   alert("登録しました。");
   controlOpen(false, "historyCreate");
 }
-
 // history更新
 const updateHistory = async (targetHistory: HistoryModel) => {
   await HistoryModel.update(url.value, content.value, files.value, targetHistory.files, targetHistory.docID, targetHistory.topicDocID)
@@ -40,7 +37,6 @@ const updateHistory = async (targetHistory: HistoryModel) => {
   alert("更新しました。");
   controlOpen(false, "historyEdit");
 }
-
 // 写真追加時発火
 const imgAdd = async (_: string, imgfile: File) => {
   const fileData = {
@@ -51,15 +47,16 @@ const imgAdd = async (_: string, imgfile: File) => {
   content.value = afterContent;
   files.value = afterFiles;
 };
-
+// フォームリセット
 const clearForm = () => {
   url.value = "";
   title.value = "";
   content.value = "";
+  files.value = []
 }
-
+// 伝播ストップ
 const stopEvent = (event: any) => {
   event.stopPropagation();
 };
 
-export { url, title, content, files, registerTopic, updateTopic, registerHistory, updateHistory, imgAdd, stopEvent }
+export { url, title, content, files, registerTopic, updateTopic, registerHistory, updateHistory, imgAdd, stopEvent, clearForm }

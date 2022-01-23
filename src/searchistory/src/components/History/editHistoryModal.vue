@@ -11,7 +11,7 @@
         <mavon-editor class="z-[2] w-[80%] h-[80%]" :toolbars="createToolbar" @imgAdd="imgAdd" language="en" v-model="content" />
       <button @click="updateHistory(targetHistory)">更新</button>
 
-      <button @click="controlOpen(false, 'editHistory')">閉じる</button>
+      <button @click="controlOpen(false, 'editHistory');clearForm();">閉じる</button>
     </div>
   </div>
 </template>
@@ -27,7 +27,7 @@ import useTargetHistoryStore from "../../store/useTargetHistoryStore";
 
 //component
 //composable
-import {url, content,files, updateHistory, imgAdd,stopEvent}from "../../composable/post";
+import {url, content,files, updateHistory, imgAdd,stopEvent,clearForm}from "../../composable/post";
 import {controlOpen}from "../../composable/modalControl";
 import {createToolbar}from "../../settings/mavonEditor";
 //model
