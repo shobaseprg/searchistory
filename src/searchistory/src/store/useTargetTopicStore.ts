@@ -13,6 +13,7 @@ export default defineStore("useTargetTopicStore", {
   },
   actions: {
     setTargetTopic(topic: TopicModel) {
+      console.log("action");
       this.targetTopic = topic;
     },
   },

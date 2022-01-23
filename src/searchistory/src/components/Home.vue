@@ -1,6 +1,6 @@
 <template>
   <button class="border-2 border-black" @click="controlOpen(true, 'create')">事案新規作成</button>
-  <CreateTopicModal v-if="isOpenCreateRef"/>
+  <CreateTopicModal v-if="isOpenCreateRef" />
   <!-- <PreviewTopicModal v-if="isOpenPreviewRef"/> -->
   <table class="w-[100%]" border="1">
     <!-- テーブルヘッダー -->
@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 //vue plugin
-import { ref, onBeforeMount, onBeforeUnmount } from "vue";
+import { ref, onBeforeMount, onBeforeUnmount, computed } from "vue";
 import { useRouter } from "vue-router";
 //firebase
 import { db } from "../firebase/config";
@@ -40,7 +40,7 @@ import PreviewTopicModal from "./Topic/previewTopicModal.vue";
 import EditTopicModal from "./Topic/editTopicModal.vue";
 import StatusSelect from "./module/StatusSelect.vue";
 //composable
-import{ isOpenCreateRef, isOpenPreviewRef, isOpenEditRef, controlOpen}from"../composable/modalControl"
+import { isOpenCreateRef, isOpenPreviewRef, isOpenEditRef, controlOpen } from "../composable/modalControl"
 //model
 import { TopicModel } from "../models/TopicModel"
 //define
@@ -48,12 +48,17 @@ const router = useRouter();
 //define store
 const userStore = useUserStore();
 const targetTopicStore = useTargetTopicStore();
+// const targetTopic = targetTopicStore.targetTopic;
 //logic
 const headers = ['タイトル', '状態', '更新日'];
 
 const setTargetTopic = (topic: TopicModel) => {
   targetTopicStore.setTargetTopic(topic);
 };
+
+const targetTopic = computed(() => {
+  return targetTopicStore.targetTopic;
+});
 
 const myTopics = ref<Array<TopicModel>>([])
 
@@ -65,13 +70,15 @@ onBeforeMount(async () => {
   unsubscribe = onSnapshot(q, (querySnapshot) => {
     myTopics.value = [];
     querySnapshot.forEach((doc) => {
-      const a = doc.data(({ serverTimestamps: "estimate" }));
-
-      myTopics.value.push(new TopicModel(doc.data(({ serverTimestamps: "estimate" }))));
+      const addTopic = new TopicModel(doc.data(({ serverTimestamps: "estimate" })))
+      if (targetTopic.value.docID === addTopic.docID) {
+        targetTopicStore.setTargetTopic(addTopic);
+      }
+      myTopics.value.push(addTopic);
     });
     console.log(myTopics.value)
   });
 });
-onBeforeUnmount(() => { unsubscribe() })
+// onBeforeUnmount(() => { unsubscribe() })
 
 </script>
