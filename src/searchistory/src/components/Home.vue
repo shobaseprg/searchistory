@@ -74,7 +74,6 @@ onBeforeMount(async () => {
       }
       myTopics.value.push(addTopic);
     });
-    console.log(myTopics.value)
   });
 });
 onBeforeUnmount(() => { unsubscribe() })

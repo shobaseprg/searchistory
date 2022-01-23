@@ -4,12 +4,10 @@
     @click="controlOpen(false, 'createHistory')"
     class="z-[2000] w-[100%] h-[100%] bg-opacity-[0.5] fixed left-0 top-0 flex items-center justify-center bg-black"
   >
-    <div class="z-[2] w-[50%] p-[1em] bg-white" @click="stopEvent">
+    <div class="z-[2] w-[80%] h-[80%] p-[1em] bg-white" @click="stopEvent">
       <p>URL</p>
       <input type="text" v-model="url" />
-      <div>
-        <mavon-editor :toolbars="createToolbar" @imgAdd="imgAdd" language="en" v-model="content" />
-      </div>
+        <mavon-editor class="z-[2] w-[80%] h-[80%]" :toolbars="createToolbar" @imgAdd="imgAdd" language="en" v-model="content" />
       <button @click="registerHistory(userStore.uid,userStore.name,targetTopicStore.targetTopic.docID)">登録</button>
 
       <button @click="controlOpen(false, 'createHistory')">閉じる</button>

@@ -19,14 +19,23 @@
 </template>
 
 <script setup lang="ts">
+//vue plugin
+import { computed } from 'vue';
 import 'mavon-editor/dist/css/index.css'
-import { createToolbar } from '../../settings/mavonEditor';
+//firebase
+//store
 import useTargetTopicStore from "../../store/useTargetTopicStore";
+
+//component
+//composable
+import { createToolbar } from '../../settings/mavonEditor';
 import {title, content, updateTopic, imgAdd, files}from "../../composable/post"
 import{controlOpen}from"../../composable/modalControl"
-import { computed } from 'vue';
-
+//model
+//define
+//define store
 const targetTopicStore = useTargetTopicStore();
+//logic
 
 const targetTopic= computed(() => {
   return targetTopicStore.targetTopic;

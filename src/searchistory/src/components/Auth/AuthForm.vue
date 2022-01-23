@@ -99,7 +99,6 @@ const signin = (isTest: boolean = false) => {
 
 const signup = () => {
   const auth = getAuth();
-  console.log(email.value);
   createUserWithEmailAndPassword(auth, email.value, password.value)
     .then(async (userCredential) => {
       const user = userCredential.user;

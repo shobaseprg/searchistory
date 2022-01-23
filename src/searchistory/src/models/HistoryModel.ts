@@ -30,6 +30,7 @@ class HistoryModel extends PostCoreModel {
   readonly url: string = "";
   readonly status: HistoryStatus = "pending";
   readonly statusWord: HistoryStatusWord = "未調査";
+  readonly topicDocID: string = "";
 
   constructor(topicObj: DocumentData | "default") {
     super(topicObj);
@@ -41,6 +42,7 @@ class HistoryModel extends PostCoreModel {
         this.url = topicObj.url;
         this.status = topicObj.status;
         this.statusWord = HISTORY_STATUS_WORD[this.status];
+        this.topicDocID = topicObj.topicDocID;
     }
   }
 
@@ -73,13 +75,20 @@ class HistoryModel extends PostCoreModel {
   static async update(
     url: string,
     content: string,
-    docID: string
+    targetHistoryFiles: FileInfo[],
+    files: FileInfo[],
+    docID: string,
+    topicDocID: string,
   ) {
-    const updateTopicRef = doc(db, 'topic', docID);
+    const margeFiles = [...targetHistoryFiles, ...files]
+    const { existFiles, deleteFiles } = super.splitFiles(margeFiles, content);
+    super.deleteImgFromStorage(deleteFiles);
+    const updateHistoryRef = doc(db, 'topic', topicDocID, 'history', docID);
 
-    await setDoc(updateTopicRef, {
+    await setDoc(updateHistoryRef, {
       url,
       content,
+      files: existFiles,
       updatedAt: serverTimestamp(),
     }, { merge: true });
   }

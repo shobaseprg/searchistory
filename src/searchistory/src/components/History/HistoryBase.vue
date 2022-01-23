@@ -2,6 +2,7 @@
   <EditTopicModal v-if="isOpenEditRef" />
   <CreateHistoryModal v-if="isOpenHistoryCreateRef" />
   <PreviewHistoryModal v-if="isOpenHistoryPreviewRef" />
+  <EditHistoryModal v-if="isOpenHistoryEditRef" />
 
   <!-- ベース -->
   <div class="w-[100%] h-[calc(100%-30px)] border-2 border-blue-600 flex">
@@ -20,7 +21,7 @@
     <!-- リスト -->
     <div class="w-[50%]">
       <button @click="controlOpen(true, 'createHistory')">調査履歴を追加</button>
-      <table class="w-[100%]" border="1" @click="controlOpen(true, 'previewHistory')">
+      <table class="w-[100%]" border="1">
         <!-- テーブルヘッダー -->
         <thead>
           <tr>
@@ -29,7 +30,7 @@
         </thead>
         <!-- 1行 -->
         <tbody>
-          <tr v-for="(history) in histories" :key="history.docID" class="border-2 border-black">
+          <tr  @click="setTargetHistory(history)" v-for="(history) in histories" :key="history.docID" class="border-2 border-black">
             <td>{{ history.url }}</td>
             <td>
               <!-- <StatusSelect :status="history.status" :docID="history.docID" /> -->
@@ -60,9 +61,10 @@ import useTargetHistoryStore from "../../store/useTargetHistoryStore"
 import EditTopicModal from "../Topic/editTopicModal.vue";
 import CreateHistoryModal from "./createHistoryModal.vue";
 import PreviewHistoryModal from "./previewHistoryModal.vue";
+import EditHistoryModal from "./editHistoryModal.vue";
 
 //composable
-import { controlOpen, isOpenEditRef, isOpenHistoryCreateRef ,isOpenHistoryPreviewRef} from "../../composable/modalControl"
+import { controlOpen, isOpenEditRef, isOpenHistoryCreateRef ,isOpenHistoryPreviewRef,isOpenHistoryEditRef} from "../../composable/modalControl"
 import { HistoryModel } from "../../models/HistoryModel";
 //model
 //define
@@ -71,7 +73,6 @@ const auth = getAuth();
 //define store
 const targetTopicStore = useTargetTopicStore()
 const targetHistoryStore = useTargetHistoryStore()
-console.log(targetHistoryStore);
 
 //logic
 const headers = ['URL', '状態', '更新日'];
@@ -92,8 +93,6 @@ onBeforeMount(async () => {
     histories.value = [];
     querySnapshot.forEach((doc) => {
       const nextHistory = new HistoryModel(doc.data(({ serverTimestamps: "estimate" })));
-      console.log(targetHistory.value)
-      console.log(nextHistory)
       if (targetHistory.value.docID === nextHistory.docID) {
         targetHistoryStore.setTargetHistory(nextHistory);
       }
@@ -101,7 +100,12 @@ onBeforeMount(async () => {
     });
   });
 });
-// onBeforeUnmount(() => { unsubscribe() })
+
+const setTargetHistory=(history:HistoryModel)=>{
+  console.log(history);
+  targetHistoryStore.setTargetHistory(history);
+  controlOpen(true, 'previewHistory')
+}
 
 
 </script>
