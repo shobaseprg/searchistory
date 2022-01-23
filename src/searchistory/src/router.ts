@@ -4,6 +4,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import Home from "./components/Home.vue";
 import SignUp from "./components/Auth/SignUp.vue";
 import SignIn from "./components/Auth/SignIn.vue";
+import HistoryBase from "./components/History/HistoryBase.vue";
 
 const routes = [
   {
@@ -26,6 +27,11 @@ const routes = [
     name: "SignIn",
     path: "/signin",
     component: SignIn,
+  },
+  {
+    name: "History",
+    path: "/history",
+    component: HistoryBase,
   },
 ];
 

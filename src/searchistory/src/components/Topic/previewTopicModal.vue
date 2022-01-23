@@ -17,7 +17,7 @@
           v-model="targetTopic.content"
         />
       </div>
-      <button @click="controlOpen(true, 'edit')">編集する</button>
+      <button @click="controlOpen(true, 'edit');controlOpen(false, 'preview')">編集する</button>
       <button @click="controlOpen(false, 'preview')">閉じる</button>
     </div>
   </div>
@@ -27,15 +27,16 @@
 import 'mavon-editor/dist/css/index.css'
 import { ref, Ref } from "vue";
 import { TopicModel } from "../../models/TopicModel"
-import useUserStore from "../../store/useUserStore";
-const userStore = useUserStore();
+import useTargetTopicStore from "../../store/useTargetTopicStore";
+
 
 interface Props {
-  targetTopic: TopicModel,
   controlOpen: (flag: boolean, type: string) => void
 }
 
-const { targetTopic, controlOpen } = defineProps<Props>();
+const {controlOpen } = defineProps<Props>();
+const targetTopicStore = useTargetTopicStore();
+const targetTopic =targetTopicStore.targetTopic;
 
 const stopEvent = (event: any) => {
   event.stopPropagation();

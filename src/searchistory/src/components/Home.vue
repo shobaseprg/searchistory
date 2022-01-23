@@ -1,8 +1,8 @@
 <template>
   <button class="border-2 border-black" @click="controlOpen(true, 'create')">事案新規作成</button>
   <CreateTopicModal v-if="isOpenCreateRef" :controlOpen="controlOpen" />
-  <PreviewTopicModal v-if="isOpenPreviewRef" :targetTopic="targetTopic" :controlOpen="controlOpen" />
-  <EditTopicModal v-if="isOpenEditRef" :targetTopic="targetTopic" :controlOpen="controlOpen" />
+  <PreviewTopicModal v-if="isOpenPreviewRef"  :controlOpen="controlOpen" />
+  <EditTopicModal v-if="isOpenEditRef" :controlOpen="controlOpen" />
   <table class="w-[100%]" border="1">
     <!-- テーブルヘッダー -->
     <thead>
@@ -18,7 +18,9 @@
           <StatusSelect :status="topic.status" :docID="topic.docID" />
         </td>
         <td>{{ topic.updatedAt.format("YYYY-MM-DD") }}</td>
-        <td @click="setTargetTopic(topic); controlOpen(true, 'preview')">事案確認</td>
+        <!-- <td @click="setTargetTopic(topic); controlOpen(true, 'preview')">事案確認</td> -->
+                <td @click="setTargetTopic(topic); controlOpen(true, 'preview')">事案確認</td>
+
       </tr>
     </tbody>
   </table>
@@ -29,7 +31,7 @@ import { ref, onBeforeMount, onBeforeUnmount } from "vue";
 import { db } from "../firebase/config";
 import { orderBy, onSnapshot, collection, query, where, Unsubscribe } from "firebase/firestore";
 import useUserStore from "../store/useUserStore";
-
+import useTargetTopicStore from "../store/useTargetTopicStore";
 
 import CreateTopicModal from "./Topic/createTopicModal.vue";
 import PreviewTopicModal from "./Topic/previewTopicModal.vue";
@@ -39,11 +41,10 @@ import { TopicModel } from "../models/TopicModel"
 import StatusSelect from "./module/StatusSelect.vue"
 const headers = ['タイトル', '状態', '更新日'];
 const userStore = useUserStore();
-
-const targetTopic = ref<TopicModel>(new TopicModel("default"));
+const targetTopicStore = useTargetTopicStore();
 
 const setTargetTopic = (topic: TopicModel) => {
-  targetTopic.value = topic
+  targetTopicStore.setTargetTopic(topic);
 };
 
 const unitModalControl = {

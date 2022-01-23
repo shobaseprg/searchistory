@@ -2,7 +2,7 @@
   <!-- モーダル時背景 -->
   <div
     @click="controlOpen(false, 'edit')"
-    class="z-[1] w-[100%] h-[100%] fixed left-0 top-0 flex items-center justify-center"
+    class="z-[1] w-[100%] h-[100%] bg-opacity-[0.5] fixed left-0 top-0 flex items-center justify-center bg-black"
   >
   <p>編集</p>
     <div class="z-[2] w-[50%] p-[1em] bg-white" @click="stopEvent">
@@ -20,15 +20,16 @@
 
 <script setup lang="ts">
 import 'mavon-editor/dist/css/index.css'
-import { TopicModel } from "../../models/TopicModel"
 import markdownOption from "./markdownOption";
+import useTargetTopicStore from "../../store/useTargetTopicStore";
 import {title, content, updateTopic, imgAdd, files}from "../../composable/postTopic"
 
 interface Props {
   controlOpen: (flag: boolean, type: string) => void
-  targetTopic: TopicModel
 }
-const { controlOpen, targetTopic } = defineProps<Props>();
+const { controlOpen } = defineProps<Props>();
+const targetTopicStore = useTargetTopicStore();
+const targetTopic =targetTopicStore.targetTopic;
 
 title.value = targetTopic.title;
 content.value = targetTopic.content;
