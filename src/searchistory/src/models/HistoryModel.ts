@@ -38,7 +38,7 @@ class HistoryModel extends PostCoreModel {
         break;
 
       default:
-        this.url = topicObj.title;
+        this.url = topicObj.url;
         this.status = topicObj.status;
         this.statusWord = HISTORY_STATUS_WORD[this.status];
     }

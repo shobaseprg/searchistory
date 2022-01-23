@@ -35,8 +35,6 @@ import {createToolbar}from "../../settings/mavonEditor";
 const userStore = useUserStore();
 const targetTopicStore = useTargetTopicStore();
 //logic
-
-
 </script>
 
 <style lang="" scoped>

@@ -1,7 +1,6 @@
 <template>
   <button class="border-2 border-black" @click="controlOpen(true, 'create')">事案新規作成</button>
   <CreateTopicModal v-if="isOpenCreateRef" />
-  <!-- <PreviewTopicModal v-if="isOpenPreviewRef"/> -->
   <table class="w-[100%]" border="1">
     <!-- テーブルヘッダー -->
     <thead>
@@ -17,7 +16,6 @@
           <StatusSelect :status="topic.status" :docID="topic.docID" />
         </td>
         <td>{{ topic.updatedAt.format("YYYY-MM-DD") }}</td>
-        <!-- <td @click="setTargetTopic(topic); controlOpen(true, 'preview')">事案確認</td> -->
         <td @click="setTargetTopic(topic); router.push('/history')">事案確認</td>
       </tr>
     </tbody>
@@ -79,6 +77,6 @@ onBeforeMount(async () => {
     console.log(myTopics.value)
   });
 });
-// onBeforeUnmount(() => { unsubscribe() })
+onBeforeUnmount(() => { unsubscribe() })
 
 </script>

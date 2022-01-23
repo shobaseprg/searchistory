@@ -8,9 +8,9 @@
       <p>URL</p>
       <input type="text" v-model="url" />
       <div>
-        <mavon-editor :toolbars="markdownOption" @imgAdd="imgAdd" language="en" v-model="content" />
+        <mavon-editor :toolbars="createToolbar" @imgAdd="imgAdd" language="en" v-model="content" />
       </div>
-      <button @click="registerHistory(controlOpen,userStore.uid,userStore.name)">登録</button>
+      <button @click="updateHistory(userStore.uid,userStore.name)">更新</button>
 
       <button @click="controlOpen(false, 'createHistory')">閉じる</button>
     </div>
@@ -18,15 +18,25 @@
 </template>
 
 <script setup lang="ts">
+//vue plugin
 import 'mavon-editor/dist/css/index.css'
+//firebase
+//store
 import useUserStore from "../../store/useUserStore";
-import markdownOption from "./markdownOption";
-import {url, content, registerHistory, imgAdd,stopEvent}from "../../composable/post"
-import{controlOpen}from"../../composable/modalControl"
-
+import useTargetTopicStore from "../../store/useTargetTopicStore";
+//component
+//composable
+import {url, content, updateHistory, imgAdd,stopEvent}from "../../composable/post";
+import {controlOpen}from "../../composable/modalControl";
+import {createToolbar}from "../../settings/mavonEditor";
+//model
+//define
+//define store
 const userStore = useUserStore();
-
+const targetTopicStore = useTargetTopicStore();
+//logic
 </script>
+
 
 <style lang="" scoped>
 </style>
