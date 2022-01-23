@@ -1,5 +1,6 @@
 <template>
   <EditTopicModal v-if="isOpenEditRef" />
+  <CreateHistoryModal v-if="isOpenHistoryCreateRef" />
   <!-- ベース -->
   <div class="w-[100%] h-[calc(100%-30px)] border-2 border-blue-600 flex">
     <!-- プレビュー -->
@@ -15,7 +16,7 @@
       <button @click="controlOpen(true, 'edit')">編集する</button>
     </div>
     <!-- リスト -->
-    <div class="w-[50%]">リスト</div>
+    <div class="w-[50%]" @click="controlOpen(true, 'createHistory')"><button >調査履歴を追加</button></div>
   </div>
 </template>
 
@@ -31,8 +32,10 @@ import { getFirestore, getDocs, collection } from "firebase/firestore";
 import useTargetStore from "../../store/useTargetTopicStore"
 //component
 import EditTopicModal from "../Topic/editTopicModal.vue";
+import CreateHistoryModal from "./createHistoryModal.vue";
+
 //composable
-import { controlOpen, isOpenEditRef } from "../../composable/modalControl"
+import { controlOpen, isOpenEditRef ,isOpenHistoryCreateRef} from "../../composable/modalControl"
 //model
 //define
 const router = useRouter()
