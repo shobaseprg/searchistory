@@ -28,13 +28,8 @@ import 'mavon-editor/dist/css/index.css'
 import { ref, Ref } from "vue";
 import { TopicModel } from "../../models/TopicModel"
 import useTargetTopicStore from "../../store/useTargetTopicStore";
+import{controlOpen}from"../../composable/modalControl"
 
-
-interface Props {
-  controlOpen: (flag: boolean, type: string) => void
-}
-
-const {controlOpen } = defineProps<Props>();
 const targetTopicStore = useTargetTopicStore();
 const targetTopic =targetTopicStore.targetTopic;
 

@@ -23,11 +23,8 @@ import 'mavon-editor/dist/css/index.css'
 import markdownOption from "./markdownOption";
 import useTargetTopicStore from "../../store/useTargetTopicStore";
 import {title, content, updateTopic, imgAdd, files}from "../../composable/postTopic"
+import{controlOpen}from"../../composable/modalControl"
 
-interface Props {
-  controlOpen: (flag: boolean, type: string) => void
-}
-const { controlOpen } = defineProps<Props>();
 const targetTopicStore = useTargetTopicStore();
 const targetTopic =targetTopicStore.targetTopic;
 

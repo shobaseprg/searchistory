@@ -22,16 +22,11 @@ import 'mavon-editor/dist/css/index.css'
 import useUserStore from "../../store/useUserStore";
 import markdownOption from "./markdownOption";
 import {title, content, registerTopic, imgAdd,stopEvent}from "../../composable/postTopic"
+import{controlOpen}from"../../composable/modalControl"
 
 const userStore = useUserStore();
 
-interface Props {
-  controlOpen: (flag: boolean, type: string) => void
-}
-
-const { controlOpen } = defineProps<Props>();
 </script>
 
 <style lang="" scoped>
-
 </style>
