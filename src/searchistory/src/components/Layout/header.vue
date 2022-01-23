@@ -1,7 +1,8 @@
 <template>
-  <div class="border-black border-2">
+  <div class="border-black border-2 flex h-[30px]">
     <p>{{ userStore.name }}さん</p>
     <button @click="signout()">ログアウト</button>
+    <p @click="router.push('/home')">home</p>
   </div>
 </template>
 
