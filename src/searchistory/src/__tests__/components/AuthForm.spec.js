@@ -18,8 +18,6 @@ describe("コンポーネントテスト", () => {
     await router.isReady();
     wrapper.find('[data-testid="inputEmail"]').setValue("1@g.com")
     wrapper.find('[data-testid="inputPassword"]').setValue("11111111")
-
-    expect(wrapper.vm.email).toMatch("1@g.com");
     const result = await wrapper.vm.signin(false);
     flushPromises();
     expect(result).toEqual(true);

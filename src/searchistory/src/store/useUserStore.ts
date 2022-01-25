@@ -8,6 +8,7 @@ type User = {
   uid: string;
   email: string;
   name: string;
+  memberEmails: string[]
 };
 
 export default defineStore("useUserStore", {
@@ -16,6 +17,7 @@ export default defineStore("useUserStore", {
       name: "",
       uid: "",
       email: "",
+      memberEmails: []
     };
   },
   getters: {
@@ -32,6 +34,7 @@ export default defineStore("useUserStore", {
       this.uid = userData.uid;
       this.email = userData.email;
       this.name = userData.name;
+      this.memberEmails = userData.memberEmails;
     }
   },
 });

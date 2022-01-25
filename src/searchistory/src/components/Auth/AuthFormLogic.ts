@@ -19,6 +19,7 @@ export default (props: any, useUserStore: any) => {
       name: name.value,
       uid: uid,
       email: email,
+      memberEmails: [],
     })
   }
 
@@ -37,8 +38,6 @@ export default (props: any, useUserStore: any) => {
     }
     return await signInWithEmailAndPassword(auth, email.value, password.value)
       .then(async (userCredential) => {
-        console.log(email.value);
-        console.log(password.value);
         const user = userCredential.user;
         await userStore.setUserInfo(user.uid)
         router.push('/home');
