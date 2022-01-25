@@ -1,5 +1,5 @@
 <template>
-  <EditTopicModal v-if="isOpenEditRef" />
+  <EditTopicModal v-if="isOpenTopicEditRef" />
   <CreateHistoryModal v-if="isOpenHistoryCreateRef" />
   <PreviewHistoryModal v-if="isOpenHistoryPreviewRef" />
   <EditHistoryModal v-if="isOpenHistoryEditRef" />
@@ -16,11 +16,11 @@
         language="en"
         v-model="targetTopic.content"
       />
-      <button @click="controlOpen(true, 'edit')">編集する</button>
+      <button @click="controlOpen(true, MODAL_TYPE.TOPIC_EDIT)">編集する</button>
     </div>
     <!-- リスト -->
     <div class="w-[50%]">
-      <button @click="controlOpen(true, 'createHistory')">調査履歴を追加</button>
+      <button @click="controlOpen(true, MODAL_TYPE.HISTORY_CREATE)">調査履歴を追加</button>
       <table class="w-[100%]" border="1">
         <!-- テーブルヘッダー -->
         <thead>
@@ -61,7 +61,7 @@ import PreviewHistoryModal from "./previewHistoryModal.vue";
 import EditHistoryModal from "./editHistoryModal.vue";
 
 //composable
-import { controlOpen, isOpenEditRef, isOpenHistoryCreateRef ,isOpenHistoryPreviewRef,isOpenHistoryEditRef} from "../../composable/modalControl"
+import { controlOpen, isOpenTopicEditRef, isOpenHistoryCreateRef ,isOpenHistoryPreviewRef,isOpenHistoryEditRef,MODAL_TYPE} from "../../composable/modalControl"
 import { HistoryModel } from "../../models/HistoryModel";
 //model
 //define
@@ -100,7 +100,7 @@ onBeforeMount(async () => {
 
 const setTargetHistory=(history:HistoryModel)=>{
   targetHistoryStore.setTargetHistory(history);
-  controlOpen(true, 'previewHistory')
+  controlOpen(true, MODAL_TYPE.HISTORY_PREVIEW)
 }
 
 

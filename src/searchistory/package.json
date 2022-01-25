@@ -5,7 +5,8 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "test": "jest"
+    "test": "jest",
+    "tsc": "tsc"
   },
   "dependencies": {
     "@types/jest": "^25.2.1",
@@ -32,6 +33,7 @@
     "@vue/compiler-sfc": "^3.1.4",
     "@vue/test-utils": "^2.0.0-rc.18",
     "autoprefixer": "^10.4.2",
+    "esbuild": "^0.13.4",
     "eslint": "^8.7.0",
     "eslint-plugin-tailwindcss": "^3.3.0",
     "mavon-editor": "^3.0.0-beta",
@@ -41,10 +43,10 @@
     "scss": "^0.2.4",
     "scss-loader": "^0.0.1",
     "tailwindcss": "^3.0.15",
+    "ts-jest": "^25.3.1",
     "typescript": "^4.4.4",
     "vite": "^2.7.2",
     "vue-jest": "^5.0.0-alpha.1",
-    "vue-tsc": "^0.29.8",
-    "ts-jest": "^25.3.1"
+    "vue-tsc": "^0.29.8"
   }
 }

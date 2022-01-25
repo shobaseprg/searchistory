@@ -5,6 +5,7 @@ import { createApp, ref } from "vue";
 import { createPinia } from 'pinia';
 createApp(AuthForm).use(createPinia())
 
+
 // コンポーネントテスト
 describe("コンポーネントテスト", () => {
   it("email,password正しい:ログイン可", async () => {

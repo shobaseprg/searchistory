@@ -1,6 +1,6 @@
 <template>
-  <button class="border-2 border-black" @click="controlOpen(true, 'create')">事案新規作成</button>
-  <CreateTopicModal v-if="isOpenCreateRef" />
+  <button class="border-2 border-black" @click="controlOpen(true, MODAL_TYPE.TOPIC_CREATE)">事案新規作成</button>
+  <CreateTopicModal v-if="isOpenTopicCreateRef" />
   <table class="w-[100%]" border="1">
     <!-- テーブルヘッダー -->
     <thead>
@@ -36,7 +36,7 @@ import useTargetTopicStore from "../store/useTargetTopicStore";
 import CreateTopicModal from "./Topic/createTopicModal.vue";
 import StatusSelect from "./module/StatusSelect.vue";
 //composable
-import { isOpenCreateRef, controlOpen } from "../composable/modalControl"
+import { isOpenTopicCreateRef, controlOpen, MODAL_TYPE,  } from "../composable/modalControl"
 //model
 import { TopicModel } from "../models/TopicModel"
 //define

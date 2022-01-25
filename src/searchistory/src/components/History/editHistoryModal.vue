@@ -1,7 +1,8 @@
 <template>
   <!-- モーダル時背景 -->
+  <p>履歴編集</p>
   <div
-    @click="controlOpen(false, 'editHistory')"
+    @click="controlOpen(false, MODAL_TYPE.HISTORY_EDIT)"
     class="z-[2000] w-[100%] h-[100%] bg-opacity-[0.5] fixed left-0 top-0 flex items-center justify-center bg-black"
   >
   <!-- モーダル -->
@@ -11,7 +12,7 @@
         <mavon-editor class="z-[2] w-[80%] h-[80%]" :toolbars="createToolbar" @imgAdd="imgAdd" language="en" v-model="content" />
       <button @click="updateHistory(targetHistory)">更新</button>
 
-      <button @click="controlOpen(false, 'editHistory');clearForm();">閉じる</button>
+      <button @click="controlOpen(false, MODAL_TYPE.HISTORY_EDIT);clearForm();">閉じる</button>
     </div>
   </div>
 </template>
@@ -27,7 +28,7 @@ import useTargetHistoryStore from "../../store/useTargetHistoryStore";
 //component
 //composable
 import {url, content,files, updateHistory, imgAdd,stopEvent,clearForm}from "../../composable/post";
-import {controlOpen}from "../../composable/modalControl";
+import {controlOpen,MODAL_TYPE}from "../../composable/modalControl";
 import {createToolbar}from "../../settings/mavonEditor";
 //model
 //define
@@ -46,4 +47,5 @@ files.value = targetHistory.value.files;
 </script>
 
 <style lang="" scoped>
+
 </style>

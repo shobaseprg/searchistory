@@ -1,7 +1,7 @@
 <template>
   <!-- モーダル時背景 -->
   <div
-    @click="controlOpen(false, 'previewHistory')"
+    @click="controlOpen(false,MODAL_TYPE.HISTORY_PREVIEW)"
     class="z-[2000] w-[100%] h-[100%] bg-opacity-[0.5] fixed left-0 top-0 flex items-center justify-center bg-black"
   >
     <!-- モーダル -->
@@ -15,8 +15,8 @@
         language="en"
         v-model="targetHistory.content"
       />
-      <button @click="controlOpen(false, 'previewHistory')">閉じる</button>
-      <button @click="controlOpen(true, 'editHistory')">編集する</button>
+      <button @click="controlOpen(false, MODAL_TYPE.HISTORY_PREVIEW)">閉じる</button>
+      <button @click="controlOpen(true, MODAL_TYPE.HISTORY_EDIT)">編集する</button>
     </div>
   </div>
 </template>
@@ -31,7 +31,7 @@ import useTargetHistoryStore from "../../store/useTargetHistoryStore";
 //component
 //composable
 import { url, content, registerHistory, imgAdd, stopEvent } from "../../composable/post";
-import { controlOpen } from "../../composable/modalControl";
+import { controlOpen ,MODAL_TYPE} from "../../composable/modalControl";
 import { createToolbar } from "../../settings/mavonEditor";
 import { computed } from 'vue';
 //model
