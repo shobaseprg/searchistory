@@ -34,11 +34,9 @@ import useUserStore from "../store/useUserStore";
 import useTargetTopicStore from "../store/useTargetTopicStore";
 //component
 import CreateTopicModal from "./Topic/createTopicModal.vue";
-import PreviewTopicModal from "./Topic/previewTopicModal.vue";
-import EditTopicModal from "./Topic/editTopicModal.vue";
 import StatusSelect from "./module/StatusSelect.vue";
 //composable
-import { isOpenCreateRef, isOpenPreviewRef, isOpenEditRef, controlOpen } from "../composable/modalControl"
+import { isOpenCreateRef, controlOpen } from "../composable/modalControl"
 //model
 import { TopicModel } from "../models/TopicModel"
 //define
@@ -46,7 +44,6 @@ const router = useRouter();
 //define store
 const userStore = useUserStore();
 const targetTopicStore = useTargetTopicStore();
-// const targetTopic = targetTopicStore.targetTopic;
 //logic
 const headers = ['タイトル', '状態', '更新日'];
 

@@ -18,11 +18,11 @@
 </template>
 
 <script setup lang="ts">
-import 'mavon-editor/dist/css/index.css'
+// import 'mavon-editor/dist/css/index.css';
 import useUserStore from "../../store/useUserStore";
 import {createToolbar} from "../../settings/mavonEditor";
-import {title, content, registerTopic, imgAdd,stopEvent,clearForm}from "../../composable/post"
-import{controlOpen}from"../../composable/modalControl"
+import {title, content, registerTopic, imgAdd,stopEvent,clearForm}from "../../composable/post";
+import{controlOpen}from"../../composable/modalControl";
 
 const userStore = useUserStore();
 

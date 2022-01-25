@@ -19,12 +19,11 @@
 <script setup lang="ts">
 //vue plugin
 import { computed } from 'vue';
-import 'mavon-editor/dist/css/index.css'
+// import 'mavon-editor/dist/css/index.css'
 //firebase
 //store
 import useUserStore from "../../store/useUserStore";
 import useTargetHistoryStore from "../../store/useTargetHistoryStore";
-
 //component
 //composable
 import {url, content,files, updateHistory, imgAdd,stopEvent,clearForm}from "../../composable/post";

@@ -9,7 +9,12 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "lib": ["esnext", "dom"]
+    "lib": ["esnext", "dom"],
+    "types": [
+      "jest"
+    ],
   },
-  "include": ["functions/**/*.ts","src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+
+  "include": ["functions/**/*.ts","src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue","src/tests/**/*.ts",
+    "src/tests/**/*.tsx", "src/tests/unit/Counter.spe.ts"]
 }

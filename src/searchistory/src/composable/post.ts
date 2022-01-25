@@ -48,7 +48,6 @@ const imgAdd = async (_: string, imgfile: File) => {
   files.value = afterFiles;
   console.log("▼【ログ】files.value");
   console.log(files.value);
-
 };
 // フォームリセット
 const clearForm = () => {

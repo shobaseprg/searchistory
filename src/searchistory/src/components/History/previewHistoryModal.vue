@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 //vue plugin
-import 'mavon-editor/dist/css/index.css'
+// import 'mavon-editor/dist/css/index.css'
 //firebase
 //store
 import useUserStore from "../../store/useUserStore";

@@ -1,5 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import AuthForm from "../../components/Auth/AuthForm.vue"
+
+import { createApp, ref } from "vue";
+import { createPinia } from 'pinia'
 
 import Home from "./components/Home.vue";
 import SignUp from "./components/Auth/SignUp.vue";
@@ -55,5 +59,9 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+
+// router.beforeEach((to, from, next) => {
+//   createApp(AuthForm).use(createPinia())
+// })
 
 export default router;
