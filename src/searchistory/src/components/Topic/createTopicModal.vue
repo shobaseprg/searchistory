@@ -11,7 +11,6 @@
         <mavon-editor :toolbars="createToolbar" @imgAdd="imgAdd" language="en" v-model="content" />
       </div>
       <button @click="registerTopic(userStore.uid,userStore.name)">登録</button>
-
       <button @click="controlOpen(false,  MODAL_TYPE.TOPIC_CREATE);clearForm()">閉じる</button>
     </div>
   </div>

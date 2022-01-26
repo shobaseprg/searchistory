@@ -1,7 +1,7 @@
 
 
 import { defineStore } from "pinia";
-import { getFirestore, getDocs, collection, getDoc, doc } from "firebase/firestore";
+import { getFirestore, getDocs, collection, getDoc, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/config"
 
 type User = {
@@ -17,7 +17,7 @@ export default defineStore("useUserStore", {
       name: "",
       uid: "",
       email: "",
-      memberEmails: []
+      memberEmails: [""],
     };
   },
   getters: {
@@ -28,13 +28,20 @@ export default defineStore("useUserStore", {
       this.uid = uid;
     },
     async setUserInfo(uid: string) {
-      const docRef = doc(db, "user", uid);
-      const docSnap = await getDoc(docRef);
-      const userData = docSnap.data() ?? {};
-      this.uid = userData.uid;
-      this.email = userData.email;
-      this.name = userData.name;
-      this.memberEmails = userData.memberEmails;
+
+      // const docRef = doc(db, "user", uid);
+      // const docSnap = await getDoc(docRef);
+      // const userData = docSnap.data() ?? {};
+      onSnapshot(doc(db, "user", uid), async (doc) => {
+        const userData = doc.data() ?? {};
+
+        this.uid = userData.uid;
+        this.email = userData.email;
+        this.name = userData.name;
+        this.memberEmails = userData.memberEmails;
+      }
+      )
     }
-  },
-});
+  }
+}
+)

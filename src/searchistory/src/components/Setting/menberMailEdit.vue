@@ -8,6 +8,7 @@
       <p>チームメンバーメール</p>
       <div class="flex"></div>
       <!-- <button @click="controlOpen(true,MODAL_TYPE.MEMBER_EMAIL)">チームメンバーメールを登録</button> -->
+          <input type="text" v-model="newMemberEmail"><button @click="addMemberEmail"> 追加</button>
       <!-- <button @click>更新</button> -->
       <button @click="controlOpen(false, MODAL_TYPE.MEMBER_EMAIL);">閉じる</button>
     </div>
@@ -16,12 +17,12 @@
 
 <script setup lang="ts">
 //vue plugin
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, computed } from "vue";
 import { useRoute, useRouter } from 'vue-router'
 //firebase
 import { db } from "../../firebase/config";
 import { getAuth, signOut } from 'firebase/auth';
-import { getFirestore, getDoc, collection, doc } from "firebase/firestore";
+import { getFirestore, getDoc, collection, doc,setDoc } from "firebase/firestore";
 import { controlOpen, MODAL_TYPE, isOpenMemberEmailRef } from "../../composable/modalControl";
 //store
 import useUserStore from "../../store/useUserStore";
@@ -30,25 +31,47 @@ import useUserStore from "../../store/useUserStore";
 //model
 //define
 const router = useRouter()
-const auth = getAuth();
 //define store
 const userStore = useUserStore();
 
 //logic
+  const myUserDocRef = doc(db, "user", userStore.uid);
+
+  const newMemberEmail =ref("");
+
+  const userInfo = computed(()=>{
+    return userStore
+  })
+
+const addMemberEmail=async()=>{
+  // console.log("▼【ログ】userInfo");
+  // console.log(userInfo);
+  // console.log("▼【ログ】userInfo.value");
+  // console.log(userInfo.value);
+  // console.log("▼【ログ】userInfo.value.memberEmails");
+  // console.log(userInfo.value.memberEmails);
+  // // console.log("▼【ログ】");
+  // // console.log();
+  // console.log("▼【ログ】newMemberEmail.value");
+  // console.log(newMemberEmail.value);
+
+  userInfo.value.memberEmails.push(newMemberEmail.value);
+  //   console.log("▼【ログ】newMemberEmailList");
+  // console.log(newMemberEmailList);
+  await setDoc(myUserDocRef, {
+      memberEmails:userInfo.value.memberEmails
+    }, { merge: true });
+}
 
 onBeforeMount(async () => {
-  const docRef = doc(db, "user", userStore.uid);
-  console.log("▼【ログ】userStore.uid");
-  console.log(userStore.uid);
 
-  const docSnap = await getDoc(docRef);
-
-  if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
-  } else {
-    // doc.data() will be undefined in this case
-    console.log("No such document!");
-  }
+  // const docSnap = await getDoc(myUserDocRef);
+  // if (docSnap.exists()) {
+  //   console.log("Document data:", docSnap.data());
+  // } else {
+  //   // doc.data() will be undefined in this case
+  //   console.log("No such document!");
+  // }
 
 });
 const stopEvent = (event: any) => {
