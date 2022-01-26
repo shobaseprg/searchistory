@@ -7,8 +7,16 @@
     <div class="border-2 border-black z-[2] w-[50%] p-[1em] bg-white" @click="stopEvent">
       <p>チームメンバーメール</p>
       <div class="flex"></div>
+      <div v-for="memberEmail in userInfo.memberEmails">
+        <div class="flex">
+          <div>{{ memberEmail }}</div>
+          <button>編集</button>
+          <button @click="deleteEmail(memberEmail)">削除</button>
+        </div>
+      </div>
       <!-- <button @click="controlOpen(true,MODAL_TYPE.MEMBER_EMAIL)">チームメンバーメールを登録</button> -->
-          <input type="text" v-model="newMemberEmail"><button @click="addMemberEmail"> 追加</button>
+      <input type="text" v-model="newMemberEmail" />
+      <button @click="addMemberEmail">追加</button>
       <!-- <button @click>更新</button> -->
       <button @click="controlOpen(false, MODAL_TYPE.MEMBER_EMAIL);">閉じる</button>
     </div>
@@ -22,7 +30,7 @@ import { useRoute, useRouter } from 'vue-router'
 //firebase
 import { db } from "../../firebase/config";
 import { getAuth, signOut } from 'firebase/auth';
-import { getFirestore, getDoc, collection, doc,setDoc } from "firebase/firestore";
+import { getFirestore, getDoc, collection, doc, setDoc } from "firebase/firestore";
 import { controlOpen, MODAL_TYPE, isOpenMemberEmailRef } from "../../composable/modalControl";
 //store
 import useUserStore from "../../store/useUserStore";
@@ -35,45 +43,35 @@ const router = useRouter()
 const userStore = useUserStore();
 
 //logic
-  const myUserDocRef = doc(db, "user", userStore.uid);
+const userInfo = computed(() => {
+  return userStore
+})
 
-  const newMemberEmail =ref("");
+// メール追加
+const myUserDocRef = doc(db, "user", userStore.uid);
+const newMemberEmail = ref("");
 
-  const userInfo = computed(()=>{
-    return userStore
-  })
-
-const addMemberEmail=async()=>{
-  // console.log("▼【ログ】userInfo");
-  // console.log(userInfo);
-  // console.log("▼【ログ】userInfo.value");
-  // console.log(userInfo.value);
-  // console.log("▼【ログ】userInfo.value.memberEmails");
-  // console.log(userInfo.value.memberEmails);
-  // // console.log("▼【ログ】");
-  // // console.log();
-  // console.log("▼【ログ】newMemberEmail.value");
-  // console.log(newMemberEmail.value);
-
+const addMemberEmail = async () => {
   userInfo.value.memberEmails.push(newMemberEmail.value);
-  //   console.log("▼【ログ】newMemberEmailList");
-  // console.log(newMemberEmailList);
   await setDoc(myUserDocRef, {
-      memberEmails:userInfo.value.memberEmails
-    }, { merge: true });
+    memberEmails: userInfo.value.memberEmails
+  }, { merge: true });
+  newMemberEmail.value = "";
 }
 
-onBeforeMount(async () => {
+// メール削除
+const deleteEmail = async (deleteEmail: string) => {
+  const deletedEmails = userInfo.value.memberEmails.filter((email) => {
+    return email !== deleteEmail;
+  }
+  )
+  await setDoc(myUserDocRef, {
+    memberEmails: deletedEmails
+  }, { merge: true });
+};
 
-  // const docSnap = await getDoc(myUserDocRef);
-  // if (docSnap.exists()) {
-  //   console.log("Document data:", docSnap.data());
-  // } else {
-  //   // doc.data() will be undefined in this case
-  //   console.log("No such document!");
-  // }
 
-});
+
 const stopEvent = (event: any) => {
   event.stopPropagation();
 };

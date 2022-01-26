@@ -36,7 +36,7 @@ import useTargetTopicStore from "../store/useTargetTopicStore";
 import CreateTopicModal from "./Topic/createTopicModal.vue";
 import StatusSelect from "./module/StatusSelect.vue";
 //composable
-import { isOpenTopicCreateRef, controlOpen, MODAL_TYPE,  } from "../composable/modalControl"
+import { isOpenTopicCreateRef, controlOpen, MODAL_TYPE, } from "../composable/modalControl"
 //model
 import { TopicModel } from "../models/TopicModel"
 //define
@@ -61,7 +61,8 @@ let unsubscribe: Unsubscribe;
 
 onBeforeMount(async () => {
   const q = query(collection(db, "topic"), where("uid", "==", userStore.uid), orderBy('updatedAt', 'desc'));
-
+  console.log("onsnap")
+  console.log(userStore.uid)
   unsubscribe = onSnapshot(q, (querySnapshot) => {
     myTopics.value = [];
     querySnapshot.forEach((doc) => {

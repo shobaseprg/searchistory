@@ -28,13 +28,8 @@ export default defineStore("useUserStore", {
       this.uid = uid;
     },
     async setUserInfo(uid: string) {
-
-      // const docRef = doc(db, "user", uid);
-      // const docSnap = await getDoc(docRef);
-      // const userData = docSnap.data() ?? {};
       onSnapshot(doc(db, "user", uid), async (doc) => {
         const userData = doc.data() ?? {};
-
         this.uid = userData.uid;
         this.email = userData.email;
         this.name = userData.name;
