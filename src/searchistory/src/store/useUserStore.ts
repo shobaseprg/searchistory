@@ -4,11 +4,10 @@ import { defineStore } from "pinia";
 import { getFirestore, getDocs, collection, getDoc, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/config"
 
-type User = {
+type Member = {
   uid: string;
   email: string;
   name: string;
-  memberEmails: string[]
 };
 
 export default defineStore("useUserStore", {
@@ -17,7 +16,7 @@ export default defineStore("useUserStore", {
       name: "",
       uid: "",
       email: "",
-      memberEmails: [""],
+      members: [{ uid: "", email: "", name: "" }],
     };
   },
   getters: {
@@ -33,7 +32,7 @@ export default defineStore("useUserStore", {
         this.uid = userData.uid;
         this.email = userData.email;
         this.name = userData.name;
-        this.memberEmails = userData.memberEmails;
+        this.members = userData.members;
       }
       )
     }

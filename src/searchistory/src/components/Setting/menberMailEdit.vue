@@ -7,11 +7,11 @@
     <div class="border-2 border-black z-[2] w-[50%] p-[1em] bg-white" @click="stopEvent">
       <p>チームメンバーメール</p>
       <div class="flex"></div>
-      <div v-for="memberEmail in userInfo.memberEmails">
+      <div v-for="member in userInfo.members">
         <div class="flex">
-          <div>{{ memberEmail }}</div>
+          <div>{{ member.email }}</div>
           <button>編集</button>
-          <button @click="deleteEmail(memberEmail)">削除</button>
+          <button @click="deleteEmail(member.email)">削除</button>
         </div>
       </div>
       <!-- <button @click="controlOpen(true,MODAL_TYPE.MEMBER_EMAIL)">チームメンバーメールを登録</button> -->
@@ -36,6 +36,7 @@ import { controlOpen, MODAL_TYPE, isOpenMemberEmailRef } from "../../composable/
 import useUserStore from "../../store/useUserStore";
 //component
 //composable
+import checkExistEmail from "../../composable/checkExistEmail";
 //model
 //define
 const router = useRouter()
@@ -48,21 +49,38 @@ const userInfo = computed(() => {
 })
 
 // メール追加
-const myUserDocRef = doc(db, "user", userStore.uid);
 const newMemberEmail = ref("");
+const myUserDocRef = doc(db, "user", userStore.uid);
 
 const addMemberEmail = async () => {
-  userInfo.value.memberEmails.push(newMemberEmail.value);
-  await setDoc(myUserDocRef, {
-    memberEmails: userInfo.value.memberEmails
-  }, { merge: true });
+  const nme = newMemberEmail.value
   newMemberEmail.value = "";
+  const { isExist, memberInfo } = await checkExistEmail(nme)
+  alert(memberInfo);
+  if (!isExist) {
+    alert("そのメールアドレスは存在しません。");
+  } else {
+    const memberInfoObj: {
+      uid: string;
+      email: string;
+      name: string;
+    } = {
+      uid: memberInfo.uid,
+      name: memberInfo.name,
+      email: memberInfo.email
+    }
+    userInfo.value.members.push(memberInfoObj);
+    await setDoc(myUserDocRef, {
+      members: userInfo.value.members
+    }, { merge: true });
+    alert("追加しました。");
+  }
 }
 
 // メール削除
 const deleteEmail = async (deleteEmail: string) => {
-  const deletedEmails = userInfo.value.memberEmails.filter((email) => {
-    return email !== deleteEmail;
+  const deletedEmails = userInfo.value.members.filter((member) => {
+    return member.email !== deleteEmail;
   }
   )
   await setDoc(myUserDocRef, {

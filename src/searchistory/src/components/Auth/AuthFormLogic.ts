@@ -19,7 +19,7 @@ export default (props: any, useUserStore: any) => {
       name: name.value,
       uid: uid,
       email: email,
-      memberEmails: [],
+      members: [],
     })
   }
 
@@ -30,7 +30,7 @@ export default (props: any, useUserStore: any) => {
   const getPageTitle = () => {
     return props.isSignUp ? "新規登録" : "ログイン";
   }
-
+  // サインイン
   const signin = async (isTest: boolean = false) => {
     if (isTest) {
       email.value = "1@g.com";
@@ -48,7 +48,7 @@ export default (props: any, useUserStore: any) => {
         return false;
       });
   };
-
+  // サインアップ
   const signup = () => {
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email.value, password.value)

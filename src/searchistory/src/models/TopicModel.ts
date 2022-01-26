@@ -23,12 +23,13 @@ const TOPIC_STATUS_WORD = {
 } as const
 
 import { PostCoreModel, FileInfo } from "./PostCoreModel"
+import { Member } from '../types/Member';
 
 class TopicModel extends PostCoreModel {
   readonly title: string = "";
   readonly status: TopicStatus = "pending";
   readonly statusWord: TopicStatusWord = "未決";
-  readonly authorizedUsers: Array<String> = [];
+  readonly authorizedUsers: Array<Member> = [];
 
   constructor(topicObj: DocumentData | "default") {
     super(topicObj);
@@ -76,7 +77,6 @@ class TopicModel extends PostCoreModel {
     files: FileInfo[],
     docID: string
   ) {
-
     const { existFiles, deleteFiles } = super.splitFiles(files, content);
     super.deleteImgFromStorage(deleteFiles);
     const updateTopicRef = doc(db, 'topic', docID);
@@ -86,6 +86,13 @@ class TopicModel extends PostCoreModel {
       content,
       files: existFiles,
       updatedAt: serverTimestamp(),
+    }, { merge: true });
+  }
+  // 権限更新
+  async updateMembers(authorizedUsers: Member[]) {
+    const updateTopicRef = doc(db, 'topic', this.docID);
+    await setDoc(updateTopicRef, {
+      authorizedUsers
     }, { merge: true });
   }
 }
