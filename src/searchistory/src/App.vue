@@ -4,7 +4,7 @@
 </template>
 
 <script setup lang="ts">
-import Header from "./components/layout/Header.vue";
+import Header from "./components/Layout/Header.vue";
 import { useRoute } from 'vue-router'
 
 const route = useRoute()

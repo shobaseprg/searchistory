@@ -29,11 +29,13 @@ import { useRouter } from "vue-router";
 //firebase
 import { db } from "../firebase/config";
 import { orderBy, onSnapshot, collection, query, where, Unsubscribe } from "firebase/firestore";
+import { getAuth, Auth } from 'firebase/auth';
+
 //store
 import useUserStore from "../store/useUserStore";
 import useTargetTopicStore from "../store/useTargetTopicStore";
 //component
-import CreateTopicModal from "./Topic/createTopicModal.vue";
+import CreateTopicModal from "./Topic/CreateTopicModal.vue";
 import StatusSelect from "./module/StatusSelect.vue";
 //composable
 import { isOpenTopicCreateRef, controlOpen, MODAL_TYPE, } from "../composable/modalControl"
@@ -41,6 +43,7 @@ import { isOpenTopicCreateRef, controlOpen, MODAL_TYPE, } from "../composable/mo
 import { TopicModel } from "../models/TopicModel"
 //define
 const router = useRouter();
+const auth: Auth = getAuth();
 //define store
 const userStore = useUserStore();
 const targetTopicStore = useTargetTopicStore();
@@ -60,19 +63,34 @@ const myTopics = ref<Array<TopicModel>>([])
 let unsubscribe: Unsubscribe;
 
 onBeforeMount(async () => {
-  const q = query(collection(db, "topic"), where("uid", "==", userStore.uid), orderBy('updatedAt', 'desc'));
-  console.log("onsnap")
-  console.log(userStore.uid)
-  unsubscribe = onSnapshot(q, (querySnapshot) => {
-    myTopics.value = [];
-    querySnapshot.forEach((doc) => {
-      const addTopic = new TopicModel(doc.data(({ serverTimestamps: "estimate" })))
-      if (targetTopic.value.docID === addTopic.docID) {
-        targetTopicStore.setTargetTopic(addTopic);
-      }
-      myTopics.value.push(addTopic);
-    });
-  });
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      const uid = auth.currentUser?.uid
+      const q = query(collection(db, "topic"), where("uid", "==", uid), orderBy('updatedAt', 'desc'));
+      console.log("topic onsnap")
+      unsubscribe = onSnapshot(q, (querySnapshot) => {
+        myTopics.value = [];
+        querySnapshot.forEach((doc) => {
+          const addTopic = new TopicModel(doc.data(({ serverTimestamps: "estimate" })))
+          if (targetTopic.value.docID === addTopic.docID) {
+            targetTopicStore.setTargetTopic(addTopic);
+          }
+          myTopics.value.push(addTopic);
+        });
+      });
+    }
+  })
 });
 
 </script>
+
+
+var unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    // ログインしていれば中通る
+    console.log(user); // ユーザー情報が表示される
+  }
+
+  // 登録解除
+  unsubscribe();
+});

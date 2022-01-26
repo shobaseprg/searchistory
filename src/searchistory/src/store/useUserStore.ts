@@ -21,7 +21,7 @@ export default defineStore("useUserStore", {
     };
   },
   getters: {
-    uidPlusMark: (state) => state.uid + "!",
+    user: (state) => state.uid + "!",
   },
   actions: {
     change_uid(uid: string) {

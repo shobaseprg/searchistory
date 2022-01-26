@@ -3,10 +3,10 @@
   <CreateHistoryModal v-if="isOpenHistoryCreateRef" />
   <PreviewHistoryModal v-if="isOpenHistoryPreviewRef" />
   <EditHistoryModal v-if="isOpenHistoryEditRef" />
-
+  <AuthorityModal v-if="isOpenAuthorityRef" />
   <!-- ベース -->
   <div class="w-[100%] h-[calc(100%-30px)] border-2 border-blue-600 flex">
-    <!-- プレビュー -->
+    <!-- プレビュートピックエリア -->
     <div class="w-[50%] h-[100%]">
       <mavon-editor
         class="h-[calc(100%-60px)]"
@@ -17,6 +17,7 @@
         v-model="targetTopic.content"
       />
       <button @click="controlOpen(true, MODAL_TYPE.TOPIC_EDIT)">編集する</button>
+      <button @click="controlOpen(true, MODAL_TYPE.AUTHORITY)">権限ユーザーを追加</button>
     </div>
     <!-- リスト -->
     <div class="w-[50%]">
@@ -30,7 +31,12 @@
         </thead>
         <!-- 1行 -->
         <tbody>
-          <tr  @click="setTargetHistory(history)" v-for="(history) in histories" :key="history.docID" class="border-2 border-black">
+          <tr
+            @click="setTargetHistory(history)"
+            v-for="(history) in histories"
+            :key="history.docID"
+            class="border-2 border-black"
+          >
             <td>{{ history.url }}</td>
             <td>
               <p>historyStatus</p>
@@ -55,13 +61,14 @@ import { orderBy, onSnapshot, collection, query, where, Unsubscribe } from "fire
 import useTargetTopicStore from "../../store/useTargetTopicStore"
 import useTargetHistoryStore from "../../store/useTargetHistoryStore"
 //component
-import EditTopicModal from "../Topic/editTopicModal.vue";
-import CreateHistoryModal from "./createHistoryModal.vue";
-import PreviewHistoryModal from "./previewHistoryModal.vue";
-import EditHistoryModal from "./editHistoryModal.vue";
+import EditTopicModal from "../Topic/EditTopicModal.vue";
+import CreateHistoryModal from "./CreateHistoryModal.vue";
+import PreviewHistoryModal from "./PreviewHistoryModal.vue";
+import EditHistoryModal from "./EditHistoryModal.vue";
+import AuthorityModal from "./AuthorityModal.vue";
 
 //composable
-import { controlOpen, isOpenTopicEditRef, isOpenHistoryCreateRef ,isOpenHistoryPreviewRef,isOpenHistoryEditRef,MODAL_TYPE} from "../../composable/modalControl"
+import { controlOpen, isOpenTopicEditRef, isOpenHistoryCreateRef, isOpenHistoryPreviewRef, isOpenHistoryEditRef, isOpenAuthorityRef, MODAL_TYPE } from "../../composable/modalControl"
 import { HistoryModel } from "../../models/HistoryModel";
 //model
 //define
@@ -98,7 +105,7 @@ onBeforeMount(async () => {
   });
 });
 
-const setTargetHistory=(history:HistoryModel)=>{
+const setTargetHistory = (history: HistoryModel) => {
   targetHistoryStore.setTargetHistory(history);
   controlOpen(true, MODAL_TYPE.HISTORY_PREVIEW)
 }
