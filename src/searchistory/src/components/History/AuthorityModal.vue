@@ -67,8 +67,13 @@ const members: ComputedRef<Member[]> = computed(() => {
 })
 
 const outMembers = computed(() => {
+  const authorizedEmails = authorizedUsers.value.map((user) => {
+    return user.email
+  }
+  )
   return members.value.filter((member: Member) => {
-    return !authorizedUsers.value.includes(member)
+    console.log(member.email);
+    return !authorizedEmails.includes(member.email)
   }
   );
 })
