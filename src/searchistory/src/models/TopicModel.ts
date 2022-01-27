@@ -7,6 +7,7 @@ import {
 } from 'firebase/firestore';
 
 import { db } from "../firebase/config";
+import { getMemberInfoList } from "../composable/getUserInfoFromUID";
 
 type TopicStatus = 'pending' | 'finish'
 
@@ -29,7 +30,8 @@ class TopicModel extends PostCoreModel {
   readonly title: string = "";
   readonly status: TopicStatus = "pending";
   readonly statusWord: TopicStatusWord = "未決";
-  readonly authorizedUsers: Array<Member> = [];
+  readonly authorizedUIDs: Array<string> = [];
+  authorizedMemberInfos: Array<Member> = [];
 
   constructor(topicObj: DocumentData | "default") {
     super(topicObj);
@@ -41,7 +43,7 @@ class TopicModel extends PostCoreModel {
         this.title = topicObj.title;
         this.status = topicObj.status;
         this.statusWord = TOPIC_STATUS_WORD[this.status];
-        this.authorizedUsers = topicObj.authorizedUsers;
+        this.authorizedUIDs = topicObj.authorizedUIDs;
     }
   }
 
@@ -62,7 +64,7 @@ class TopicModel extends PostCoreModel {
       content,
       uid,
       name,
-      authorizedUsers: [],
+      authorizedUIDs: [uid],
       status: TOPIC_STATUS.PENDING,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
@@ -89,11 +91,20 @@ class TopicModel extends PostCoreModel {
     }, { merge: true });
   }
   // 権限更新
-  async updateMembers(authorizedUsers: Member[]) {
+  async updateMembers(authorizedMemberInfos: Member[], uid: string) {
+    const authorizedUIDs = authorizedMemberInfos.map((info) => {
+      return info.uid;
+    }
+    )
+    authorizedUIDs.push(uid)
     const updateTopicRef = doc(db, 'topic', this.docID);
     await setDoc(updateTopicRef, {
-      authorizedUsers
+      authorizedUIDs
     }, { merge: true });
+  }
+  // 最新のメンバー情報を格納
+  async setMemberInfo() {
+    this.authorizedMemberInfos = await getMemberInfoList(this.authorizedUIDs)
   }
 }
 export { TopicModel, TopicStatus, TOPIC_STATUS, TOPIC_STATUS_WORD };

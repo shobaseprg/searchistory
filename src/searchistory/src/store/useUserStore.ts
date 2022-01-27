@@ -3,6 +3,7 @@
 import { defineStore } from "pinia";
 import { getFirestore, getDocs, collection, getDoc, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/config"
+import { getMemberInfoList } from "../composable/getUserInfoFromUID";
 
 type Member = {
   uid: string;
@@ -16,7 +17,8 @@ export default defineStore("useUserStore", {
       name: "",
       uid: "",
       email: "",
-      members: [{ uid: "", email: "", name: "" }],
+      memberUIDs: [""],
+      memberInfos: [{ uid: "", name: "", email: "" }],
     };
   },
   getters: {
@@ -32,10 +34,11 @@ export default defineStore("useUserStore", {
         this.uid = userData.uid;
         this.email = userData.email;
         this.name = userData.name;
-        this.members = userData.members;
+        this.memberUIDs = userData.memberUIDs ?? "no data";
+        this.memberInfos = await getMemberInfoList(this.memberUIDs);
       }
       )
-    }
+    },
   }
 }
 )

@@ -6,7 +6,7 @@
     <button @click="controlOpen(true, MODAL_TYPE.PERSONAL_SETTING)">個人設定</button>
   </div>
   <SettingBaseModal v-if="isOpenPersonalSettingRef" />
-  <MemberEmailEdit v-if="isOpenMemberEmailRef" />
+  <MemberEdit v-if="isOpenMemberEditRef" />
 </template>
 
 <script setup lang="ts">
@@ -18,9 +18,9 @@ import { useRoute, useRouter } from 'vue-router'
 import useUserStore from "../../store/useUserStore";
 //component
 //composable
-import { controlOpen, MODAL_TYPE, isOpenPersonalSettingRef, isOpenMemberEmailRef } from '../../composable/modalControl';
+import { controlOpen, MODAL_TYPE, isOpenPersonalSettingRef, isOpenMemberEditRef } from '../../composable/modalControl';
 import SettingBaseModal from "../Setting/settingBaseModal.vue";
-import MemberEmailEdit from "../Setting/menberMailEdit.vue";
+import MemberEdit from "../Setting/MemberEdit.vue";
 
 //model
 //define

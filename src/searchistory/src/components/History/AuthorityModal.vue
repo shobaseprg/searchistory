@@ -1,6 +1,5 @@
 <template>
   <!-- モーダル時背景 -->
-
   <div
     @click="controlOpen(false, MODAL_TYPE.HISTORY_EDIT)"
     class="z-[2000] w-[100%] h-[100%] bg-opacity-[0.5] fixed left-0 top-0 flex items-center justify-center bg-black"
@@ -9,23 +8,25 @@
     <div class="z-[2] w-[80%] h-[80%] p-[1em] bg-white" @click="stopEvent">
       <p>メール追加</p>
       <div class="flex">
+        <!-- 許可ユーザー -->
         <div class="border-2 border-black w-[150px]">
           <draggable
             class="list-group"
-            :list="authorizedUsers"
+            :list="authorizedMemberInfosRemoveMe"
             group="people"
-            @change="updateMembers"
-            item-key="email"
+            @change="update"
+            item-key="uid"
           >
             <template #item="{ element, index }">
-              <div class="border-2 border-blue-500">{{ element.email }} {{ index }}</div>
+              <div class="border-2 border-blue-500">{{ element.email }} {{ element.name }}</div>
             </template>
           </draggable>
         </div>
+        <!-- メンバー -->
         <div class="border-2 border-black w-[150px]">
-          <draggable class="list-group" :list="outMembers" group="people" item-key="email">
+          <draggable class="list-group" :list="outMembers" group="people" item-key="uid">
             <template #item="{ element, index }">
-              <div class="border-2 border-blue-500">{{ element.email }} {{ index }}</div>
+              <div class="border-2 border-blue-500">{{ element.email }} {{ element.name }}</div>
             </template>
           </draggable>
         </div>
@@ -39,7 +40,7 @@
 
 <script setup lang="ts">
 //vue plugin
-import { computed, onBeforeMount, ref, ComputedRef } from 'vue';
+import { computed, onBeforeMount, ref, ComputedRef, onMounted } from 'vue';
 import draggable from "vuedraggable";
 //firebase
 //store
@@ -57,29 +58,27 @@ import { Member } from '../../types/Member';
 //define store
 const targetTopicStore = useTargetTopicStore();
 const userStore = useUserStore()
-//logic
-const authorizedUsers = computed(() => {
-  return targetTopicStore.targetTopic.authorizedUsers
-})
 
-const members: ComputedRef<Member[]> = computed(() => {
-  return userStore.members
-})
+const authorizedMemberInfosRemoveMe = ref<Member[]>([]);
+const outMembers = ref<Member[]>([]);
 
-const outMembers = computed(() => {
-  const authorizedEmails = authorizedUsers.value.map((user) => {
-    return user.email
+onMounted(() => {
+  const authorizedMemberInfos = [...targetTopicStore.targetTopic.authorizedMemberInfos];
+  authorizedMemberInfosRemoveMe.value = authorizedMemberInfos.filter((memberInfo) => {
+    return userStore.uid !== memberInfo.uid;
   }
   )
-  return members.value.filter((member: Member) => {
-    console.log(member.email);
-    return !authorizedEmails.includes(member.email)
+  const authorizedMemberUIDs = authorizedMemberInfosRemoveMe.value.map((memberInfo) => {
+    return memberInfo.uid
   }
-  );
+  )
+  outMembers.value = [...userStore.memberInfos].filter((memberInfo) => {
+    return !authorizedMemberUIDs.includes(memberInfo.uid)
+  })
 })
 
-const updateMembers = () => {
-  targetTopicStore.targetTopic.updateMembers(authorizedUsers.value);
+const update = () => {
+  targetTopicStore.targetTopic.updateMembers(authorizedMemberInfosRemoveMe.value, userStore.uid);
 };
 </script>
 

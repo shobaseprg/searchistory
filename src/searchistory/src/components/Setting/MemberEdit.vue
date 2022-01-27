@@ -1,24 +1,23 @@
 <template>
   <!-- モーダル時背景 -->
   <div
-    @click="controlOpen(false, MODAL_TYPE.MEMBER_EMAIL)"
+    @click="controlOpen(false, MODAL_TYPE.MEMBER_EDIT)"
     class="z-[3000] w-[100%] h-[100%] bg-opacity-[0.5] fixed left-0 top-0 flex items-center justify-center"
   >
     <div class="border-2 border-black z-[2] w-[50%] p-[1em] bg-white" @click="stopEvent">
       <p>チームメンバーメール</p>
       <div class="flex"></div>
-      <div v-for="member in userInfo.members">
+      <div v-for="memberInfo in userInfo.memberInfos">
         <div class="flex">
-          <div>{{ member.email }}</div>
-          <button>編集</button>
-          <button @click="deleteEmail(member.email)">削除</button>
+          <div>{{ memberInfo.name }}:{{ memberInfo.email }}</div>
+          <!-- <button>編集</button> -->
+          <button @click="deleteMember(memberInfo.uid)">削除</button>
         </div>
       </div>
-      <!-- <button @click="controlOpen(true,MODAL_TYPE.MEMBER_EMAIL)">チームメンバーメールを登録</button> -->
       <input type="text" v-model="newMemberEmail" />
       <button @click="addMemberEmail">追加</button>
       <!-- <button @click>更新</button> -->
-      <button @click="controlOpen(false, MODAL_TYPE.MEMBER_EMAIL);">閉じる</button>
+      <button @click="controlOpen(false, MODAL_TYPE.MEMBER_EDIT);">閉じる</button>
     </div>
   </div>
 </template>
@@ -30,13 +29,14 @@ import { useRoute, useRouter } from 'vue-router'
 //firebase
 import { db } from "../../firebase/config";
 import { getAuth, signOut } from 'firebase/auth';
-import { getFirestore, getDoc, collection, doc, setDoc } from "firebase/firestore";
-import { controlOpen, MODAL_TYPE, isOpenMemberEmailRef } from "../../composable/modalControl";
+import { getFirestore, getDoc, collection, doc, setDoc, arrayRemove } from "firebase/firestore";
+import { controlOpen, MODAL_TYPE, isOpenMemberEditRef } from "../../composable/modalControl";
 //store
 import useUserStore from "../../store/useUserStore";
 //component
 //composable
 import checkExistEmail from "../../composable/checkExistEmail";
+
 //model
 //define
 const router = useRouter()
@@ -56,39 +56,27 @@ const addMemberEmail = async () => {
   const nme = newMemberEmail.value
   newMemberEmail.value = "";
   const { isExist, memberInfo } = await checkExistEmail(nme)
-  alert(memberInfo);
   if (!isExist) {
     alert("そのメールアドレスは存在しません。");
   } else {
-    const memberInfoObj: {
-      uid: string;
-      email: string;
-      name: string;
-    } = {
-      uid: memberInfo.uid,
-      name: memberInfo.name,
-      email: memberInfo.email
-    }
-    userInfo.value.members.push(memberInfoObj);
+    userInfo.value.memberUIDs.push(memberInfo.uid);
     await setDoc(myUserDocRef, {
-      members: userInfo.value.members
+      memberUIDs: userInfo.value.memberUIDs
     }, { merge: true });
     alert("追加しました。");
   }
 }
 
-// メール削除
-const deleteEmail = async (deleteEmail: string) => {
-  const deletedEmails = userInfo.value.members.filter((member) => {
-    return member.email !== deleteEmail;
+// メンバー削除
+const deleteMember = async (deleteUid: string) => {
+  const deletedMembers = userInfo.value.memberUIDs.filter((memberUID) => {
+    return memberUID !== deleteUid;
   }
   )
   await setDoc(myUserDocRef, {
-    memberEmails: deletedEmails
+    memberUIDs: deletedMembers
   }, { merge: true });
 };
-
-
 
 const stopEvent = (event: any) => {
   event.stopPropagation();

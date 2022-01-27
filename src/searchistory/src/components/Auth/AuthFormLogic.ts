@@ -19,7 +19,7 @@ export default (props: any, useUserStore: any) => {
       name: name.value,
       uid: uid,
       email: email,
-      members: [],
+      memberUIDs: [],
     })
   }
 

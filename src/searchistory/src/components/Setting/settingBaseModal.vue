@@ -12,7 +12,7 @@
         <button>編集</button>
       </div>
       <p>{{ userInfo.email }}</p>
-      <button @click="controlOpen(true, MODAL_TYPE.MEMBER_EMAIL)">チームメンバーメールを登録</button>
+      <button @click="controlOpen(true, MODAL_TYPE.MEMBER_EDIT)">チームメンバーメールを登録</button>
       <!-- <button @click>更新</button> -->
       <button @click="controlOpen(false, MODAL_TYPE.PERSONAL_SETTING); clearForm()">閉じる</button>
     </div>

@@ -6,7 +6,7 @@ const checkExistEmail = async (email: string) => {
   const q = query(collection(db, "user"), where("email", "==", email));
   const querySnapshot = await getDocs(q);
   if (querySnapshot.docs.length == 0) {
-    return { isExist: false, memberInfo: {} }
+    return { isExist: false, memberInfo: { name: "", email: "", uid: "" } }
   } else {
     return { isExist: true, memberInfo: querySnapshot.docs[0].data() }
   }

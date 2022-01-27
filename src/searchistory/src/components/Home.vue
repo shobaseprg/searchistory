@@ -70,8 +70,9 @@ onBeforeMount(async () => {
       console.log("topic onsnap")
       unsubscribe = onSnapshot(q, (querySnapshot) => {
         myTopics.value = [];
-        querySnapshot.forEach((doc) => {
+        querySnapshot.forEach(async (doc) => {
           const addTopic = new TopicModel(doc.data(({ serverTimestamps: "estimate" })))
+          addTopic.setMemberInfo();
           if (targetTopic.value.docID === addTopic.docID) {
             targetTopicStore.setTargetTopic(addTopic);
           }
@@ -82,15 +83,6 @@ onBeforeMount(async () => {
   })
 });
 
+
+
 </script>
-
-
-var unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    // ログインしていれば中通る
-    console.log(user); // ユーザー情報が表示される
-  }
-
-  // 登録解除
-  unsubscribe();
-});
