@@ -51,10 +51,11 @@ import useTargetTopicStore from "../store/useTargetTopicStore";
 import CreateTopicModal from "./Topic/CreateTopicModal.vue";
 import StatusSelect from "./module/StatusSelect.vue";
 //composable
-import { isOpenTopicCreateRef, controlOpen, MODAL_TYPE, } from "../composable/modalControl"
-import filterUnit from "../composable/topicFilter"
+import { isOpenTopicCreateRef, controlOpen, MODAL_TYPE, } from "../composable/modalControl";
+import filterUnit from "../composable/topicFilter";
+import onSnapList from "../composable/onSnapList";
 //model
-import { TopicModel, TOPIC_STATUS, TOPIC_STATUS_WORD } from "../models/TopicModel"
+import { TopicModel, TOPIC_STATUS, TOPIC_STATUS_WORD } from "../models/TopicModel";
 //define
 const router = useRouter();
 const auth: Auth = getAuth();
@@ -80,42 +81,54 @@ let unsubscribe: Unsubscribe;
 
 const uid = auth.currentUser?.uid
 
+// リスト取得
+const q = query(collection(db, "topic"), where("authorizedUIDs", "array-contains", uid), orderBy('updatedAt', 'desc'));
+
+const getInstanceFunc = (change: DocumentChange<DocumentData>) => {
+  const addTopic = new TopicModel(change.doc.data(({ serverTimestamps: "estimate" })))
+  addTopic.setMemberInfo();
+  return addTopic;
+}
+
 onBeforeMount(async () => {
   auth.onAuthStateChanged((user) => {
     if (user) {
-      const q = query(collection(db, "topic"), where("authorizedUIDs", "array-contains", uid), orderBy('updatedAt', 'desc'));
+      onSnapList(
+        { q, getInstanceFunc, list: topics, targetState: targetTopic, targetStore: targetTopicStore }
+      );
+      // const q = query(collection(db, "topic"), where("authorizedUIDs", "array-contains", uid), orderBy('updatedAt', 'desc'));
 
-      const getNewInstance = (change: DocumentChange<DocumentData>) => {
-        const addTopic = new TopicModel(change.doc.data(({ serverTimestamps: "estimate" })))
-        addTopic.setMemberInfo();
-        return addTopic;
-      }
+      // const getNewInstance = (change: DocumentChange<DocumentData>) => {
+      //   const addTopic = new TopicModel(change.doc.data(({ serverTimestamps: "estimate" })))
+      //   addTopic.setMemberInfo();
+      //   return addTopic;
+      // }
 
-      unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.docChanges().forEach(async (change) => {
-          console.log("foreach")
-          // added
-          if (change.type == "added") {
-            const addTopic = getNewInstance(change)
-            topics.value.push(addTopic);
-            if (targetTopic.value.docID === addTopic.docID) {
-              targetTopicStore.setTarget(addTopic);
-            }
-          }
-          // modified
-          if (change.type == "modified") {
-            const modifyTopic = getNewInstance(change)
-            const modifyIndex = topics.value.findIndex((topic) => {
-              return topic.docID === modifyTopic.docID
-            }
-            )
-            topics.value[modifyIndex] = modifyTopic;
-            if (targetTopic.value.docID === modifyTopic.docID) {
-              targetTopicStore.setTarget(modifyTopic);
-            }
-          }
-        });
-      });
+      // unsubscribe = onSnapshot(q, (querySnapshot) => {
+      //   querySnapshot.docChanges().forEach(async (change) => {
+      //     console.log("foreach")
+      //     // added
+      //     if (change.type == "added") {
+      //       const addTopic = getNewInstance(change)
+      //       topics.value.push(addTopic);
+      //       if (targetTopic.value.docID === addTopic.docID) {
+      //         targetTopicStore.setTarget(addTopic);
+      //       }
+      //     }
+      //     // modified
+      //     if (change.type == "modified") {
+      //       const modifyTopic = getNewInstance(change)
+      //       const modifyIndex = topics.value.findIndex((topic) => {
+      //         return topic.docID === modifyTopic.docID
+      //       }
+      //       )
+      //       topics.value[modifyIndex] = modifyTopic;
+      //       if (targetTopic.value.docID === modifyTopic.docID) {
+      //         targetTopicStore.setTarget(modifyTopic);
+      //       }
+      //     }
+      //   });
+      // });
     }
   })
 });

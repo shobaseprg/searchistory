@@ -7,16 +7,17 @@ import { HistoryModel } from '../models/HistoryModel';
 import { TopicModel } from '../models/TopicModel';
 import { PostCoreModel } from '../models/PostCoreModel'
 
-type SnapType = "history" | "topic";
-
 const onSnapList = async (
-  query: Query<DocumentData>,
-  getInstanceFunc: (change: DocumentChange<DocumentData>) => TopicModel | HistoryModel,
-  list: Ref<PostCoreModel[]>,
-  targetState: ComputedRef,
-  targetStore: any,
+  { q, getInstanceFunc, list, targetState, targetStore }:
+    {
+      q: Query<DocumentData>,
+      getInstanceFunc: (change: DocumentChange<DocumentData>) => TopicModel | HistoryModel,
+      list: Ref<PostCoreModel[]>,
+      targetState: ComputedRef,
+      targetStore: any,
+    }
 ) => {
-  onSnapshot(query, (querySnapshot) => {
+  return onSnapshot(q, (querySnapshot) => {
     querySnapshot.docChanges().forEach((change) => {
 
       // added
