@@ -42,7 +42,7 @@ import { ref, onBeforeMount, onBeforeUnmount, computed } from "vue";
 import { useRouter } from "vue-router";
 //firebase
 import { db } from "../firebase/config";
-import { orderBy, onSnapshot, collection, query, where, Unsubscribe } from "firebase/firestore";
+import { orderBy, onSnapshot, collection, query, where, Unsubscribe, DocumentChange, DocumentData } from "firebase/firestore";
 import { getAuth, Auth } from 'firebase/auth';
 //store
 import useUserStore from "../store/useUserStore";
@@ -67,7 +67,7 @@ const headers = ['タイトル', '状態', '更新日'];
 
 // ----------------------------- トピック -----------------------------
 const setTargetTopic = (topic: TopicModel) => {
-  targetTopicStore.setTargetTopic(topic);
+  targetTopicStore.setTarget(topic);
 };
 
 const targetTopic = computed(() => {
@@ -83,30 +83,35 @@ const uid = auth.currentUser?.uid
 onBeforeMount(async () => {
   auth.onAuthStateChanged((user) => {
     if (user) {
-      const q = query(collection(db, "topic"), where("authorizedUIDs"
-        , "array-contains", uid), orderBy('updatedAt', 'desc'));
+      const q = query(collection(db, "topic"), where("authorizedUIDs", "array-contains", uid), orderBy('updatedAt', 'desc'));
+
+      const getNewInstance = (change: DocumentChange<DocumentData>) => {
+        const addTopic = new TopicModel(change.doc.data(({ serverTimestamps: "estimate" })))
+        addTopic.setMemberInfo();
+        return addTopic;
+      }
+
       unsubscribe = onSnapshot(q, (querySnapshot) => {
         querySnapshot.docChanges().forEach(async (change) => {
           console.log("foreach")
           // added
           if (change.type == "added") {
-            const addTopic = new TopicModel(change.doc.data(({ serverTimestamps: "estimate" })))
-            addTopic.setMemberInfo();
+            const addTopic = getNewInstance(change)
             topics.value.push(addTopic);
             if (targetTopic.value.docID === addTopic.docID) {
-              targetTopicStore.setTargetTopic(addTopic);
+              targetTopicStore.setTarget(addTopic);
             }
           }
           // modified
           if (change.type == "modified") {
-            const modifyTopic = new TopicModel(change.doc.data(({ serverTimestamps: "estimate" })))
+            const modifyTopic = getNewInstance(change)
             const modifyIndex = topics.value.findIndex((topic) => {
               return topic.docID === modifyTopic.docID
             }
             )
             topics.value[modifyIndex] = modifyTopic;
             if (targetTopic.value.docID === modifyTopic.docID) {
-              targetTopicStore.setTargetTopic(modifyTopic);
+              targetTopicStore.setTarget(modifyTopic);
             }
           }
         });
@@ -114,14 +119,6 @@ onBeforeMount(async () => {
     }
   })
 });
-
-// onBeforeUnmount(() => {
-//   console.log("unmount")
-//   unsubscribe();
-// }
-// )
-
-// )
 // ----------------------------- 検索-----------------------------
 const { filterWord, filterStatus, matchTopics, changeFilterOwner } = filterUnit(topics, uid)
 

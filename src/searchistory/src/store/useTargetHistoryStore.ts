@@ -10,7 +10,7 @@ export default defineStore("useTargetHistoryStore", {
   getters: {
   },
   actions: {
-    setTargetHistory(topic: HistoryModel) {
+    setTarget(topic: HistoryModel) {
       this.targetHistory = topic;
     },
   },

@@ -57,7 +57,7 @@ import { useRouter } from 'vue-router'
 //firebase
 import { getAuth, signOut } from 'firebase/auth';
 import { db } from "../../firebase/config";
-import { orderBy, onSnapshot, collection, query, where, Unsubscribe } from "firebase/firestore";
+import { orderBy, onSnapshot, collection, query, where, Unsubscribe, DocumentChange, DocumentData } from "firebase/firestore";
 //store
 import useTargetTopicStore from "../../store/useTargetTopicStore"
 import useTargetHistoryStore from "../../store/useTargetHistoryStore"
@@ -74,8 +74,6 @@ import { HistoryModel } from "../../models/HistoryModel";
 import historyFilter from "../../composable/historyFilter"
 //model
 //define
-const router = useRouter()
-const auth = getAuth();
 //define store
 const targetTopicStore = useTargetTopicStore()
 const targetHistoryStore = useTargetHistoryStore()
@@ -98,28 +96,31 @@ const histories = ref<HistoryModel[]>([]);
 onBeforeMount(async () => {
   const q = query(collection(db, "topic", targetTopic.value.docID, "history"), orderBy('updatedAt', 'desc'));
 
+  const getNewInstance = (change: DocumentChange<DocumentData>) => {
+    return new HistoryModel(change.doc.data(({ serverTimestamps: "estimate" })));
+  }
+
   unsubscribe = onSnapshot(q, (querySnapshot) => {
-    // histories.value = [];
     querySnapshot.docChanges().forEach((change) => {
 
       // added
       if (change.type == "added") {
-        const addHistory = new HistoryModel(change.doc.data(({ serverTimestamps: "estimate" })));
+        const addHistory = getNewInstance(change);
         histories.value.push(addHistory);
         if (targetHistory.value.docID === addHistory.docID) {
-          targetHistoryStore.setTargetHistory(targetHistory.value);
+          targetHistoryStore.setTarget(targetHistory.value);
         }
       }
       // modified
       if (change.type == "modified") {
-        const modifyHistory = new HistoryModel(change.doc.data(({ serverTimestamps: "estimate" })))
+        const modifyHistory = getNewInstance(change);
         const modifyIndex = histories.value.findIndex((history) => {
           return history.docID === modifyHistory.docID
         }
         )
         histories.value[modifyIndex] = modifyHistory;
         if (targetHistory.value.docID === modifyHistory.docID) {
-          targetHistoryStore.setTargetHistory(modifyHistory);
+          targetHistoryStore.setTarget(modifyHistory);
         }
       }
     });
@@ -132,7 +133,7 @@ onBeforeUnmount(() => {
 })
 
 const setTargetHistory = (history: HistoryModel) => {
-  targetHistoryStore.setTargetHistory(history);
+  targetHistoryStore.setTarget(history);
   controlOpen(true, MODAL_TYPE.HISTORY_PREVIEW)
 }
 // ----------------------------- 検索-----------------------------
