@@ -72,6 +72,7 @@ import AuthorityModal from "./AuthorityModal.vue";
 import { controlOpen, isOpenTopicEditRef, isOpenHistoryCreateRef, isOpenHistoryPreviewRef, isOpenHistoryEditRef, isOpenAuthorityRef, MODAL_TYPE } from "../../composable/modalControl"
 import { HistoryModel } from "../../models/HistoryModel";
 import historyFilter from "../../composable/historyFilter"
+import onSnapList from "../../composable/onSnapList";
 //model
 //define
 //define store
@@ -93,38 +94,17 @@ let unsubscribe: Unsubscribe;
 
 const histories = ref<HistoryModel[]>([]);
 
+// リスト取得
+const q = query(collection(db, "topic", targetTopic.value.docID, "history"), orderBy('updatedAt', 'desc'));
+
+const getInstanceFunc = (change: DocumentChange<DocumentData>) => {
+  return new HistoryModel(change.doc.data(({ serverTimestamps: "estimate" })));
+}
+
 onBeforeMount(async () => {
-  const q = query(collection(db, "topic", targetTopic.value.docID, "history"), orderBy('updatedAt', 'desc'));
-
-  const getNewInstance = (change: DocumentChange<DocumentData>) => {
-    return new HistoryModel(change.doc.data(({ serverTimestamps: "estimate" })));
-  }
-
-  unsubscribe = onSnapshot(q, (querySnapshot) => {
-    querySnapshot.docChanges().forEach((change) => {
-
-      // added
-      if (change.type == "added") {
-        const addHistory = getNewInstance(change);
-        histories.value.push(addHistory);
-        if (targetHistory.value.docID === addHistory.docID) {
-          targetHistoryStore.setTarget(targetHistory.value);
-        }
-      }
-      // modified
-      if (change.type == "modified") {
-        const modifyHistory = getNewInstance(change);
-        const modifyIndex = histories.value.findIndex((history) => {
-          return history.docID === modifyHistory.docID
-        }
-        )
-        histories.value[modifyIndex] = modifyHistory;
-        if (targetHistory.value.docID === modifyHistory.docID) {
-          targetHistoryStore.setTarget(modifyHistory);
-        }
-      }
-    });
-  });
+  onSnapList(
+    { q, getInstanceFunc, list: histories, targetState: targetHistory, targetStore: targetHistoryStore }
+  );
 });
 
 onBeforeUnmount(() => {

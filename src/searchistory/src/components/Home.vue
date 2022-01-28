@@ -96,39 +96,6 @@ onBeforeMount(async () => {
       onSnapList(
         { q, getInstanceFunc, list: topics, targetState: targetTopic, targetStore: targetTopicStore }
       );
-      // const q = query(collection(db, "topic"), where("authorizedUIDs", "array-contains", uid), orderBy('updatedAt', 'desc'));
-
-      // const getNewInstance = (change: DocumentChange<DocumentData>) => {
-      //   const addTopic = new TopicModel(change.doc.data(({ serverTimestamps: "estimate" })))
-      //   addTopic.setMemberInfo();
-      //   return addTopic;
-      // }
-
-      // unsubscribe = onSnapshot(q, (querySnapshot) => {
-      //   querySnapshot.docChanges().forEach(async (change) => {
-      //     console.log("foreach")
-      //     // added
-      //     if (change.type == "added") {
-      //       const addTopic = getNewInstance(change)
-      //       topics.value.push(addTopic);
-      //       if (targetTopic.value.docID === addTopic.docID) {
-      //         targetTopicStore.setTarget(addTopic);
-      //       }
-      //     }
-      //     // modified
-      //     if (change.type == "modified") {
-      //       const modifyTopic = getNewInstance(change)
-      //       const modifyIndex = topics.value.findIndex((topic) => {
-      //         return topic.docID === modifyTopic.docID
-      //       }
-      //       )
-      //       topics.value[modifyIndex] = modifyTopic;
-      //       if (targetTopic.value.docID === modifyTopic.docID) {
-      //         targetTopicStore.setTarget(modifyTopic);
-      //       }
-      //     }
-      //   });
-      // });
     }
   })
 });
