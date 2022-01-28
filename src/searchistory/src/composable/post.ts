@@ -46,8 +46,6 @@ const imgAdd = async (_: string, imgfile: File) => {
   const { afterContent, afterFiles } = await PostCoreModel.uploadImg(fileData, files.value);
   content.value = afterContent;
   files.value = afterFiles;
-  console.log("▼【ログ】files.value");
-  console.log(files.value);
 };
 // フォームリセット
 const clearForm = () => {

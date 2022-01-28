@@ -19,10 +19,13 @@
     <!-- 1行 -->
     <tbody>
       <tr v-for="(topic) in matchTopics" :key="topic.docID" class="border-2 border-black">
+        <!-- タイトル -->
         <td>{{ topic.title }}</td>
+        <!-- ステータス変更 -->
         <td>
           <StatusSelect :status="topic.status" :docID="topic.docID" />
         </td>
+        <!-- 更新日 -->
         <td>
           {{ topic.updatedAt.format("YYYY-MM-DD") }}
           <span
@@ -30,7 +33,11 @@
             v-if="topic.uid === userStore.uid"
           >me</span>
         </td>
+        <!-- 事案確認 -->
         <td @click="setTargetTopic(topic); router.push('/history')">事案確認</td>
+        <td>
+          <button v-if="topic.uid === userStore.uid" @click="deleteData(topic)">削除</button>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -77,8 +84,6 @@ const targetTopic = computed(() => {
 
 const topics = ref<Array<TopicModel>>([])
 
-let unsubscribe: Unsubscribe;
-
 const uid = auth.currentUser?.uid
 
 // リスト取得
@@ -99,6 +104,12 @@ onBeforeMount(async () => {
     }
   })
 });
+
+// 削除
+const deleteData = (topic: TopicModel) => {
+  topic.delete()
+};
+
 // ----------------------------- 検索-----------------------------
 const { filterWord, filterStatus, matchTopics, changeFilterOwner } = filterUnit(topics, uid)
 

@@ -4,6 +4,7 @@ import {
   doc,
   setDoc,
   DocumentData,
+  deleteDoc
 } from 'firebase/firestore';
 
 import { db } from "../firebase/config";
@@ -92,6 +93,11 @@ class TopicModel extends PostCoreModel {
       updatedAt: serverTimestamp(),
     }, { merge: true });
   }
+  async delete() {
+    const updateTopicRef = doc(db, 'topic', this.docID);
+    await deleteDoc(updateTopicRef)
+
+  };
   // 権限更新
   async updateMembers(authorizedMemberInfos: Member[], uid: string) {
     const authorizedUIDs = authorizedMemberInfos.map((info) => {

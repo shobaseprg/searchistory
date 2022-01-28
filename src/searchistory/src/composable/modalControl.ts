@@ -24,8 +24,6 @@ const MODAL_TYPE = {
 type MODAL_TYPE = typeof MODAL_TYPE[keyof typeof MODAL_TYPE];
 
 const controlOpen = (flag: boolean, type: MODAL_TYPE) => {
-  console.log(type)
-  console.log(flag)
   switch (type) {
     case MODAL_TYPE.TOPIC_CREATE:
       isOpenTopicCreateRef.value = flag;

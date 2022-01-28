@@ -102,7 +102,7 @@ const getInstanceFunc = (change: DocumentChange<DocumentData>) => {
 }
 
 onBeforeMount(async () => {
-  onSnapList(
+  unsubscribe = onSnapList(
     { q, getInstanceFunc, list: histories, targetState: targetHistory, targetStore: targetHistoryStore }
   );
 });

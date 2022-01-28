@@ -7,7 +7,7 @@ import { HistoryModel } from '../models/HistoryModel';
 import { TopicModel } from '../models/TopicModel';
 import { PostCoreModel } from '../models/PostCoreModel'
 
-const onSnapList = async (
+const onSnapList = (
   { q, getInstanceFunc, list, targetState, targetStore }:
     {
       q: Query<DocumentData>,

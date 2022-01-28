@@ -13,10 +13,7 @@ export default defineStore("useTargetTopicStore", {
   },
   actions: {
     setTarget(topic: TopicModel) {
-      console.log("↓ 【ログ】topic"); console.log(topic);
       this.targetTopic = topic;
-      console.log("↓ 【ログ】this.targetTopic"); console.log(this.targetTopic);
-
     }
   }
 }
