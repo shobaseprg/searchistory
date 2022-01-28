@@ -3,7 +3,7 @@
   <button class="border-2 border-black" @click="controlOpen(true, MODAL_TYPE.TOPIC_CREATE)">事案新規作成</button>
   <button class="border-2 border-black" @click="changeFilterOwner('me')">自分のみ</button>
   <button class="border-2 border-black" @click="changeFilterOwner('all')">全て</button>
-  <input type="text" />
+  <input type="text" v-model="filterWord"/>
   <select v-model="filterStatus">
     <option :value="TOPIC_STATUS.ALL">{{ TOPIC_STATUS_WORD.all }}</option>
     <option :value="TOPIC_STATUS.PENDING">{{ TOPIC_STATUS_WORD.pending }}</option>
@@ -81,7 +81,6 @@ const uid = auth.currentUser?.uid
 onBeforeMount(async () => {
   auth.onAuthStateChanged((user) => {
     if (user) {
-      // const uid = auth.currentUser?.uid
       const q = query(collection(db, "topic"), where("authorizedUIDs"
         , "array-contains", uid), orderBy('updatedAt', 'desc'));
       unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -117,6 +116,6 @@ onBeforeUnmount(() => {
 
 // )
 // ----------------------------- 検索-----------------------------
-const { filterStatus, matchTopics, changeFilterOwner } = filterUnit(topics, uid)
+const { filterWord,filterStatus, matchTopics, changeFilterOwner } = filterUnit(topics, uid)
 
 </script>
