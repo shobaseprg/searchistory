@@ -18,7 +18,7 @@
     </thead>
     <!-- 1行 -->
     <tbody>
-      <tr v-for="(topic) in topics" :key="topic.docID" class="border-2 border-black">
+      <tr v-for="(topic) in matchTopics" :key="topic.docID" class="border-2 border-black">
         <td>{{ topic.title }}</td>
         <td>
           <StatusSelect :status="topic.status" :docID="topic.docID" />
@@ -105,16 +105,14 @@ const targetTopic = computed(() => {
 const topics = ref<Array<TopicModel>>([])
 
 let unsubscribe: Unsubscribe;
-
+const uid = auth.currentUser?.uid
 onBeforeMount(async () => {
   auth.onAuthStateChanged((user) => {
     if (user) {
-      const uid = auth.currentUser?.uid
-      const q = query(collection(db, "topic"), where("uid", "==", uid), orderBy('updatedAt', 'desc'));
+      // const uid = auth.currentUser?.uid
+      const q = query(collection(db, "topic"), where("authorizedUIDs"
+        , "array-contains", uid), orderBy('updatedAt', 'desc'));
       unsubscribe = onSnapshot(q, (querySnapshot) => {
-        console.log("↓ 【ログ】before topics"); console.log(JSON.stringify(topics.value));
-
-        // topics.value = [];
         querySnapshot.docChanges().forEach(async (change) => {
           console.log("foreach")
           if (change.type == "added") {
@@ -133,9 +131,6 @@ onBeforeMount(async () => {
             )
             topics.value[modifyIndex] = modifyTopic;
           }
-
-          console.log("↓ 【ログ】after topics"); console.log(JSON.stringify(topics.value));
-
         });
       });
     }
@@ -150,6 +145,6 @@ onBeforeUnmount(() => {
 
 // )
 // ----------------------------- 検索-----------------------------
-const { filterStatus, topicType, matchTopics, changeTopicType, filterStatusChange } = filterUnit(topics)
+const { filterStatus, topicType, matchTopics, changeTopicType, filterStatusChange } = filterUnit(topics, uid)
 
 </script>

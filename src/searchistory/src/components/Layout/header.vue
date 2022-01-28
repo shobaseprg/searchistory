@@ -31,7 +31,9 @@ const userStore = useUserStore();
 //logic
 const signout = () => {
   signOut(auth).then(() => {
-    location.reload
+    console.log("ログアウト")
+    location.reload()
+    // router.push("/signin");
   });
 };
 </script>
