@@ -1,0 +1,14 @@
+{
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "node",
+  "workspaceFolder": "/app",
+  "extensions": [
+    "msjsdiag.debugger-for-chrome",
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig",
+    "streetsidesoftware.code-spell-checker",
+    "johnsoncodehk.volar",
+    "bradlc.vscode-tailwindcss",
+    "shardulm94.trailing-spaces"
+  ]
+}

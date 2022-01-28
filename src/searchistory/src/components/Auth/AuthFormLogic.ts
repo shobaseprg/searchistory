@@ -35,6 +35,7 @@ export default (props: any, useUserStore: any) => {
     if (isTest) {
       email.value = "1@g.com";
       password.value = "11111111";
+      console.log(email)
     }
     return await signInWithEmailAndPassword(auth, email.value, password.value)
       .then(async (userCredential) => {
