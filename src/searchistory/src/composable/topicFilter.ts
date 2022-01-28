@@ -4,7 +4,7 @@ import { TopicModel, TopicStatus, TOPIC_STATUS, TOPIC_STATUS_WORD } from "../mod
 export default (topics: Ref<Array<TopicModel>>, uid: string | undefined) => {
   type ownerType = "all" | "me";
 
-  // ----------------------------- 検索 -----------------------------
+  // ----------------------------- トピック検索 -----------------------------
   const filterWord = ref("");
   const filterOwner = ref<ownerType>("all");
   const changeFilterOwner = (owner: ownerType) => {
@@ -22,8 +22,6 @@ export default (topics: Ref<Array<TopicModel>>, uid: string | undefined) => {
   };
 
   const isMatchWord = (topic: TopicModel) => {
-    console.log("↓ 【ログ】filterWord.value"); console.log(JSON.stringify(filterWord.value, null, 2));
-    console.log("↓ 【ログ】topic.content"); console.log(JSON.stringify(topic.content, null, 2));
     return topic.title.includes(filterWord.value)
   }
 
@@ -33,7 +31,10 @@ export default (topics: Ref<Array<TopicModel>>, uid: string | undefined) => {
         && isMatchWord(topic)
     }
     )
-
   });
-  return { filterStatus, filterOwner, matchTopics, changeFilterOwner, filterWord }
+  // ------------------------------- ヒストリー検索 -------------------------------
+  const urlFilterWord = ref("");
+
+
+  return { filterStatus, filterOwner, matchTopics, changeFilterOwner, filterWord, urlFilterWord }
 }

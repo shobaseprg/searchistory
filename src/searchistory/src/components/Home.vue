@@ -3,7 +3,7 @@
   <button class="border-2 border-black" @click="controlOpen(true, MODAL_TYPE.TOPIC_CREATE)">事案新規作成</button>
   <button class="border-2 border-black" @click="changeFilterOwner('me')">自分のみ</button>
   <button class="border-2 border-black" @click="changeFilterOwner('all')">全て</button>
-  <input type="text" v-model="filterWord"/>
+  <input type="text" v-model="filterWord" />
   <select v-model="filterStatus">
     <option :value="TOPIC_STATUS.ALL">{{ TOPIC_STATUS_WORD.all }}</option>
     <option :value="TOPIC_STATUS.PENDING">{{ TOPIC_STATUS_WORD.pending }}</option>
@@ -77,7 +77,9 @@ const targetTopic = computed(() => {
 const topics = ref<Array<TopicModel>>([])
 
 let unsubscribe: Unsubscribe;
+
 const uid = auth.currentUser?.uid
+
 onBeforeMount(async () => {
   auth.onAuthStateChanged((user) => {
     if (user) {
@@ -86,14 +88,16 @@ onBeforeMount(async () => {
       unsubscribe = onSnapshot(q, (querySnapshot) => {
         querySnapshot.docChanges().forEach(async (change) => {
           console.log("foreach")
+          // added
           if (change.type == "added") {
             const addTopic = new TopicModel(change.doc.data(({ serverTimestamps: "estimate" })))
             addTopic.setMemberInfo();
+            topics.value.push(addTopic);
             if (targetTopic.value.docID === addTopic.docID) {
               targetTopicStore.setTargetTopic(addTopic);
             }
-            topics.value.push(addTopic);
           }
+          // modified
           if (change.type == "modified") {
             const modifyTopic = new TopicModel(change.doc.data(({ serverTimestamps: "estimate" })))
             const modifyIndex = topics.value.findIndex((topic) => {
@@ -101,6 +105,9 @@ onBeforeMount(async () => {
             }
             )
             topics.value[modifyIndex] = modifyTopic;
+            if (targetTopic.value.docID === modifyTopic.docID) {
+              targetTopicStore.setTargetTopic(modifyTopic);
+            }
           }
         });
       });
@@ -108,14 +115,14 @@ onBeforeMount(async () => {
   })
 });
 
-onBeforeUnmount(() => {
-  console.log("unmount")
-  unsubscribe();
-}
-)
+// onBeforeUnmount(() => {
+//   console.log("unmount")
+//   unsubscribe();
+// }
+// )
 
 // )
 // ----------------------------- 検索-----------------------------
-const { filterWord,filterStatus, matchTopics, changeFilterOwner } = filterUnit(topics, uid)
+const { filterWord, filterStatus, matchTopics, changeFilterOwner } = filterUnit(topics, uid)
 
 </script>

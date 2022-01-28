@@ -19,9 +19,10 @@
       <button @click="controlOpen(true, MODAL_TYPE.TOPIC_EDIT)">編集する</button>
       <button @click="controlOpen(true, MODAL_TYPE.AUTHORITY)">権限ユーザーを追加</button>
     </div>
-    <!-- リスト -->
+    <!-- URLリスト -->
     <div class="w-[50%]">
       <button @click="controlOpen(true, MODAL_TYPE.HISTORY_CREATE)">調査履歴を追加</button>
+      <input type="text" v-model="urlFilterWord" />
       <table class="w-[100%]" border="1">
         <!-- テーブルヘッダー -->
         <thead>
@@ -33,7 +34,7 @@
         <tbody>
           <tr
             @click="setTargetHistory(history)"
-            v-for="(history) in histories"
+            v-for="(history) in matchHistory"
             :key="history.docID"
             class="border-2 border-black"
           >
@@ -70,6 +71,7 @@ import AuthorityModal from "./AuthorityModal.vue";
 //composable
 import { controlOpen, isOpenTopicEditRef, isOpenHistoryCreateRef, isOpenHistoryPreviewRef, isOpenHistoryEditRef, isOpenAuthorityRef, MODAL_TYPE } from "../../composable/modalControl"
 import { HistoryModel } from "../../models/HistoryModel";
+import historyFilter from "../../composable/historyFilter"
 //model
 //define
 const router = useRouter()
@@ -84,33 +86,57 @@ const headers = ['URL', '状態', '更新日'];
 const targetTopic = computed(() => {
   return targetTopicStore.targetTopic;
 });
+
 const targetHistory = computed(() => {
   return targetHistoryStore.targetHistory;
 });
+
 let unsubscribe: Unsubscribe;
+
 const histories = ref<HistoryModel[]>([]);
 
 onBeforeMount(async () => {
   const q = query(collection(db, "topic", targetTopic.value.docID, "history"), orderBy('updatedAt', 'desc'));
 
   unsubscribe = onSnapshot(q, (querySnapshot) => {
-    histories.value = [];
-    querySnapshot.forEach((doc) => {
-      const nextHistory = new HistoryModel(doc.data(({ serverTimestamps: "estimate" })));
-      if (targetHistory.value.docID === nextHistory.docID) {
-        targetHistoryStore.setTargetHistory(nextHistory);
+    // histories.value = [];
+    querySnapshot.docChanges().forEach((change) => {
+
+      // added
+      if (change.type == "added") {
+        const addHistory = new HistoryModel(change.doc.data(({ serverTimestamps: "estimate" })));
+        histories.value.push(addHistory);
+        if (targetHistory.value.docID === addHistory.docID) {
+          targetHistoryStore.setTargetHistory(targetHistory.value);
+        }
       }
-      histories.value.push(nextHistory);
+      // modified
+      if (change.type == "modified") {
+        const modifyHistory = new HistoryModel(change.doc.data(({ serverTimestamps: "estimate" })))
+        const modifyIndex = histories.value.findIndex((history) => {
+          return history.docID === modifyHistory.docID
+        }
+        )
+        histories.value[modifyIndex] = modifyHistory;
+        if (targetHistory.value.docID === modifyHistory.docID) {
+          targetHistoryStore.setTargetHistory(modifyHistory);
+        }
+      }
     });
   });
 });
+
+onBeforeUnmount(() => {
+  console.log("unmount")
+  unsubscribe();
+})
 
 const setTargetHistory = (history: HistoryModel) => {
   targetHistoryStore.setTargetHistory(history);
   controlOpen(true, MODAL_TYPE.HISTORY_PREVIEW)
 }
-
-
+// ----------------------------- 検索-----------------------------
+const { urlFilterWord, matchHistory } = historyFilter(histories)
 </script>
 
 <style lang="scss" scoped>

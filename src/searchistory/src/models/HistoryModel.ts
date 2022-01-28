@@ -8,17 +8,19 @@ import {
 
 import { db } from "../firebase/config";
 
-type HistoryStatus = 'pending' | 'unsolved' | 'solved'
+type HistoryStatus = 'all' | 'pending' | 'unsolved' | 'solved'
 
 const HISTORY_STATUS = {
+  ALL: 'all',
   PENDING: 'pending',
   UNSOLVED: 'unsolved',
   SOLVED: 'solved',
 } as const;
 
-type HistoryStatusWord = '未調査' | '未解決' | '解決'
+type HistoryStatusWord = '全て' | '未調査' | '未解決' | '解決'
 
 const HISTORY_STATUS_WORD = {
+  all: "全て",
   pending: "未調査",
   unsolved: "未解決",
   solved: "解決"

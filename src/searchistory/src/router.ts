@@ -32,6 +32,7 @@ const routes = [
     name: "History",
     path: "/history",
     component: HistoryBase,
+    meta: { requiredAuth: true }
   },
 ];
 
