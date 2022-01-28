@@ -19,7 +19,6 @@ const onSnapList = (
 ) => {
   return onSnapshot(q, (querySnapshot) => {
     querySnapshot.docChanges().forEach((change) => {
-
       // added
       if (change.type == "added") {
         const addData = getInstanceFunc(change)
@@ -28,7 +27,6 @@ const onSnapList = (
           targetStore.setTarget(addData);
         }
       }
-
       // modified
       if (change.type == "modified") {
         const modifyData = getInstanceFunc(change)
@@ -37,12 +35,21 @@ const onSnapList = (
         }
         )
         list.value[modifyIndex] = modifyData;
+
         if (targetState.value.docID === modifyData.docID) {
           targetStore.setTarget(modifyData);
         }
       }
+      //   delete
+      if (change.type == "removed") {
+        const deleteData = getInstanceFunc(change)
+        const deleteIndex = list.value.findIndex((data) => {
+          return data.docID === deleteData.docID
+        })
+        delete list.value[deleteIndex]
+      }
     })
-  });
-};
+  })
+}
 
 export default onSnapList;

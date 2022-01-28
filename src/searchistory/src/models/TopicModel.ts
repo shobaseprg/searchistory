@@ -93,6 +93,7 @@ class TopicModel extends PostCoreModel {
       updatedAt: serverTimestamp(),
     }, { merge: true });
   }
+  // 削除
   async delete() {
     const updateTopicRef = doc(db, 'topic', this.docID);
     await deleteDoc(updateTopicRef)
