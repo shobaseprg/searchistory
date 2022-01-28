@@ -9,16 +9,18 @@ import {
 import { db } from "../firebase/config";
 import { getMemberInfoList } from "../composable/getUserInfoFromUID";
 
-type TopicStatus = 'pending' | 'finish'
+type TopicStatus = 'all' | 'pending' | 'finish'
 
 const TOPIC_STATUS = {
+  ALL: 'all',
   PENDING: 'pending',
   FINISH: 'finish',
 } as const;
 
-type TopicStatusWord = '未決' | '解決済'
+type TopicStatusWord = '全て' | '未決' | '解決済'
 
 const TOPIC_STATUS_WORD = {
+  all: "全て",
   pending: "未決",
   finish: "解決済"
 } as const
@@ -28,8 +30,8 @@ import { Member } from '../types/Member';
 
 class TopicModel extends PostCoreModel {
   readonly title: string = "";
-  readonly status: TopicStatus = "pending";
-  readonly statusWord: TopicStatusWord = "未決";
+  readonly status: TopicStatus = TOPIC_STATUS.PENDING;
+  readonly statusWord: TopicStatusWord = TOPIC_STATUS_WORD.pending;
   readonly authorizedUIDs: Array<string> = [];
   authorizedMemberInfos: Array<Member> = [];
 

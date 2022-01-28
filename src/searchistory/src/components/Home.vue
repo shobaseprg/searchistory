@@ -1,13 +1,13 @@
 <template>
   <CreateTopicModal v-if="isOpenTopicCreateRef" />
   <button class="border-2 border-black" @click="controlOpen(true, MODAL_TYPE.TOPIC_CREATE)">事案新規作成</button>
-  <button class="border-2 border-black" @click="changeTopicType('me')">自分のみ</button>
-  <button class="border-2 border-black" @click="changeTopicType('all')">全て</button>
+  <button class="border-2 border-black" @click="changeFilterOwner('me')">自分のみ</button>
+  <button class="border-2 border-black" @click="changeFilterOwner('all')">全て</button>
   <input type="text" />
-  <select v-model="filterStatus" v-on:change="filterStatusChange()">
-    <option value="全て">全て</option>
-    <option value="未決">未決</option>
-    <option value="解決済">解決済み</option>
+  <select v-model="filterStatus">
+    <option :value="TOPIC_STATUS.ALL">{{ TOPIC_STATUS_WORD.all }}</option>
+    <option :value="TOPIC_STATUS.PENDING">{{ TOPIC_STATUS_WORD.pending }}</option>
+    <option :value="TOPIC_STATUS.FINISH">{{ TOPIC_STATUS_WORD.finish }}</option>
   </select>
   <table class="w-[100%]" border="1">
     <!-- テーブルヘッダー -->
@@ -54,7 +54,7 @@ import StatusSelect from "./module/StatusSelect.vue";
 import { isOpenTopicCreateRef, controlOpen, MODAL_TYPE, } from "../composable/modalControl"
 import filterUnit from "../composable/topicFilter"
 //model
-import { TopicModel } from "../models/TopicModel"
+import { TopicModel, TOPIC_STATUS, TOPIC_STATUS_WORD } from "../models/TopicModel"
 //define
 const router = useRouter();
 const auth: Auth = getAuth();
@@ -64,34 +64,6 @@ const userStore = useUserStore();
 const targetTopicStore = useTargetTopicStore();
 //logic
 const headers = ['タイトル', '状態', '更新日'];
-
-type TopicType = "all" | "me";
-
-// // ----------------------------- 検索 -----------------------------
-// const filterStatus = ref("全て");
-// const topicType = ref<TopicType>("all");
-
-// const filterStatusChange = () => {
-
-// };
-
-// const changeTopicType = (type: TopicType) => {
-//   topicType.value = type;
-// };
-
-// const isTypeMatch = (topic: TopicModel) => {
-//   if (topicType.value === "all") true;
-//   if (topicType.value === "me" && topic.uid === userStore.uid) true;
-//   return false;
-// }
-
-// const matchTopics = computed(() => {
-//   return topics.value.filter((topic) => {
-//     isTypeMatch(topic)
-//   }
-//   )
-
-// });
 
 // ----------------------------- トピック -----------------------------
 const setTargetTopic = (topic: TopicModel) => {
@@ -145,6 +117,6 @@ onBeforeUnmount(() => {
 
 // )
 // ----------------------------- 検索-----------------------------
-const { filterStatus, topicType, matchTopics, changeTopicType, filterStatusChange } = filterUnit(topics, uid)
+const { filterStatus, matchTopics, changeFilterOwner } = filterUnit(topics, uid)
 
 </script>

@@ -1,34 +1,35 @@
 import { ref, onBeforeMount, onBeforeUnmount, computed, Ref } from "vue";
-import { TopicModel } from "../models/TopicModel"
-
+import { TopicModel, TopicStatus, TOPIC_STATUS, TOPIC_STATUS_WORD } from "../models/TopicModel"
 
 export default (topics: Ref<Array<TopicModel>>, uid: string | undefined) => {
-  type TopicType = "all" | "me";
+  type ownerType = "all" | "me";
+
   // ----------------------------- 検索 -----------------------------
-  const filterStatus = ref("全て");
-  const topicType = ref<TopicType>("all");
-  const filterStatusChange = () => {
+  const filterOwner = ref<ownerType>("all");
+  const changeFilterOwner = (owner: ownerType) => {
+    filterOwner.value = owner;
   };
 
-  const changeTopicType = (type: TopicType) => {
-    topicType.value = type;
-  };
+  const filterStatus = ref<TopicStatus>(TOPIC_STATUS.ALL);
+  // const changeFilterStatus = () => {
+  //   filterStatus.value =
+  // };
 
-  const isTypeMatch = (topic: TopicModel) => {
-    console.log("↓ 【ログ】topicType.value"); console.log(JSON.stringify(topicType.value, null, 2));
-    console.log("↓ 【ログ】topic.uid"); console.log(JSON.stringify(topic.uid, null, 2));
-    console.log("↓ 【ログ】uid"); console.log(JSON.stringify(uid, null, 2));
-
-
-    return topicType.value === "all" || (topicType.value === "me" && topic.uid === uid);
+  const isOwnerMatch = (topic: TopicModel) => {
+    return filterOwner.value === "all" || (filterOwner.value === "me" && topic.uid === uid);
   }
+
+  const isStatusMatch = (topic: TopicModel) => {
+    return filterStatus.value === "all" || (filterStatus.value === topic.status);
+  };
+
 
   const matchTopics = computed(() => {
     return topics.value.filter((topic: TopicModel) => {
-      return isTypeMatch(topic)
+      return isOwnerMatch(topic) && isStatusMatch(topic)
     }
     )
 
   });
-  return { filterStatus, topicType, matchTopics, changeTopicType, filterStatusChange }
+  return { filterStatus, filterOwner, matchTopics, changeFilterOwner }
 }
