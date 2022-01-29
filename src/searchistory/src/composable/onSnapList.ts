@@ -1,7 +1,6 @@
 import { Ref, ComputedRef, ref } from "vue";
 //firebase
 
-
 import { onSnapshot, Query, DocumentData, QueryDocumentSnapshot } from "firebase/firestore"
 import { HistoryModel } from '../models/HistoryModel';
 import { TopicModel } from '../models/TopicModel';
@@ -20,18 +19,6 @@ const onSnapList = (
       targetStore: any,
     }
 ) => {
-  // return onSnapshot(q, (querySnapshot) => {
-  //   list.value = []
-  //   console.log("on snap")
-  //   querySnapshot.forEach(doc => {
-  //     console.log("foreach")
-  //     const addData = getInstanceFunc(doc);
-  //     list.value.push(addData);
-  //     if (targetState.value.docID === addData.docID) {
-  //       targetStore.setTarget(addData);
-  //     }
-  //   });
-  // })
   return onSnapshot(q, (querySnapshot) => {
     querySnapshot.docChanges().forEach((change) => {
       const clone = [...list.value];
@@ -73,11 +60,8 @@ const onSnapList = (
       console.log("list.value");
       console.log(list.value)
     })
-
+    list.value.sort((a, b) => a.updatedAt < b.updatedAt ? 1 : -1)
   })
-
-
-
 }
 
 export { onSnapList, topics };

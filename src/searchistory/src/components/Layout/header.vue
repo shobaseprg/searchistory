@@ -37,7 +37,9 @@ const route = useRoute()
 //define store
 const userStore = useUserStore();
 const targetTopicStore = useTargetTopicStore()
+
 //logic
+
 // サインアウト
 const signout = () => {
   signOut(auth).then(() => {

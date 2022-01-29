@@ -8,15 +8,10 @@
 <script setup lang="ts">
 
 import { ref } from "vue";
-import { firebaseApp } from "../../firebase/config";
-import { getAuth, signOut } from 'firebase/auth';
-import { setDoc, getFirestore, getDocs, collection, doc, serverTimestamp } from "firebase/firestore";
-import { useRoute, useRouter } from 'vue-router'
+import { db } from "../../firebase/config"
+import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { TOPIC_STATUS, TOPIC_STATUS_WORD, TopicStatus } from "../../models/TopicModel"
 
-const router = useRouter()
-const db = getFirestore(firebaseApp);
-const auth = getAuth();
 interface Props {
   status: TopicStatus,
   docID: string,
