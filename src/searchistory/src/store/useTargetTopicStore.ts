@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { TopicModel } from "../models/TopicModel"
-import { getMemberInfoList } from "../composable/getUserInfoFromUID";
 
 export default defineStore("useTargetTopicStore", {
   state: () => {

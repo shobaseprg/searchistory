@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { HistoryModel } from "../models/HistoryModel"
+import { HistoryModel, HistoryStatus } from "../models/HistoryModel"
 import { TopicModel } from "../models/TopicModel"
 import { FileInfo, PostCoreModel } from "../models/PostCoreModel"
 import { controlOpen, MODAL_TYPE } from "./modalControl";
@@ -31,8 +31,8 @@ const registerHistory = async (uid: string, name: string, topicDocID: string) =>
   controlOpen(false, MODAL_TYPE.HISTORY_CREATE);
 }
 // history更新
-const updateHistory = async (targetHistory: HistoryModel) => {
-  await HistoryModel.update(url.value, content.value, files.value, targetHistory.files, targetHistory.docID, targetHistory.topicDocID)
+const updateHistory = async (targetHistory: HistoryModel, selectedStatus: HistoryStatus) => {
+  await HistoryModel.update(url.value, content.value, files.value, targetHistory.files, targetHistory.docID, targetHistory.topicDocID, selectedStatus)
   clearForm();
   alert("更新しました。");
   controlOpen(false, MODAL_TYPE.HISTORY_EDIT);

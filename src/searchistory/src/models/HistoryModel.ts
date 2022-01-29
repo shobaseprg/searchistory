@@ -4,6 +4,7 @@ import {
   doc,
   setDoc,
   DocumentData,
+  deleteDoc
 } from 'firebase/firestore';
 
 import { db } from "../firebase/config";
@@ -81,6 +82,7 @@ class HistoryModel extends PostCoreModel {
     files: FileInfo[],
     docID: string,
     topicDocID: string,
+    status: HistoryStatus
   ) {
     const margeFiles = [...targetHistoryFiles, ...files]
     const { existFiles, deleteFiles } = super.splitFiles(margeFiles, content);
@@ -92,7 +94,14 @@ class HistoryModel extends PostCoreModel {
       content,
       files: existFiles,
       updatedAt: serverTimestamp(),
+      status
     }, { merge: true });
   }
+  // 削除
+  async delete(topicDocID: string) {
+    const updateHistoryRef = doc(db, 'topic', topicDocID, 'history', this.docID);
+    await deleteDoc(updateHistoryRef)
+
+  };
 }
 export { HistoryModel, HistoryStatus, HISTORY_STATUS, HISTORY_STATUS_WORD };

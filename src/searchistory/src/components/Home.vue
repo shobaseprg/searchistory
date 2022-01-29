@@ -45,11 +45,8 @@
 
 <script setup lang="ts">
 //vue plugin
-import { ref, onBeforeMount, onBeforeUnmount, computed } from "vue";
 import { useRouter } from "vue-router";
 //firebase
-import { db } from "../firebase/config";
-import { orderBy, onSnapshot, collection, query, where, Unsubscribe, DocumentChange, DocumentData } from "firebase/firestore";
 import { getAuth, Auth } from 'firebase/auth';
 //store
 import useUserStore from "../store/useUserStore";
@@ -60,7 +57,7 @@ import StatusSelect from "./module/StatusSelect.vue";
 //composable
 import { isOpenTopicCreateRef, controlOpen, MODAL_TYPE, } from "../composable/modalControl";
 import filterUnit from "../composable/topicFilter";
-import onSnapList from "../composable/onSnapList";
+import { topics } from "../composable/onSnapList";
 //model
 import { TopicModel, TOPIC_STATUS, TOPIC_STATUS_WORD } from "../models/TopicModel";
 //define
@@ -78,32 +75,7 @@ const setTargetTopic = (topic: TopicModel) => {
   targetTopicStore.setTarget(topic);
 };
 
-const targetTopic = computed(() => {
-  return targetTopicStore.targetTopic;
-});
-
-const topics = ref<Array<TopicModel>>([])
-
 const uid = auth.currentUser?.uid
-
-// リスト取得
-const q = query(collection(db, "topic"), where("authorizedUIDs", "array-contains", uid), orderBy('updatedAt', 'desc'));
-
-const getInstanceFunc = (change: DocumentChange<DocumentData>) => {
-  const addTopic = new TopicModel(change.doc.data(({ serverTimestamps: "estimate" })))
-  addTopic.setMemberInfo();
-  return addTopic;
-}
-
-onBeforeMount(async () => {
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      onSnapList(
-        { q, getInstanceFunc, list: topics, targetState: targetTopic, targetStore: targetTopicStore }
-      );
-    }
-  })
-});
 
 // 削除
 const deleteData = (topic: TopicModel) => {

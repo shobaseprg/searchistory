@@ -38,9 +38,11 @@
             :key="history.docID"
             class="border-2 border-black"
           >
+            <!-- URL -->
             <td>{{ history.url }}</td>
+            <!-- 状態 -->
             <td>
-              <p>historyStatus</p>
+              <p>{{ history.statusWord }}</p>
             </td>
             <td>{{ history.updatedAt.format("YYYY-MM-DD") }}</td>
           </tr>
@@ -57,7 +59,7 @@ import { useRouter } from 'vue-router'
 //firebase
 import { getAuth, signOut } from 'firebase/auth';
 import { db } from "../../firebase/config";
-import { orderBy, onSnapshot, collection, query, where, Unsubscribe, DocumentChange, DocumentData } from "firebase/firestore";
+import { orderBy, onSnapshot, collection, query, where, Unsubscribe, DocumentChange, DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 //store
 import useTargetTopicStore from "../../store/useTargetTopicStore"
 import useTargetHistoryStore from "../../store/useTargetHistoryStore"
@@ -72,7 +74,7 @@ import AuthorityModal from "./AuthorityModal.vue";
 import { controlOpen, isOpenTopicEditRef, isOpenHistoryCreateRef, isOpenHistoryPreviewRef, isOpenHistoryEditRef, isOpenAuthorityRef, MODAL_TYPE } from "../../composable/modalControl"
 import { HistoryModel } from "../../models/HistoryModel";
 import historyFilter from "../../composable/historyFilter"
-import onSnapList from "../../composable/onSnapList";
+import { onSnapList } from "../../composable/onSnapList";
 //model
 //define
 //define store
@@ -97,8 +99,8 @@ const histories = ref<HistoryModel[]>([]);
 // リスト取得
 const q = query(collection(db, "topic", targetTopic.value.docID, "history"), orderBy('updatedAt', 'desc'));
 
-const getInstanceFunc = (change: DocumentChange<DocumentData>) => {
-  return new HistoryModel(change.doc.data(({ serverTimestamps: "estimate" })));
+const getInstanceFunc = (doc: QueryDocumentSnapshot<DocumentData>) => {
+  return new HistoryModel(doc.data(({ serverTimestamps: "estimate" })));
 }
 
 onBeforeMount(async () => {
