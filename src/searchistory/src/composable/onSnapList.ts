@@ -20,54 +20,64 @@ const onSnapList = (
       targetStore: any,
     }
 ) => {
+  // return onSnapshot(q, (querySnapshot) => {
+  //   list.value = []
+  //   console.log("on snap")
+  //   querySnapshot.forEach(doc => {
+  //     console.log("foreach")
+  //     const addData = getInstanceFunc(doc);
+  //     list.value.push(addData);
+  //     if (targetState.value.docID === addData.docID) {
+  //       targetStore.setTarget(addData);
+  //     }
+  //   });
+  // })
   return onSnapshot(q, (querySnapshot) => {
-    list.value = []
-    console.log("on snap")
-    querySnapshot.forEach(doc => {
-      console.log("foreach")
-      const addData = getInstanceFunc(doc);
-      list.value.push(addData);
-      if (targetState.value.docID === addData.docID) {
-        targetStore.setTarget(addData);
-      }
-    });
-    // querySnapshot.docChanges().forEach((change) => {
-    // added
-    // if (change.type == "added") {
-    //   const addData = getInstanceFunc(change)
-    //   list.value.push(addData);
-    //   if (targetState.value.docID === addData.docID) {
-    //     targetStore.setTarget(addData);
-    //   }
-    //   list.value
-    // }
-    // // modified
-    // if (change.type == "modified") {
-    //   const modifyData = getInstanceFunc(change)
-    //   console.log(list.value.length)
-    //   const modifyIndex = list.value.findIndex((data) => {
-    //     return data.docID === modifyData.docID
-    //   }
-    //   )
-    //   list.value[modifyIndex] = modifyData;
-    //   list.value
+    querySnapshot.docChanges().forEach((change) => {
+      const clone = [...list.value];
+      // added
+      if (change.type == "added") {
+        const addData = getInstanceFunc(change.doc)
+        clone.push(addData);
 
-    //   if (targetState.value.docID === modifyData.docID) {
-    //     targetStore.setTarget(modifyData);
-    //   }
-    // }
-    // //   delete
-    // if (change.type == "removed") {
-    //   const deleteData = getInstanceFunc(change)
-    //   const deleteIndex = list.value.findIndex((data) => {
-    //     console.log(data)
-    //     return data.docID === deleteData.docID
-    //   })
-    //   delete list.value[deleteIndex]
-    //   list.value
-    // }
-    // })
+        console.log("addData")
+        console.log(addData)
+      }
+      // modified
+      if (change.type == "modified") {
+        const modifyData = getInstanceFunc(change.doc)
+        const modifyIndex = clone.findIndex((data) => {
+          return data.docID === modifyData.docID
+        }
+        )
+        clone[modifyIndex] = modifyData;
+        console.log("modifyData")
+        console.log(modifyData)
+
+        if (targetState.value.docID === modifyData.docID) {
+          targetStore.setTarget(modifyData);
+        }
+      }
+      //   delete
+      if (change.type == "removed") {
+        const deleteData = getInstanceFunc(change.doc)
+        const deleteIndex = clone.findIndex((data) => {
+          return data.docID === deleteData.docID
+        })
+        clone.splice(deleteIndex, 1)
+
+        console.log("deleteData")
+        console.log(deleteData)
+      }
+      list.value = clone;
+      console.log("list.value");
+      console.log(list.value)
+    })
+
   })
+
+
+
 }
 
 export { onSnapList, topics };
