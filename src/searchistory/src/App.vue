@@ -9,7 +9,7 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
-const authPage = ["/signin", "/signup"]
+const authPage = ["/signin", "/signup", "/"]
 const isAuthPage = () => {
   return !authPage.includes(route.path)
 }
