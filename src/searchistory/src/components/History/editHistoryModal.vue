@@ -9,6 +9,14 @@
     <div class="z-[2] w-[80%] h-[80%] p-[1em] bg-white" @click="stopEvent">
       <p>URL</p>
       <input type="text" v-model="url" />
+      <!-- 編集フォーム -->
+      <mavon-editor
+        class="z-[2] w-[80%] h-[80%]"
+        :toolbars="createToolbar"
+        @imgAdd="imgAdd"
+        language="en"
+        v-model="content"
+      />
       <button @click="updateHistory(targetHistory, selectedStatus)">更新</button>
       <button @click="controlOpen(false, MODAL_TYPE.HISTORY_EDIT); clearForm();">閉じる</button>
     </div>
@@ -18,6 +26,7 @@
 <script setup lang="ts">
 //vue plugin
 import { computed, ref } from 'vue';
+// import 'mavon-editor/dist/css/index.css'
 //firebase
 //store
 import useTargetHistoryStore from "../../store/useTargetHistoryStore";
@@ -25,6 +34,7 @@ import useTargetHistoryStore from "../../store/useTargetHistoryStore";
 //composable
 import { url, content, files, updateHistory, imgAdd, stopEvent, clearForm } from "../../composable/post";
 import { controlOpen, MODAL_TYPE } from "../../composable/modalControl";
+import { createToolbar } from "../../settings/mavonEditor";
 //model
 //define
 //define store

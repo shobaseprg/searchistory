@@ -48,7 +48,7 @@ class HistoryModel extends PostCoreModel {
         this.topicDocID = topicObj.topicDocID;
     }
   }
-
+  // 登録
   static async register(
     url: string,
     content: string,
@@ -74,7 +74,7 @@ class HistoryModel extends PostCoreModel {
       topicDocID
     });
   }
-
+  // 更新
   static async update(
     url: string,
     content: string,

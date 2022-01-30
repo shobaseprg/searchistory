@@ -17,7 +17,6 @@
       />
       <button @click="controlOpen(false, MODAL_TYPE.HISTORY_PREVIEW)">閉じる</button>
       <button @click="controlOpen(true, MODAL_TYPE.HISTORY_EDIT)">編集する</button>
-      <button v-if="targetHistory.uid === userStore.uid" @click="deleteData">削除</button>
     </div>
   </div>
 </template>
@@ -27,37 +26,23 @@
 // import 'mavon-editor/dist/css/index.css'
 //firebase
 //store
-import useUserStore from "../../store/useUserStore";
 import useTargetHistoryStore from "../../store/useTargetHistoryStore";
-import useTargetTopicStore from "../../store/useTargetTopicStore";
-
 //component
 //composable
-import { url, content, registerHistory, imgAdd, stopEvent } from "../../composable/post";
+import { stopEvent } from "../../composable/post";
 import { controlOpen, MODAL_TYPE } from "../../composable/modalControl";
-import { createToolbar } from "../../settings/mavonEditor";
 import { computed } from 'vue';
 //model
 //define
 //define store
-const userStore = useUserStore();
-const targetTopicStore = useTargetTopicStore();
 const targetHistoryStore = useTargetHistoryStore();
 
 const targetHistory = computed(() => {
   return targetHistoryStore.targetHistory;
 })
-
-const targetTopic = computed(() => {
-  return targetTopicStore.targetTopic;
-})
 //logic
-// 削除
-const deleteData = async () => {
-  await targetHistory.value.delete(targetTopic.value.docID)
-  alert("削除しました。");
-  controlOpen(false, MODAL_TYPE.HISTORY_PREVIEW)
-};
+
+
 </script>
 
 <style lang="" scoped>

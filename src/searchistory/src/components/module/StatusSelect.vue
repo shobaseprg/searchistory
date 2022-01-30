@@ -22,7 +22,6 @@ const selectedStatus = ref(status);
 const statusChange = async () => {
   await setDoc(doc(db, "topic", docID), {
     status: selectedStatus.value,
-    updatedAt: serverTimestamp(),
   }, { merge: true });
 }
 </script>

@@ -4,7 +4,8 @@ import {
   doc,
   setDoc,
   DocumentData,
-  deleteDoc
+  deleteDoc,
+  getDocs
 } from 'firebase/firestore';
 
 import { db } from "../firebase/config";
@@ -28,6 +29,7 @@ const TOPIC_STATUS_WORD = {
 
 import { PostCoreModel, FileInfo } from "./PostCoreModel"
 import { Member } from '../types/Member';
+import { Moment } from 'moment';
 
 class TopicModel extends PostCoreModel {
   readonly title: string = "";
@@ -90,7 +92,6 @@ class TopicModel extends PostCoreModel {
       title,
       content,
       files: existFiles,
-      updatedAt: serverTimestamp(),
     }, { merge: true });
   }
   // 削除
@@ -98,6 +99,13 @@ class TopicModel extends PostCoreModel {
     const updateTopicRef = doc(db, 'topic', this.docID);
     await deleteDoc(updateTopicRef)
 
+    const historyColRef = collection(db, 'topic', this.docID, 'history');
+    const querySnapshot = await getDocs(historyColRef);
+    querySnapshot.forEach(async (doc) => {
+
+      await deleteDoc(doc.ref)
+    }
+    )
   };
   // 権限更新
   async updateMembers(authorizedMemberInfos: Member[], uid: string) {
@@ -114,6 +122,13 @@ class TopicModel extends PostCoreModel {
   // 最新のメンバー情報を格納
   async setMemberInfo() {
     this.authorizedMemberInfos = await getMemberInfoList(this.authorizedUIDs)
+  }
+  // 更新日更新
+  static async updateUpdatedAt(topicDocID: string) {
+    const updateTopicRef = doc(db, 'topic', topicDocID);
+    await setDoc(updateTopicRef, {
+      updatedAt: serverTimestamp(),
+    }, { merge: true });
   }
 }
 export { TopicModel, TopicStatus, TOPIC_STATUS, TOPIC_STATUS_WORD };
