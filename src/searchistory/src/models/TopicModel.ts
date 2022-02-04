@@ -10,6 +10,7 @@ import {
 
 import { db } from "../firebase/config";
 import { getMemberInfoList } from "../composable/getUserInfoFromUID";
+import { sanitize, reSanitize } from "../composable/sanitize"
 
 type TopicStatus = 'all' | 'pending' | 'finish'
 
@@ -29,8 +30,6 @@ const TOPIC_STATUS_WORD = {
 
 import { PostCoreModel, FileInfo } from "./PostCoreModel"
 import { Member } from '../types/Member';
-import { Moment } from 'moment';
-
 class TopicModel extends PostCoreModel {
   readonly title: string = "";
   readonly status: TopicStatus = TOPIC_STATUS.PENDING;
@@ -64,9 +63,11 @@ class TopicModel extends PostCoreModel {
     super.deleteImgFromStorage(deleteFiles);
     const newTopicRef = doc(collection(db, 'topic'));
 
+    const scontent = sanitize(content);
+
     await setDoc(newTopicRef, {
       title,
-      content,
+      content: scontent,
       uid,
       name,
       authorizedUIDs: [uid],
@@ -88,9 +89,11 @@ class TopicModel extends PostCoreModel {
     super.deleteImgFromStorage(deleteFiles);
     const updateTopicRef = doc(db, 'topic', docID);
 
+    const scontent = sanitize(content);
+
     await setDoc(updateTopicRef, {
       title,
-      content,
+      content: scontent,
       files: existFiles,
     }, { merge: true });
   }

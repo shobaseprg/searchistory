@@ -28,8 +28,9 @@ import useTargetTopicStore from "../../store/useTargetTopicStore";
 //component
 //composable
 import { createToolbar } from '../../settings/mavonEditor';
-import { title, content, updateTopic, imgAdd, files, clearForm } from "../../composable/post"
-import { controlOpen, MODAL_TYPE } from "../../composable/modalControl"
+import { title, content, updateTopic, imgAdd, files, clearForm } from "../../composable/post";
+import { controlOpen, MODAL_TYPE } from "../../composable/modalControl";
+import { reSanitize } from "../../composable/sanitize";
 //model
 //define
 //define store
@@ -41,7 +42,7 @@ const targetTopic = computed(() => {
 });
 
 title.value = targetTopic.value.title;
-content.value = targetTopic.value.content;
+content.value = reSanitize(targetTopic.value.content);
 files.value = targetTopic.value.files;
 
 const stopEvent = (event: any) => {

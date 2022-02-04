@@ -73,7 +73,7 @@ class PostCoreModel {
 
     const url = await getDownloadURL(uploadTask.ref)
     const reg = new RegExp('!\\[.*\\]\\(\\d*\\)', 'g');
-    const afterContent = fileData.content.replace(reg, `<img src="${url}">`);
+    const afterContent = fileData.content.replace(reg, `![image](${url})`);
     const afterFiles = [...files, { id, url }]
     return { afterContent, afterFiles }
   }

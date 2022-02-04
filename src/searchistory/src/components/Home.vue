@@ -41,6 +41,7 @@
       </tr>
     </tbody>
   </table>
+  <div v-html="html"></div>>
 </template>
 
 <script setup lang="ts">
@@ -69,6 +70,8 @@ const userStore = useUserStore();
 const targetTopicStore = useTargetTopicStore();
 //logic
 const headers = ['タイトル', '状態', '更新日'];
+
+const html = "```aaaaaaa ```"
 
 // ----------------------------- トピック -----------------------------
 const setTargetTopic = (topic: TopicModel) => {
