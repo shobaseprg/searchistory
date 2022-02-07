@@ -1,8 +1,15 @@
 rules_version = '2';
+  function isUidFieldEquelToLoginUid(){
+    return request.auth.uid == request.resource.data.uid
+  }
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+      match /user/{uid} {
+      allow read: if request.auth != null;
+      allow write: if (request.auth.uid == uid) && isUidFieldEquelToLoginUid();
     }
+  }
+  match /topic/{docID} {
+    allow read, write: if request.auth != null;
   }
 }

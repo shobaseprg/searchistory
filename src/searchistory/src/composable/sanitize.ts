@@ -5,7 +5,7 @@ const sanitize = (originWord: string) => {
   let sanitizedAllWord = ""
 
   for (let i = 0; i < array.length; i++) {
-    const splitReg = /^```\w+\s/
+    const splitReg = /^```.+\s/
     if (!splitReg.test(array[i])) {
       const sanitizedBlockWord = escapeHTML(array[i])
       sanitizedAllWord = sanitizedAllWord + sanitizedBlockWord;
@@ -17,7 +17,7 @@ const sanitize = (originWord: string) => {
 }
 
 const escapeHTML = (word: string) => {
-  return word.replace(/(?<!(media))&(?!(token))?/g, '&lt;')
+  return word.replace(/(?<!(media))&(?!(token))?/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
@@ -25,7 +25,7 @@ const escapeHTML = (word: string) => {
 }
 
 const reSanitize = (sanitizedWord: string) => {
-  return sanitizedWord.replace(/&lt;/g, '&')
+  return sanitizedWord.replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')

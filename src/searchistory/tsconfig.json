@@ -16,5 +16,5 @@
   },
 
   "include": ["functions/**/*.ts","src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue","src/tests/**/*.ts",
-    "src/tests/**/*.tsx", "src/tests/unit/Counter.spe.ts"]
+    "src/tests/**/*.tsx", "src/tests/unit/Counter.spe.ts", "src/__tests__/firebase/firestore.test.js"]
 }
