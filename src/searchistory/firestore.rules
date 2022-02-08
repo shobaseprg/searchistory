@@ -17,12 +17,24 @@ rules_version = '2';
   function isContainProhibitedField(fieldList){
     return incomingData().diff(existingData()).affectedKeys().hasAny(fieldList);
   }
+  function isAvalableFieldOnCreate(fieldList){
+    return incomingData().keys().hasOnly(fieldList)
+  }
 
 service cloud.firestore {
   match /databases/{database}/documents {
       match /user/{docID} {
-      allow create: if isAuth() && docID == myUID() && reqData().uid == myUID()
-      allow update: if isAuth() && docID == myUID() && isContainProhibitedField(["uid"])
+      allow read: if isAuth();
+      allow create:
+        if isAuth()
+        && docID == myUID()
+        && incomingData().uid == myUID()
+        && isAvalableFieldOnCreate(["name","email","uid","memberUIDs"])
+      allow update:
+        if isAuth()
+        && docID == myUID()
+        && isContainProhibitedField(["uid"])
+        && isContainProhibitedField(["uid"])
     }
   }
   match /topic/{docID} {
