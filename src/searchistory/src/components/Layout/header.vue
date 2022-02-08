@@ -45,6 +45,7 @@ const targetTopicStore = useTargetTopicStore()
 const signout = () => {
   signOut(auth).then(() => {
     console.log("ログアウト")
+    router.push("/")
     location.reload()
   });
 };
@@ -91,10 +92,7 @@ const testtopic = () => {
       []
     )
   }
-
 };
-
-
 </script>
 
 <style lang="scss" scoped></style>

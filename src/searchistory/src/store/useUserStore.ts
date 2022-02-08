@@ -5,11 +5,11 @@ import { getFirestore, getDocs, collection, getDoc, doc, onSnapshot } from "fire
 import { db } from "../firebase/config"
 import { getMemberInfoList } from "../composable/getUserInfoFromUID";
 
-type Member = {
-  uid: string;
-  email: string;
-  name: string;
-};
+// type Member = {
+//   uid: string;
+//   email: string;
+//   name: string;
+// };
 
 export default defineStore("useUserStore", {
   state: () => {
@@ -18,7 +18,7 @@ export default defineStore("useUserStore", {
       uid: "",
       email: "",
       memberUIDs: [""],
-      memberInfos: [{ uid: "", name: "", email: "" }],
+      memberInfos: [{ uid: "", name: "" }],
     };
   },
   getters: {
@@ -32,9 +32,13 @@ export default defineStore("useUserStore", {
       onSnapshot(doc(db, "user", uid), async (doc) => {
         const userData = doc.data() ?? {};
         this.uid = userData.uid;
-        this.email = userData.email;
         this.name = userData.name;
-        this.memberUIDs = userData.memberUIDs ?? "no data";
+      }
+      )
+      onSnapshot(doc(db, "userPrivate", uid), async (doc) => {
+        const userPrivateData = doc.data() ?? {};
+        this.email = userPrivateData.email;
+        this.memberUIDs = userPrivateData.memberUIDs ?? "no data";
         this.memberInfos = await getMemberInfoList(this.memberUIDs);
       }
       )

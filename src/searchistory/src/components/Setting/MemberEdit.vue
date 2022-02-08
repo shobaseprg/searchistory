@@ -5,17 +5,17 @@
     class="z-[3000] w-[100%] h-[100%] bg-opacity-[0.5] fixed left-0 top-0 flex items-center justify-center"
   >
     <div class="border-2 border-black z-[2] w-[50%] p-[1em] bg-white" @click="stopEvent">
-      <p>チームメンバーメール</p>
+      <p>チームメンバー</p>
       <div class="flex"></div>
       <div v-for="memberInfo in userInfo.memberInfos">
         <div class="flex">
-          <div>{{ memberInfo.name }}:{{ memberInfo.email }}</div>
+          <div>{{ memberInfo.name }}</div>
           <!-- <button>編集</button> -->
           <button @click="deleteMember(memberInfo.uid)">削除</button>
         </div>
       </div>
-      <input type="text" v-model="newMemberEmail" />
-      <button @click="addMemberEmail">追加</button>
+      <input type="text" v-model="newMemberUID" />
+      <button @click="addMemberUID">追加</button>
       <!-- <button @click>更新</button> -->
       <button @click="controlOpen(false, MODAL_TYPE.MEMBER_EDIT);">閉じる</button>
     </div>
@@ -35,7 +35,7 @@ import { controlOpen, MODAL_TYPE, isOpenMemberEditRef } from "../../composable/m
 import useUserStore from "../../store/useUserStore";
 //component
 //composable
-import checkExistEmail from "../../composable/checkExistEmail";
+import checkExistUID from "../../composable/checkExistUID";
 
 //model
 //define
@@ -48,22 +48,25 @@ const userInfo = computed(() => {
   return userStore
 })
 
-// メール追加
-const newMemberEmail = ref("");
-const myUserDocRef = doc(db, "user", userStore.uid);
+// メンバー追加
+const newMemberUID = ref("");
+const myUserPrivateDocRef = doc(db, "userPrivate", userStore.uid);
 
-const addMemberEmail = async () => {
-  const nme = newMemberEmail.value
-  newMemberEmail.value = "";
-  const { isExist, memberInfo } = await checkExistEmail(nme)
+const addMemberUID = async () => {
+  const nmu = newMemberUID.value
+  newMemberUID.value = "";
+  const { isExist, memberInfo } = await checkExistUID(nmu)
   if (!isExist) {
-    alert("そのメールアドレスは存在しません。");
+    alert("そのユーザーIDは存在しません。");
   } else {
-    userInfo.value.memberUIDs.push(memberInfo.uid);
-    await setDoc(myUserDocRef, {
-      memberUIDs: userInfo.value.memberUIDs
-    }, { merge: true });
-    alert("追加しました。");
+    const result = window.confirm(`${memberInfo.name}さんを追加しますか？`);
+    if (result) {
+      userInfo.value.memberUIDs.push(memberInfo.uid);
+      await setDoc(myUserPrivateDocRef, {
+        memberUIDs: userInfo.value.memberUIDs
+      }, { merge: true });
+      alert("追加しました。");
+    }
   }
 }
 
@@ -73,7 +76,7 @@ const deleteMember = async (deleteUid: string) => {
     return memberUID !== deleteUid;
   }
   )
-  await setDoc(myUserDocRef, {
+  await setDoc(myUserPrivateDocRef, {
     memberUIDs: deletedMembers
   }, { merge: true });
 };

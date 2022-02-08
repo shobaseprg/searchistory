@@ -12,7 +12,7 @@ import { db } from "../firebase/config";
 const getUserInfo = async (uid: string) => {
   const userDocRef = doc(db, "user", uid);
   const snap = await getDoc(userDocRef);
-  return snap.exists() ? snap.data() : { name: "", email: "", uid: "" }
+  return snap.exists() ? snap.data() : { name: "", uid: "" }
 }
 
 const getMemberInfoList = async (memberUIDs: string[]) => {
@@ -22,7 +22,6 @@ const getMemberInfoList = async (memberUIDs: string[]) => {
     const memberInfo = {
       uid: typeof memberInfoData.uid === "string" ? memberInfoData.uid : "",
       name: typeof memberInfoData.name === "string" ? memberInfoData.name : "",
-      email: typeof memberInfoData.email === "string" ? memberInfoData.email : "",
     }
     array.push(memberInfo);
   }

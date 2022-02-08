@@ -6,7 +6,7 @@
   >
     <!-- モーダル -->
     <div class="z-[2] w-[80%] h-[80%] p-[1em] bg-white" @click="stopEvent">
-      <p>メール追加</p>
+      <p>メンバー追加</p>
       <div class="flex">
         <!-- 許可ユーザー -->
         <div class="border-2 border-black w-[150px]">
@@ -18,7 +18,7 @@
             item-key="uid"
           >
             <template #item="{ element, index }">
-              <div class="border-2 border-blue-500">{{ element.email }} {{ element.name }}</div>
+              <div class="border-2 border-blue-500">{{ element.name }}</div>
             </template>
           </draggable>
         </div>
@@ -26,7 +26,7 @@
         <div class="border-2 border-black w-[150px]">
           <draggable class="list-group" :list="outMembers" group="people" item-key="uid">
             <template #item="{ element, index }">
-              <div class="border-2 border-blue-500">{{ element.email }} {{ element.name }}</div>
+              <div class="border-2 border-blue-500">{{ element.name }}</div>
             </template>
           </draggable>
         </div>

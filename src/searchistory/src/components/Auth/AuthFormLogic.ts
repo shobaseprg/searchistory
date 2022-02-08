@@ -18,6 +18,9 @@ export default (props: any, useUserStore: any) => {
     await setDoc(doc(db, 'user', uid), {
       name: name.value,
       uid: uid,
+    })
+    await setDoc(doc(db, 'userPrivate', uid), {
+      uid: uid,
       email: email,
       memberUIDs: [],
     })
@@ -54,7 +57,9 @@ export default (props: any, useUserStore: any) => {
     createUserWithEmailAndPassword(auth, email.value, password.value)
       .then(async (userCredential) => {
         const user = userCredential.user;
+        alert(60)
         await createUser(user.uid, user.email ?? "");
+        alert(62)
         await userStore.setUserInfo(user.uid)
         router.push('/home');
       })
