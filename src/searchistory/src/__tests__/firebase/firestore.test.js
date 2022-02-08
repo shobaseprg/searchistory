@@ -62,35 +62,35 @@ describe("userコレクションテスト", () => {
     await firebase.assertFails(getDoc(clientUserRef));
   })
   // 書き込み
-  it("未認証ユーザーは書き込み不可", async () => {
+  it("未認証ユーザーは作成不可", async () => {
     const testEnv = await initEnv();
     const unauthenticatedContext = testEnv.unauthenticatedContext();
     const db = unauthenticatedContext.firestore();
     const clientUserRef = db.collection('user').doc("unauthenticatedContext")
     await firebase.assertFails(setDoc(clientUserRef, { uid: "unauthenticatedContext" }));
   })
-  it("ログインユーザーのUIDと同じドキュメントIDで書き込み可能", async () => {
+  it("ログインユーザーのUIDと同じドキュメントIDで作成可能", async () => {
     const testEnv = await initEnv();
     const authenticatedUser = testEnv.authenticatedContext("authenticatedUser");
     const db = authenticatedUser.firestore();
     const clientUserRef = db.collection('user').doc("authenticatedUser")
     await firebase.assertSucceeds(setDoc(clientUserRef, { uid: "authenticatedUser" }));
   })
-  it("ログインユーザーのUIDと異なるドキュメントIDで書き込み不可", async () => {
+  it("ログインユーザーのUIDと異なるドキュメントIDで作成不可", async () => {
     const testEnv = await initEnv();
     const authenticatedUser = testEnv.authenticatedContext("authenticatedUser");
     const db = authenticatedUser.firestore();
     const clientUserRef = db.collection('user').doc("otherUID")
     await firebase.assertFails(setDoc(clientUserRef, { uid: "authenticatedUser" }));
   })
-  it("ログインユーザーのUIDと同じ値のみuidフィールドに書き込み可能", async () => {
+  it("ログインユーザーのUIDと同じ値のみuidフィールドに作成可能", async () => {
     const testEnv = await initEnv();
     const authenticatedUser = testEnv.authenticatedContext("authenticatedUser");
     const db = authenticatedUser.firestore();
     const clientUserRef = db.collection('user').doc("authenticatedUser")
     await firebase.assertSucceeds(setDoc(clientUserRef, { uid: "authenticatedUser" }));
   })
-  it("ログインユーザーのUIDと異なる値はuidフィールドに書き込み不可", async () => {
+  it("ログインユーザーのUIDと異なる値はuidフィールドに作成不可", async () => {
     const testEnv = await initEnv();
     const authenticatedUser = testEnv.authenticatedContext("authenticatedUser");
     const db = authenticatedUser.firestore();
@@ -101,24 +101,24 @@ describe("userコレクションテスト", () => {
   // afterAll(async () => await testEnv.cleanup())
 })
 
-describe("topicコレクションテスト", () => {
-  it("ダミーデータを作成する。", async () => {
-    const testEnv = await initEnv();
-    await testEnv.withSecurityRulesDisabled(async context => {
-      const noRuleDB = context.firestore()
-      const clientUserRef = noRuleDB.collection('topic').doc("testTopicDoc")
-      await firebase.assertSucceeds(setDoc(clientUserRef, {
-        authorizedUIDs: ["testUserUID1", "testUserUID2"]
-      }))
-    })
-  })
-  // it("未認証ユーザーは読み取り不可", async () => {
-  //   const testEnv = await initEnv();
-  //   const unauthenticatedContext = testEnv.unauthenticatedContext();
-  //   const db = unauthenticatedContext.firestore();
-  //   const clientUserRef = db.collection('user').doc("unauthenticatedContext")
-  //   await firebase.assertFails(getDoc(clientUserRef));
-  // })
+// describe("topicコレクションテスト", () => {
+//   it("ダミーデータを作成する。", async () => {
+//     const testEnv = await initEnv();
+//     await testEnv.withSecurityRulesDisabled(async context => {
+//       const noRuleDB = context.firestore()
+//       const clientUserRef = noRuleDB.collection('topic').doc("testTopicDoc")
+//       await firebase.assertSucceeds(setDoc(clientUserRef, {
+//         authorizedUIDs: ["testUserUID1", "testUserUID2"]
+//       }))
+//     })
+//   })
+//   it("未認証ユーザーは読み取り不可", async () => {
+//     const testEnv = await initEnv();
+//     const unauthenticatedContext = testEnv.unauthenticatedContext();
+//     const db = unauthenticatedContext.firestore();
+//     const clientUserRef = db.collection('topic').doc("topic1")
+//     await firebase.assertFails(getDoc(clientUserRef));
+//   })
   // // 書き込み
   // it("未認証ユーザーは書き込み不可", async () => {
   //   const testEnv = await initEnv();
@@ -157,4 +157,4 @@ describe("topicコレクションテスト", () => {
   // })
   // beforeEach(async () => await testEnv.cleanup())
   // afterAll(async () => await testEnv.cleanup())
-})
+// })

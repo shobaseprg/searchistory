@@ -14,7 +14,7 @@
       <!-- メール -->
       <div>
         <p>メール</p>
-        <p>{{email}}</p>
+        <p>{{ email }}</p>
         <input
           class="w-[300px] h-[50px] mb-10 text-center border-2 border-pink-300 rounded-full duration-75;"
           type="text"
@@ -29,8 +29,7 @@
           class="w-[300px] h-[50px] mb-10 text-center border-2 border-pink-300 rounded-full duration-75;"
           type="text"
           v-model="password"
-                    data-testid="inputPassword"
-
+          data-testid="inputPassword"
         />
       </div>
       <!-- ボタン -->
@@ -54,5 +53,5 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const { name, email, password,getActionButton, getPageTitle, signin,} = logic(props, useUserStore);
+const { name, email, password, getActionButton, getPageTitle, signin, } = logic(props, useUserStore);
 </script>
