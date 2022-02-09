@@ -91,5 +91,20 @@ service cloud.firestore {
                       incomingData().email.size() < 31 &&
                       isAvailableFieldOnUpdate(['email']);
     }
+    match /topic/{documentID} {
+      allow list:if isAuth() &&
+                    myUID() in existingData().authorizedUIDs
+      // allow create:if isAuth() &&
+      //                 userID == myUID() &&
+      //                 incomingData().email is string &&
+      //                 incomingData().email.size() < 31 &&
+      //                 incomingData().uid == myUID() &&
+      //                 isAvailableOnCreateField(["email","uid"])
+      // allow update:if isAuth() &&
+      //                 userID == myUID() &&
+      //                 incomingData().email is string &&
+      //                 incomingData().email.size() < 31 &&
+      //                 isAvailableFieldOnUpdate(['email']);
+    }
   }
 }
