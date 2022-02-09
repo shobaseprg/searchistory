@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { useRouter } from 'vue-router'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, User } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, addDoc } from 'firebase/firestore';
 import { db } from "../../firebase/config";
 
 export default (props: any, useUserStore: any) => {
