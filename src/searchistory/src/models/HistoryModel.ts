@@ -4,7 +4,8 @@ import {
   doc,
   setDoc,
   DocumentData,
-  deleteDoc
+  deleteDoc,
+  updateDoc
 } from 'firebase/firestore';
 
 import { db } from "../firebase/config";
@@ -84,18 +85,21 @@ class HistoryModel extends PostCoreModel {
     topicDocID: string,
     status: HistoryStatus
   ) {
+    console.log("⬇︎【ログ】", "");
+
     const margeFiles = [...targetHistoryFiles, ...files]
     const { existFiles, deleteFiles } = super.splitFiles(margeFiles, content);
     super.deleteImgFromStorage(deleteFiles);
     const updateHistoryRef = doc(db, 'topic', topicDocID, 'history', docID);
-
-    await setDoc(updateHistoryRef, {
+    console.log("⬇︎【ログ】", "");
+    await updateDoc(updateHistoryRef, {
       url,
       content,
       files: existFiles,
       updatedAt: serverTimestamp(),
       status
-    }, { merge: true });
+    });
+    console.log("⬇︎【ログ】", "");
   }
   // 削除
   async delete(topicDocID: string) {

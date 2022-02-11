@@ -5,7 +5,8 @@ import {
   setDoc,
   DocumentData,
   deleteDoc,
-  getDocs
+  getDocs,
+  updateDoc
 } from 'firebase/firestore';
 
 import { db } from "../firebase/config";
@@ -90,11 +91,11 @@ class TopicModel extends PostCoreModel {
     const updateTopicRef = doc(db, 'topic', docID);
     const scontent = sanitize(content);
 
-    await setDoc(updateTopicRef, {
+    await updateDoc(updateTopicRef, {
       title,
       content: scontent,
       files: existFiles,
-    }, { merge: true });
+    });
   }
   // 削除
   async delete() {

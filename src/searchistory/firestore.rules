@@ -57,16 +57,18 @@ service cloud.firestore {
     }
     // topic
     match /topic/{documentID} {
+      allow get:if isAuth() &&
+                    myUID() in existingData().authorizedUIDs
       allow list:if isAuth() &&
                     myUID() in existingData().authorizedUIDs
       allow create:if isAuth() &&
                       incomingData().uid == myUID() &&
                       myUID() in incomingData().authorizedUIDs &&
-                      isAvailableCreateFields(["title","content","uid","authorizedUIDs"])
+                      isAvailableCreateFields(["title","content","authorizedUIDs","files","updatedAt","name","status","uid","docID","createdAt",])
       allow update:if isAuth() &&
                       existingData().uid == myUID() &&
                       myUID() in incomingData().authorizedUIDs &&
-                      isAvailableUpdateFields(["title","content","authorizedUIDs"])
+                      isAvailableUpdateFields(["title","content","authorizedUIDs","files","updatedAt"])
       allow delete:if isAuth() &&
                       existingData().uid == myUID()
 
@@ -76,10 +78,10 @@ service cloud.firestore {
         allow create:if isAuth() &&
                         incomingData().uid == myUID() &&
                         myUID() in getParentTopic(database,documentID).data.authorizedUIDs &&
-                        isAvailableCreateFields(["url","content","uid"])
+                        isAvailableCreateFields(["url","content","status","files","updatedAt","createdAt","docID","uid","name","topicDocID"])
         allow update:if isAuth() &&
                         myUID() in getParentTopic(database,documentID).data.authorizedUIDs &&
-                        isAvailableUpdateFields(["url","content"])
+                        isAvailableUpdateFields(["url","content","status","files","updatedAt"])
         allow delete:if isAuth() &&
                         myUID() == getParentTopic(database,documentID).data.uid ||
                         myUID() == existingData().uid
