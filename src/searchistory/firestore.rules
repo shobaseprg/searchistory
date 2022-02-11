@@ -1,60 +1,6 @@
-// rules_version = '2';
-//   // function isExistMyUidInField(field){
-//   //   return
-//   // }
-  // function isAuth(){
-  //   return request.auth != null
-  // }
-//   function myUID(){
-//     return request.auth.uid
-//   }
-//   function existingData(){
-//     return resource.data
-//   }
-//   function incomingData(){
-//     return request.resource.data
-//   }
-//   function isContainProhibitedField(fieldList){
-//     return incomingData().diff(existingData()).affectedKeys().hasAny(fieldList);
-//   }
-//   function isAvailableField(fieldList){
-//     return incomingData().keys().hasOnly(fieldList)
-//   }
-
-//   function isAvailableFieldOnUpdate(FieldList){
-//     return incomingData.diff(existingData()).affectedKeys().hasOnly(FieldList)
-//   }
-
-// service cloud.firestore {
-//   match /databases/{database}/documents {
-//     match /user/{docID} {
-//       allow read:if isAuth();
-//       // allow create:if isAuth() && & docID == myUID()
-//       // allow update:if isAuth() && docID == myUID() &&
-//       //                 incomingData().name is string &&
-//       //                 incomingData().name.size() < 21 &&
-//       //                 incomingData().uid == myUID() &&
-//       //                 isAvailableField(["name","uid"])
-
-//           // allow create:if isAuth() && docID == myUID() &&
-//           //             incomingData().name is string &&
-//           //             incomingData().name.size() < 21 &&
-//           //             incomingData().uid == myUID()
-//     }
-//     // match /userPrivate/{docID} {
-//     //   allow read:if isAuth() && docID == myUID();
-//     //   allow update:if isAuth() && docID == myUID() &&
-//     //                   incomingData().email is string &&
-//     //                   incomingData().email.size() < 51 &&
-//     //                   incomingData().uid == myUID() &&
-//     //                   isAvailableField(["email","uid"])
-//     // }
-//   //   match /topic/{docID} {
-//   //   allow read, write: if request.auth != null && isExistMyUidInField("authorizedUIDs");
-//   }
-// }
-
 rules_version = '2';
+
+service cloud.firestore {
 
   function isAuth(){
     return request.auth != null
@@ -68,14 +14,32 @@ rules_version = '2';
   function existingData(){
     return resource.data
   }
-  function isAvailableOnCreateField(fieldList){
+  function isAvailableCreateFields(fieldList){
     return incomingData().keys().hasOnly(fieldList)
   }
-  function isAvailableFieldOnUpdate(FieldList){
+  function isAvailableUpdateFields(FieldList){
     return incomingData().diff(existingData()).affectedKeys().hasOnly(FieldList)
   }
-service cloud.firestore {
+  function getParentTopic(database,documentID){
+    return get(/databases/$(database)/documents/topic/$(documentID))
+  }
+
   match /databases/{database}/documents {
+    match /user/{userID} {
+      allow get:if isAuth()
+      allow create:if isAuth() &&
+                      userID == myUID() &&
+                      incomingData().name is string &&
+                      incomingData().name.size() < 31 &&
+                      incomingData().uid == myUID() &&
+                      isAvailableCreateFields(["name","uid"])
+      allow update:if isAuth() &&
+                      userID == myUID() &&
+                      incomingData().name is string &&
+                      incomingData().name.size() < 31 &&
+                      isAvailableUpdateFields(['name']);
+    }
+    // userPrivate
     match /userPrivate/{userID} {
       allow get:if isAuth() &&
                     userID == myUID()
@@ -84,27 +48,42 @@ service cloud.firestore {
                       incomingData().email is string &&
                       incomingData().email.size() < 31 &&
                       incomingData().uid == myUID() &&
-                      isAvailableOnCreateField(["email","uid"])
+                      isAvailableCreateFields(["email","uid","memberUIDs"])
       allow update:if isAuth() &&
                       userID == myUID() &&
                       incomingData().email is string &&
                       incomingData().email.size() < 31 &&
-                      isAvailableFieldOnUpdate(['email']);
+                      isAvailableUpdateFields(['email',"memberUIDs"]);
     }
+    // topic
     match /topic/{documentID} {
       allow list:if isAuth() &&
                     myUID() in existingData().authorizedUIDs
-      // allow create:if isAuth() &&
-      //                 userID == myUID() &&
-      //                 incomingData().email is string &&
-      //                 incomingData().email.size() < 31 &&
-      //                 incomingData().uid == myUID() &&
-      //                 isAvailableOnCreateField(["email","uid"])
-      // allow update:if isAuth() &&
-      //                 userID == myUID() &&
-      //                 incomingData().email is string &&
-      //                 incomingData().email.size() < 31 &&
-      //                 isAvailableFieldOnUpdate(['email']);
+      allow create:if isAuth() &&
+                      incomingData().uid == myUID() &&
+                      myUID() in incomingData().authorizedUIDs &&
+                      isAvailableCreateFields(["title","content","uid","authorizedUIDs"])
+      allow update:if isAuth() &&
+                      existingData().uid == myUID() &&
+                      myUID() in incomingData().authorizedUIDs &&
+                      isAvailableUpdateFields(["title","content","authorizedUIDs"])
+      allow delete:if isAuth() &&
+                      existingData().uid == myUID()
+
+      match /history/{historyDocumentID}{
+        allow list:if isAuth() &&
+                        myUID() in getParentTopic(database,documentID).data.authorizedUIDs
+        allow create:if isAuth() &&
+                        incomingData().uid == myUID() &&
+                        myUID() in getParentTopic(database,documentID).data.authorizedUIDs &&
+                        isAvailableCreateFields(["url","content","uid"])
+        allow update:if isAuth() &&
+                        myUID() in getParentTopic(database,documentID).data.authorizedUIDs &&
+                        isAvailableUpdateFields(["url","content"])
+        allow delete:if isAuth() &&
+                        myUID() == getParentTopic(database,documentID).data.uid ||
+                        myUID() == existingData().uid
+      }
     }
   }
 }

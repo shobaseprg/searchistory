@@ -1,13 +1,12 @@
 import { db } from "../firebase/config"
-import { getDocs, collection, query, where } from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 
 const checkExistUID = async (uid: string) => {
-  const q = query(collection(db, "user"), where("uid", "==", uid));
-  const querySnapshot = await getDocs(q);
-  if (querySnapshot.docs.length == 0) {
-    return { isExist: false, memberInfo: { name: "", uid: "" } }
+  const userSnap = await getDoc(doc(db, "user", uid));
+  if (userSnap.exists() && userSnap.data()) {
+    return { isExist: true, memberInfo: userSnap.data() }
   } else {
-    return { isExist: true, memberInfo: querySnapshot.docs[0].data() }
+    return { isExist: false, memberInfo: { name: "", uid: "" } }
   }
 };
 

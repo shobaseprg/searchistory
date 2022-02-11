@@ -88,7 +88,6 @@ class TopicModel extends PostCoreModel {
     const { existFiles, deleteFiles } = super.splitFiles(files, content);
     super.deleteImgFromStorage(deleteFiles);
     const updateTopicRef = doc(db, 'topic', docID);
-
     const scontent = sanitize(content);
 
     await setDoc(updateTopicRef, {
@@ -101,11 +100,9 @@ class TopicModel extends PostCoreModel {
   async delete() {
     const updateTopicRef = doc(db, 'topic', this.docID);
     await deleteDoc(updateTopicRef)
-
     const historyColRef = collection(db, 'topic', this.docID, 'history');
     const querySnapshot = await getDocs(historyColRef);
     querySnapshot.forEach(async (doc) => {
-
       await deleteDoc(doc.ref)
     }
     )

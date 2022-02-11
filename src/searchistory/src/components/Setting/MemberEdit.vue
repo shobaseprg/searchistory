@@ -11,7 +11,7 @@
         <div class="flex">
           <div>{{ memberInfo.name }}</div>
           <!-- <button>編集</button> -->
-          <button @click="deleteMember(memberInfo.uid)">削除</button>
+          <button @click="deleteMember(memberInfo)">削除</button>
         </div>
       </div>
       <input type="text" v-model="newMemberUID" />
@@ -38,6 +38,7 @@ import useUserStore from "../../store/useUserStore";
 import checkExistUID from "../../composable/checkExistUID";
 
 //model
+import { Member } from "../../types/Member"
 //define
 const router = useRouter()
 //define store
@@ -71,9 +72,12 @@ const addMemberUID = async () => {
 }
 
 // メンバー削除
-const deleteMember = async (deleteUid: string) => {
+const deleteMember = async (memberInfo: Member) => {
+  const result = window.confirm(`${memberInfo.name}さんを削除しますか？`);
+  if (!result) return;
+
   const deletedMembers = userInfo.value.memberUIDs.filter((memberUID) => {
-    return memberUID !== deleteUid;
+    return memberUID !== memberInfo.uid;
   }
   )
   await setDoc(myUserPrivateDocRef, {
