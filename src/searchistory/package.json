@@ -3,14 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
+    "dev-dev": "vite --mode dev",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "jest",
     "test-fs": "jest ./__tests__/firebase/firestore.test.js",
-    "tsc": "tsc",
-    "em-fs": "firebase emulators:start --only firestore",
-    "deploy-r": "firebase deploy --only firestore:rules",
-    "deploy-h": "firebase deploy --only hosting"
+    "tsc": "tsc"
   },
   "dependencies": {
     "@firebase/rules-unit-testing": "^2.0.2",

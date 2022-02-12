@@ -27,7 +27,7 @@ const updateTopic = async (targetTopic: TopicModel) => {
 const registerHistory = async (uid: string, name: string, topicDocID: string) => {
   await HistoryModel.register(url.value, content.value, uid, name, files.value, topicDocID)
   clearForm();
-  await TopicModel.updateUpdatedAt(topicDocID)
+  // await TopicModel.updateUpdatedAt(topicDocID)
   alert("登録しました。");
   controlOpen(false, MODAL_TYPE.HISTORY_CREATE);
 }

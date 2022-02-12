@@ -68,7 +68,7 @@ service cloud.firestore {
       allow update:if isAuth() &&
                       existingData().uid == myUID() &&
                       myUID() in incomingData().authorizedUIDs &&
-                      isAvailableUpdateFields(["title","content","authorizedUIDs","files","updatedAt"])
+                      isAvailableUpdateFields(["title","content","authorizedUIDs","files","updatedAt","status"])
       allow delete:if isAuth() &&
                       existingData().uid == myUID()
 

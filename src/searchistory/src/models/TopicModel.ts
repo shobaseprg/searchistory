@@ -95,6 +95,7 @@ class TopicModel extends PostCoreModel {
       title,
       content: scontent,
       files: existFiles,
+      updatedAt: serverTimestamp(),
     });
   }
   // 削除
@@ -116,20 +117,13 @@ class TopicModel extends PostCoreModel {
     )
     authorizedUIDs.push(uid)
     const updateTopicRef = doc(db, 'topic', this.docID);
-    await setDoc(updateTopicRef, {
+    await updateDoc(updateTopicRef, {
       authorizedUIDs
-    }, { merge: true });
+    });
   }
   // 最新のメンバー情報を格納
   async setMemberInfo() {
     this.authorizedMemberInfos = await getMemberInfoList(this.authorizedUIDs)
-  }
-  // 更新日更新
-  static async updateUpdatedAt(topicDocID: string) {
-    const updateTopicRef = doc(db, 'topic', topicDocID);
-    await setDoc(updateTopicRef, {
-      updatedAt: serverTimestamp(),
-    }, { merge: true });
   }
 }
 export { TopicModel, TopicStatus, TOPIC_STATUS, TOPIC_STATUS_WORD };

@@ -24,29 +24,10 @@ const firebaseApp: FirebaseApp = !getApps().length
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
 const db = getFirestore(firebaseApp);
-const isEmulating = window.location.hostname === "localhost";
-if (isEmulating) {
+
+if (import.meta.env.VITE_ENV === "development") {
+  console.log("start development")
   connectFirestoreEmulator(db, 'localhost', 8080);
 }
 
-
 export { firebaseApp, db };
-
-
-// import { collection, connectFirestoreEmulator, getDocs, getFirestore } from 'firebase/firestore';
-// import { initializeFirebase } from './firebase';
-
-// initializeFirebase()
-
-// export const fetchRamen = () => {
-
-//   const firestore = getFirestore();
-//   connectFirestoreEmulator(firestore, 'localhost', 8080);
-
-//   const coll = collection(firestore, 'ramens')
-//   getDocs(coll).then(snapshot => {
-//     snapshot.docs.map(doc => {
-//       console.log(doc.data())
-//     })
-//   })
-// }

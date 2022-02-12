@@ -7,3 +7,5 @@ dist-ssr
 .firebase/
 .vscode/
 emudata/
+.env
+.env.dev
