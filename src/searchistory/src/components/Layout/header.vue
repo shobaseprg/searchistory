@@ -60,6 +60,7 @@ let unsubscribe: Unsubscribe | null = null;
 
 if (uid) {
   const q = query(collection(db, "topic"), where("authorizedUIDs", "array-contains", uid), orderBy('updatedAt', 'desc'));
+
   const getInstanceFunc = (doc: QueryDocumentSnapshot<DocumentData>) => {
     const addTopic = new TopicModel(doc.data(({ serverTimestamps: "estimate" })))
     addTopic.setMemberInfo();

@@ -23,6 +23,7 @@
         <td>{{ topic.title }}</td>
         <!-- ステータス変更 -->
         <td>
+          <p>{{ topic.status }}</p>
           <StatusSelect :status="topic.status" :docID="topic.docID" />
         </td>
         <!-- 更新日 -->

@@ -1,4 +1,5 @@
 <template>
+  <p>child:{{ selectedStatus }}</p>
   <select v-model="selectedStatus" v-on:change="statusChange()">
     <option :value="TOPIC_STATUS.PENDING">{{ TOPIC_STATUS_WORD[TOPIC_STATUS.PENDING] }}</option>
     <option :value="TOPIC_STATUS.FINISH">{{ TOPIC_STATUS_WORD[TOPIC_STATUS.FINISH] }}</option>
@@ -7,20 +8,29 @@
 
 <script setup lang="ts">
 
-import { ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { db } from "../../firebase/config"
-import { setDoc, doc, serverTimestamp } from "firebase/firestore";
+import { setDoc, doc } from "firebase/firestore";
 import { TOPIC_STATUS, TOPIC_STATUS_WORD, TopicStatus } from "../../models/TopicModel"
 
 interface Props {
   status: TopicStatus,
   docID: string,
 }
-const { status, docID } = defineProps<Props>();
-const selectedStatus = ref(status);
+const props = defineProps<Props>();
+
+const propsStatus = computed(() => {
+  return props.status
+})
+
+const selectedStatus = ref(propsStatus.value)
+
+watch(propsStatus, (value) => {
+  selectedStatus.value = value;
+})
 
 const statusChange = async () => {
-  await setDoc(doc(db, "topic", docID), {
+  await setDoc(doc(db, "topic", props.docID), {
     status: selectedStatus.value,
   }, { merge: true });
 }

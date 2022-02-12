@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import { useRouter } from 'vue-router'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, User } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, User, EmailAuthProvider } from 'firebase/auth';
 import { doc, setDoc, addDoc } from 'firebase/firestore';
 import { db } from "../../firebase/config";
 
@@ -36,7 +36,11 @@ export default (props: any, useUserStore: any) => {
   // サインイン
   const signin = async (isTest: boolean = false) => {
     if (isTest) {
-      email.value = "1@g.com";
+      if (import.meta.env.VITE_ENV === "development") {
+        email.value = "1@g.com";
+      } else {
+        email.value = "1s@g.com"
+      }
       password.value = "11111111";
     }
     return await signInWithEmailAndPassword(auth, email.value, password.value)

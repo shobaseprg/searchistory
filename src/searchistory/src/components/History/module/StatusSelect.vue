@@ -10,7 +10,7 @@
 
 import { ref } from "vue";
 import { db } from "../../../firebase/config"
-import { setDoc, doc, serverTimestamp } from "firebase/firestore";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { HISTORY_STATUS, HISTORY_STATUS_WORD, HistoryStatus } from "../../../models/HistoryModel"
 import useTargetTopicStore from "../../../store/useTargetTopicStore";
 
@@ -25,9 +25,10 @@ const targetTopicStore = useTargetTopicStore();
 const selectedStatus = ref(status);
 
 const statusChange = async () => {
-  await setDoc(doc(db, "topic", targetTopicStore.targetTopic.docID, "history", docID), {
+  await updateDoc(doc(db, "topic", targetTopicStore.targetTopic.docID, "history", docID), {
     status: selectedStatus.value,
-  }, { merge: true });
+    updatedAt: serverTimestamp(),
+  });
 }
 </script>
 

@@ -2,10 +2,16 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp()
 
-exports.onBookWrite = functions.firestore.document('topic/{topicID}/history/{historyID}').onWrite(async (change, context) => {
-  // 変更されたときはafterに変更後の値が入る
-  const beforeDocument = change.after.exists ? change.after.data() : null;
-  const document = change.before.data();
+exports.onHistoryCreate = functions.firestore.document('topic/{topicID}/history/{historyID}').onCreate(async (snapshot, context) => {
+  admin.firestore().collection("topic").doc(context.params.topicID).update({ updatedAt: snapshot.data().updatedAt })
+})
 
-  console.log('【Firestore変更】');
+exports.onHistoryUpdate = functions.firestore.document('topic/{topicID}/history/{historyID}').onUpdate(async (change, context) => {
+  const parentTopicRef = admin.firestore().collection("topic").doc(context.params.topicID);
+  const afterData = change.after.data();
+  if (afterData.status === "solved")
+    parentTopicRef.update({ updatedAt: afterData.updatedAt, status: "finish" })
+  else {
+    parentTopicRef.update({ updatedAt: afterData.updatedAt })
+  }
 })
