@@ -6,3 +6,4 @@ dist-ssr
 *.log
 .firebase/
 .vscode/
+emudata/
