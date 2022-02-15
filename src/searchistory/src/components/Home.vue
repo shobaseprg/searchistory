@@ -59,17 +59,19 @@ import StatusSelect from "./module/StatusSelect.vue";
 import { isOpenTopicCreateRef, controlOpen, MODAL_TYPE, } from "../composable/modalControl";
 import filterUnit from "../composable/topicFilter";
 import { topics } from "../composable/onSnapList";
+import setBeforeUser from "../composable/beforeSetUser";
 //model
 import { TopicModel, TOPIC_STATUS, TOPIC_STATUS_WORD } from "../models/TopicModel";
 //define
 const router = useRouter();
 const auth: Auth = getAuth();
-
 //define store
 const userStore = useUserStore();
 const targetTopicStore = useTargetTopicStore();
 //logic
 const headers = ['タイトル', '状態', '更新日'];
+
+setBeforeUser(userStore);
 
 // ----------------------------- トピック -----------------------------
 const setTargetTopic = (topic: TopicModel) => {

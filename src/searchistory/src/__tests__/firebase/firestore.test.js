@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import { v4 } from "uuid"
 import * as testing from '@firebase/rules-unit-testing'
 
-import { doc, collection, setDoc, getDoc, updateDoc, query, where, getDocs, deleteDoc } from 'firebase/firestore'
+import { doc, collection, setDoc, getDoc, updateDoc, query, where, getDocs, deleteDoc, serverTimestamp } from 'firebase/firestore'
 
 const projectID = v4()
 let testEnv
@@ -49,13 +49,13 @@ describe('userPrivate collection', () => {
         getDoc(doc(guestClientDB, "userPrivate", uid))
       )
     })
-    it('get: 認証済みでもログインユーザーのUIDと異なるドキュメントIDのドキュメントは不可', async () => {
+    it('get: ログインユーザーのUIDと異なるドキュメントIDのドキュメントは不可', async () => {
       const { clientDB } = getDB();
       await testing.assertFails(
         getDoc(doc(clientDB, "userPrivate", otherUid))
       )
     })
-    it('get: 認証済みでログインのUIDと同じドキュメントIDのドキュメントは可能', async () => {
+    it('get: ログインのUIDと同じドキュメントIDのドキュメントは可能', async () => {
       const { clientDB } = getDB();
       await testing.assertSucceeds(
         getDoc(doc(clientDB, "userPrivate", uid))
@@ -70,7 +70,7 @@ describe('userPrivate collection', () => {
         setDoc(doc(clientDB, "userPrivate", uid), { email: "123456789012345678901234567890", uid })
       )
     })
-    it('create: 未認証ではcreate不可。', async () => {
+    it('create: 未認証では不可。', async () => {
       const { guestClientDB } = getDB();
       await testing.assertFails(
         setDoc(doc(guestClientDB, "userPrivate", uid), { email: "otherEmail", uid })
@@ -115,7 +115,7 @@ describe('userPrivate collection', () => {
         updateDoc(doc(clientDB, "userPrivate", uid), { email: "changeEmail" })
       )
     })
-    it('update: 未認証ではupdate不可', async () => {
+    it('update: 未認証では不可', async () => {
       const { guestClientDB } = getDB();
       await testing.assertFails(
         updateDoc(doc(guestClientDB, "userPrivate", uid), { email: "changeEmail" })
@@ -293,6 +293,77 @@ describe('history collection', () => {
       )
     })
   })
+  // create
+  describe('create', () => {
+    // モック作成
+    beforeEach(async () => {
+      await testEnv.withSecurityRulesDisabled(async context => {
+        const noRuleDB = context.firestore()
+        await setDoc(doc(noRuleDB, "topic", "topicID"), { title: "title", content: "content", uid, authorizedUIDs: [uid] })
+        await setDoc(doc(noRuleDB, "topic", "outOfAuthTopicID"), { title: "title", content: "content", uid: otherUid, authorizedUIDs: [otherUid] })
+      })
+    })
+    it('create:親topicドキュメントのauthorizedUIDsにログインユーザーのUIDが含まれていたら、サブコレクション (history)ドキュメント作成可能', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "topicID", "history", "mmhistoryID");
+      await testing.assertSucceeds(
+        setDoc(docRef, {
+          url: "url",
+          title: "タイトル",
+          content: "content",
+          status: "pending",
+          files: [],
+          updatedAt: serverTimestamp(),
+          createdAt: serverTimestamp(),
+          docID: docRef.id, uid,
+          topicDocID: "topicID"
+        })
+      )
+    })
+    it('create:親topicドキュメントのauthorizedUIDsにログインユーザーのUIDが含まれていなければ、サブコレクション (history)ドキュメント作成不可', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "outOfAuthTopicID", "history", "mmhistoryID");
+      await testing.assertFails(
+        setDoc(docRef, { url: "url", content: "content", uid })
+      )
+    })
+    it('create:uidにログインユーザーのUIDと異なる値を与えるのは不可', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "topicID", "history", "mmhistoryID");
+      await testing.assertFails(
+        setDoc(docRef, { url: "url", content: "content", uid: otherUid })
+      )
+    })
+  })
+  // update
+  describe('update', () => {
+    // モック作成
+    beforeEach(async () => {
+      await testEnv.withSecurityRulesDisabled(async context => {
+        const noRuleDB = context.firestore()
+        // 親topicドキュメントのauthorizedUIDsにログインユーザーのUIDが含まれている場合
+        await setDoc(doc(noRuleDB, "topic", "topicID"), { title: "title", content: "content", uid, authorizedUIDs: [uid] })
+        await setDoc(doc(noRuleDB, "topic", "topicID", "history", "historyID"), { url: "url", content: "content", uid: otherUid })
+        // 親topicドキュメントのauthorizedUIDsにログインユーザーのUIDが含まれていない場合
+        await setDoc(doc(noRuleDB, "topic", "outOfAuthTopicID"), { title: "title", content: "content", uid, authorizedUIDs: [otherUid] })
+        await setDoc(doc(noRuleDB, "topic", "outOfAuthTopicID", "history", "historyID"), { url: "url", content: "content", uid: otherUid })
+      })
+    })
+    it('update:親topicドキュメントのauthorizedUIDsにログインユーザーのUIDが含まれていたら、サブコレクション (history)ドキュメントの更新可能', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "topicID", "history", "historyID");
+      await testing.assertSucceeds(
+        updateDoc(docRef, { url: "url", content: "content" })
+      )
+    })
+    it('update:親topicドキュメントのauthorizedUIDsにログインユーザーのUIDが含まれていなければ、サブコレクション (history)ドキュメントの更新不可', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "outOfAuthTopicID", "history", "historyID");
+      await testing.assertFails(
+        updateDoc(docRef, { url: "url", content: "content" })
+      )
+    })
+  })
   //delete
   describe('delete', () => {
     // モック作成
@@ -310,28 +381,26 @@ describe('history collection', () => {
         await setDoc(doc(noRuleDB, "topic", "ooTopicID", "history", "ooHistoryID"), { url: "url", content: "content", uid: otherUid })
       })
     })
-    describe('delete', () => {
-      it('delete:親topicドキュメントのuidがログインユーザーのUIDであれば可能', async () => {
-        const { clientDB } = getDB();
-        const docRef = doc(clientDB, "topic", "moTopicID", "history", "moHistoryID");
-        await testing.assertSucceeds(
-          deleteDoc(docRef)
-        )
-      })
-      it('delete:historyドキュメントのuidがログイン中のユーザーであれば可能', async () => {
-        const { clientDB } = getDB();
-        const docRef = doc(clientDB, "topic", "omTopicID", "history", "omHistoryID");
-        await testing.assertSucceeds(
-          deleteDoc(docRef)
-        )
-      })
-      it('delete:親topic、history共に他人が作成したものであれば不可', async () => {
-        const { clientDB } = getDB();
-        const docRef = doc(clientDB, "topic", "ooTopicID", "history", "omHistoryID");
-        await testing.assertFails(
-          deleteDoc(docRef)
-        )
-      })
+    it('delete:親topicドキュメントのuidがログインユーザーのUIDであれば可能', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "moTopicID", "history", "moHistoryID");
+      await testing.assertSucceeds(
+        deleteDoc(docRef)
+      )
+    })
+    it('delete:historyドキュメントのuidがログイン中のユーザーであれば可能', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "omTopicID", "history", "omHistoryID");
+      await testing.assertSucceeds(
+        deleteDoc(docRef)
+      )
+    })
+    it('delete:親topic、history共に他人が作成したものであれば不可', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "ooTopicID", "history", "ooHistoryID");
+      await testing.assertFails(
+        deleteDoc(docRef)
+      )
     })
   })
 })

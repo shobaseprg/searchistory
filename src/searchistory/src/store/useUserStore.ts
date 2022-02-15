@@ -22,7 +22,7 @@ export default defineStore("useUserStore", {
     };
   },
   getters: {
-    user: (state) => state.uid + "!",
+    user: (state) => state.uid,
   },
   actions: {
     change_uid(uid: string) {
