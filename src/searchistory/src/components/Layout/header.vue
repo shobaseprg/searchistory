@@ -4,7 +4,7 @@
     <button @click="signout()">ログアウト</button>
     <p @click="router.push('/home')">home</p>
     <button @click="controlOpen(true, MODAL_TYPE.PERSONAL_SETTING)">個人設定</button>
-    <button @click="testtopic()">テストトピック作成</button>
+    <!-- <button @click="testtopic()">テストトピック作成</button> -->
   </div>
   <SettingBaseModal v-if="isOpenPersonalSettingRef" />
   <MemberEdit v-if="isOpenMemberEditRef" />
@@ -82,18 +82,18 @@ onBeforeUnmount(() => {
   if (unsubscribe) unsubscribe();
 })
 
-const testtopic = () => {
-  const testuid = uid === undefined ? "" : uid;
-  for (let i = 0; i < 3; i++) {
-    TopicModel.register(
-      `topic-title-${i}`,
-      `topic-content-${i}`,
-      testuid,
-      userStore.name,
-      []
-    )
-  }
-};
+// const testtopic = () => {
+//   const testuid = uid === undefined ? "" : uid;
+//   for (let i = 0; i < 3; i++) {
+//     TopicModel.register(
+//       `topic-title-${i}`,
+//       `topic-content-${i}`,
+//       testuid,
+//       userStore.name,
+//       []
+//     )
+//   }
+// };
 </script>
 
 <style lang="scss" scoped></style>

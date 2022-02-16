@@ -22,8 +22,18 @@
     <!-- ヒストリーリスト -->
     <div class="w-[50%]">
       <button @click="controlOpen(true, MODAL_TYPE.HISTORY_CREATE)">調査履歴を追加</button>
-      <input type="text" v-model="urlFilterWord" />
+      URL検索
+      <input class="border-2 border-blue-600" type="text" v-model="urlFilterWord" />
+      docID検索
+      <input class="border-2 border-blue-600" type="text" v-model="docIdFilterWord" />
       <table class="w-[100%]" border="1">
+        状態検索
+        <select v-model="filterStatus">
+          <option :value="HISTORY_STATUS.ALL">{{ HISTORY_STATUS_WORD.all }}</option>
+          <option :value="HISTORY_STATUS.PENDING">{{ HISTORY_STATUS_WORD.pending }}</option>
+          <option :value="HISTORY_STATUS.UNSOLVED">{{ HISTORY_STATUS_WORD.unsolved }}</option>
+          <option :value="HISTORY_STATUS.SOLVED">{{ HISTORY_STATUS_WORD.solved }}</option>
+        </select>
         <!-- テーブルヘッダー -->
         <thead>
           <tr>
@@ -66,19 +76,18 @@ import CreateHistoryModal from "./CreateHistoryModal.vue";
 import PreviewHistoryModal from "./PreviewHistoryModal.vue";
 import EditHistoryModal from "./EditHistoryModal.vue";
 import AuthorityModal from "./AuthorityModal.vue";
-
 //composable
 import { controlOpen, isOpenTopicEditRef, isOpenHistoryCreateRef, isOpenHistoryPreviewRef, isOpenHistoryEditRef, isOpenAuthorityRef, MODAL_TYPE } from "../../composable/modalControl"
-import { HistoryModel } from "../../models/HistoryModel";
 import historyFilter from "../../composable/historyFilter"
 import { onSnapList } from "../../composable/onSnapList";
 import StatusSelect from "./module/StatusSelect.vue";
+import directHistory from "../../composable/directHistory";
 //model
+import { HistoryModel, HISTORY_STATUS, HISTORY_STATUS_WORD } from "../../models/HistoryModel";
 //define
 //define store
 const targetTopicStore = useTargetTopicStore()
 const targetHistoryStore = useTargetHistoryStore()
-
 //logic
 const headers = ['URL', '状態', '更新日'];
 
@@ -105,6 +114,10 @@ onBeforeMount(async () => {
   unsubscribe = onSnapList(
     { q, getInstanceFunc, list: histories, targetState: targetHistory, targetStore: targetHistoryStore }
   );
+  if (directHistory.value !== null) {
+    docIdFilterWord.value = directHistory.value;
+    directHistory.value = null;
+  }
 });
 
 onBeforeUnmount(() => {
@@ -120,7 +133,7 @@ const deleteData = () => {
   targetHistory.value.delete(targetTopic.value.docID)
 };
 // ----------------------------- 検索-----------------------------
-const { urlFilterWord, matchHistory } = historyFilter(histories)
+const { urlFilterWord, docIdFilterWord, filterStatus, matchHistory } = historyFilter(histories)
 </script>
 
 <style lang="scss" scoped>

@@ -10,8 +10,8 @@
       <div>
         <mavon-editor :toolbars="createToolbar" @imgAdd="imgAdd" language="en" v-model="content" />
       </div>
-      <button @click="registerTopic(userStore.uid,userStore.name)">登録</button>
-      <button @click="controlOpen(false,  MODAL_TYPE.TOPIC_CREATE);clearForm()">閉じる</button>
+      <button @click="registerTopic(userStore.uid)">登録</button>
+      <button @click="controlOpen(false, MODAL_TYPE.TOPIC_CREATE); clearForm()">閉じる</button>
     </div>
   </div>
 </template>
@@ -19,9 +19,9 @@
 <script setup lang="ts">
 // import 'mavon-editor/dist/css/index.css';
 import useUserStore from "../../store/useUserStore";
-import {createToolbar} from "../../settings/mavonEditor";
-import {title, content, registerTopic, imgAdd,stopEvent,clearForm}from "../../composable/post";
-import{controlOpen,MODAL_TYPE}from"../../composable/modalControl";
+import { createToolbar } from "../../settings/mavonEditor";
+import { title, content, registerTopic, imgAdd, stopEvent, clearForm } from "../../composable/post";
+import { controlOpen, MODAL_TYPE } from "../../composable/modalControl";
 
 const userStore = useUserStore();
 

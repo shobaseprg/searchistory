@@ -8,7 +8,6 @@ import { PostCoreModel } from '../models/PostCoreModel'
 
 const topics = ref<TopicModel[]>([]);
 
-
 const onSnapList = (
   { q, getInstanceFunc, list, targetState, targetStore }:
     {

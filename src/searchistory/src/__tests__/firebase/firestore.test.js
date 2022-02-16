@@ -67,7 +67,7 @@ describe('userPrivate collection', () => {
     it('create: 認証済みで条件を満たす場合は可能', async () => {
       const { clientDB } = getDB();
       await testing.assertSucceeds(
-        setDoc(doc(clientDB, "userPrivate", uid), { email: "123456789012345678901234567890", uid })
+        setDoc(doc(clientDB, "userPrivate", uid), { email: "123456789012345678901234567890123456789012345678901234567890", uid })
       )
     })
     it('create: 未認証では不可。', async () => {
@@ -133,10 +133,10 @@ describe('userPrivate collection', () => {
         updateDoc(doc(clientDB, "userPrivate", uid), { email: 0 })
       )
     })
-    it('update: 認証済み。emailが31文字以上不可。', async () => {
+    it('update: 認証済み。emailが61文字以上不可。', async () => {
       const { clientDB } = getDB();
       await testing.assertFails(
-        updateDoc(doc(clientDB, "userPrivate", uid), { email: "1234567890123456789012345678901" })
+        updateDoc(doc(clientDB, "userPrivate", uid), { email: "1234567890123456789012345678901234567890123456789012345678901" })
       )
     })
     it('update: 認証済み。許可されたフィールド以外は不可', async () => {

@@ -54,7 +54,6 @@ class HistoryModel extends PostCoreModel {
     url: string,
     content: string,
     uid: string,
-    name: string,
     files: FileInfo[],
     topicDocID: string,
   ) {
@@ -66,7 +65,6 @@ class HistoryModel extends PostCoreModel {
       url,
       content,
       uid,
-      name,
       status: HISTORY_STATUS.PENDING,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),

@@ -10,8 +10,8 @@ const content = ref("");
 const files = ref<FileInfo[]>([]);
 
 // topic登録
-const registerTopic = async (uid: string, name: string) => {
-  await TopicModel.register(title.value, content.value, uid, name, files.value)
+const registerTopic = async (uid: string) => {
+  await TopicModel.register(title.value, content.value, uid, files.value)
   clearForm();
   alert("登録しました。");
   controlOpen(false, MODAL_TYPE.TOPIC_CREATE);
@@ -24,8 +24,8 @@ const updateTopic = async (targetTopic: TopicModel) => {
   controlOpen(false, MODAL_TYPE.TOPIC_EDIT);
 }
 // history登録
-const registerHistory = async (uid: string, name: string, topicDocID: string) => {
-  await HistoryModel.register(url.value, content.value, uid, name, files.value, topicDocID)
+const registerHistory = async (uid: string, topicDocID: string) => {
+  await HistoryModel.register(url.value, content.value, uid, files.value, topicDocID)
   clearForm();
   // await TopicModel.updateUpdatedAt(topicDocID)
   alert("登録しました。");

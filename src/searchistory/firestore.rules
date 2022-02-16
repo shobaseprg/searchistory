@@ -46,13 +46,13 @@ service cloud.firestore {
       allow create:if isAuth() &&
                       userID == myUID() &&
                       incomingData().email is string &&
-                      incomingData().email.size() < 31 &&
+                      incomingData().email.size() < 61 &&
                       incomingData().uid == myUID() &&
                       isAvailableCreateFields(["email","uid","memberUIDs"])
       allow update:if isAuth() &&
                       userID == myUID() &&
                       incomingData().email is string &&
-                      incomingData().email.size() < 31 &&
+                      incomingData().email.size() < 61 &&
                       isAvailableUpdateFields(['email',"memberUIDs"]);
     }
     // topic
@@ -64,7 +64,7 @@ service cloud.firestore {
       allow create:if isAuth() &&
                       incomingData().uid == myUID() &&
                       myUID() in incomingData().authorizedUIDs &&
-                      isAvailableCreateFields(["title","content","authorizedUIDs","files","updatedAt","name","status","uid","docID","createdAt",])
+                      isAvailableCreateFields(["title","content","authorizedUIDs","files","updatedAt","status","uid","docID","createdAt","historyList"])
       allow update:if isAuth() &&
                       existingData().uid == myUID() &&
                       myUID() in incomingData().authorizedUIDs &&

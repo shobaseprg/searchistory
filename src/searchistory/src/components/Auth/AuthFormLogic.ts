@@ -48,11 +48,9 @@ export default (props: any, useUserStore: any) => {
         const user = userCredential.user;
         await userStore.setUserInfo(user.uid)
         router.push('/home');
-        // return true;
       })
       .catch((error) => {
         alert(error.message);
-        // return false;
       });
   };
   const actionCodeSettings = {
@@ -68,13 +66,11 @@ export default (props: any, useUserStore: any) => {
         if (auth.currentUser) {
           sendEmailVerification(auth.currentUser, actionCodeSettings)
             .then(() => {
-              alert("認証メールを送りました。")
+              alert("確認メールを送りました。メールを確認後ログインしてください。")
             }).catch((e) => {
               alert(e)
             });
         }
-        // await userStore.setUserInfo(user.uid)
-        // router.push('/home');
       })
       .catch((error) => {
         alert(error.message);

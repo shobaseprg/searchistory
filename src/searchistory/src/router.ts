@@ -43,16 +43,15 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const requiredAuth = to.matched.some(record => record.meta.requiredAuth)
-
   if (!requiredAuth) {
     next()
   } else {
     const auth = getAuth()
     onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        next({ path: '/signin' })
-      } else {
+      if (user !== null && user.emailVerified) {
         next()
+      } else {
+        next({ path: '/signin' })
       }
     })
   }

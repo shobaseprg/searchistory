@@ -1,11 +1,11 @@
-import { ref, onBeforeMount, onBeforeUnmount, computed, Ref } from "vue";
+import { ref, onBeforeMount, onBeforeUnmount, computed, Ref, ComputedRef } from "vue";
 import { TopicModel, TopicStatus, TOPIC_STATUS, TOPIC_STATUS_WORD } from "../models/TopicModel"
 
 export default (topics: Ref<Array<TopicModel>>, uid: string | undefined) => {
   type ownerType = "all" | "me";
-
   // ----------------------------- トピック検索 -----------------------------
   const filterWord = ref("");
+  const docIdFilterWord = ref("");
   const filterOwner = ref<ownerType>("all");
   const changeFilterOwner = (owner: ownerType) => {
     filterOwner.value = owner;
@@ -13,15 +13,15 @@ export default (topics: Ref<Array<TopicModel>>, uid: string | undefined) => {
 
   const filterStatus = ref<TopicStatus>(TOPIC_STATUS.ALL);
 
-  const isOwnerMatch = (topic: TopicModel) => {
+  const isOwnerMatch = (topic: TopicModel): boolean => {
     return filterOwner.value === "all" || (filterOwner.value === "me" && topic.uid === uid);
   }
 
-  const isStatusMatch = (topic: TopicModel) => {
+  const isStatusMatch = (topic: TopicModel): boolean => {
     return filterStatus.value === "all" || (filterStatus.value === topic.status);
   };
 
-  const isMatchWord = (topic: TopicModel) => {
+  const isMatchWord = (topic: TopicModel): boolean => {
     return topic.title.includes(filterWord.value)
   }
 
@@ -32,9 +32,6 @@ export default (topics: Ref<Array<TopicModel>>, uid: string | undefined) => {
     }
     )
   });
-  // ------------------------------- ヒストリー検索 -------------------------------
-  const urlFilterWord = ref("");
 
-
-  return { filterStatus, filterOwner, matchTopics, changeFilterOwner, filterWord, urlFilterWord }
+  return { filterStatus, docIdFilterWord, filterOwner, matchTopics, changeFilterOwner, filterWord }
 }
