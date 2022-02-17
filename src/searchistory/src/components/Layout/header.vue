@@ -29,16 +29,12 @@ import MemberEdit from "../Setting/MemberEdit.vue";
 import { onSnapList, topics } from "../../composable/onSnapList";
 //model
 import { TopicModel } from "../../models/TopicModel";
-
 //define
 const auth = getAuth();
 const router = useRouter()
-const route = useRoute()
-
 //define store
 const userStore = useUserStore();
 const targetTopicStore = useTargetTopicStore()
-
 //logic
 
 // サインアウト

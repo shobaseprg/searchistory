@@ -48,10 +48,15 @@ router.beforeEach((to, from, next) => {
   } else {
     const auth = getAuth()
     onAuthStateChanged(auth, (user) => {
-      if (user !== null && user.emailVerified) {
-        next()
+      if (user === null) {
+        next({ path: '/signin' });
       } else {
-        next({ path: '/signin' })
+        if (!user.emailVerified) {
+          alert("該当のEmailは認証されていません。");
+          next({ path: '/signin' })
+        } else {
+          next()
+        }
       }
     })
   }

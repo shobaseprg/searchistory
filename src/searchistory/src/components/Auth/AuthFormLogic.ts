@@ -1,8 +1,9 @@
 import { ref } from "vue";
 import { useRouter } from 'vue-router'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { doc, setDoc, addDoc } from 'firebase/firestore';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, User } from 'firebase/auth';
+import { doc, setDoc, addDoc, updateDoc } from 'firebase/firestore';
 import { db } from "../../firebase/config";
+import { actionCodeSettings } from "./authOption";
 
 export default (props: any, useUserStore: any) => {
   const userStore = useUserStore();
@@ -33,29 +34,25 @@ export default (props: any, useUserStore: any) => {
   const getPageTitle = () => {
     return props.isSignUp ? "新規登録" : "ログイン";
   }
-  // サインイン
-  const signin = async (isTest: boolean = false) => {
-    if (isTest) {
-      if (import.meta.env.VITE_ENV === "development") {
-        email.value = "1@g.com";
-      } else {
-        email.value = "1s@g.com"
-      }
-      password.value = "11111111";
+  const _checkEmail = (user: User) => {
+    if (user.email !== userStore.email) {
+      const userRef = doc(db, "userPrivate", user.uid);
+      updateDoc(userRef, { email: user.email })
     }
+  }
+  // サインイン
+  const signin = async () => {
     await signInWithEmailAndPassword(auth, email.value, password.value)
       .then(async (userCredential) => {
         const user = userCredential.user;
-        await userStore.setUserInfo(user.uid)
+        await userStore.setUserInfo(user.uid);
+        _checkEmail(user);
         router.push('/home');
       })
       .catch((error) => {
         alert(error.message);
       });
   };
-  const actionCodeSettings = {
-    url: "http://localhost:3000/home",
-  }
   // サインアップ
   const signup = () => {
     const auth = getAuth();

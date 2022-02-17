@@ -36,9 +36,6 @@
       <div>
         <button @click="getActionButton()">{{ getPageTitle() }}</button>
       </div>
-      <div>
-        <button v-if="isSignUp === false" @click="signin(true)">テストログイン</button>
-      </div>
     </div>
   </div>
 </template>
