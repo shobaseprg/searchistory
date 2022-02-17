@@ -1,4 +1,5 @@
 <template>
+  <PasswordModal :passwordModalControl="passwordModalControl" v-if="isPasswordModal" />
   <div class="bg-gray-300 h-[100%] flex justify-center items-center">
     <div class="border-2 border-red-500 w-[500px] h-[300px]">
       <p>{{ getPageTitle() }}</p>
@@ -36,6 +37,14 @@
       <div>
         <button @click="getActionButton()">{{ getPageTitle() }}</button>
       </div>
+      <!-- 移動 -->
+      <div>
+        <button @click="movePage(isSignUp)">{{ isSignUp ? "ログインへ" : "新規登録へ" }}</button>
+      </div>
+      <!-- ボタン -->
+      <div>
+        <button v-if="!isSignUp" @click="passwordModalControl(true)">パスワードをお忘れの場合</button>
+      </div>
     </div>
   </div>
 </template>
@@ -43,6 +52,7 @@
 <script setup lang="ts">
 import useUserStore from "../../store/useUserStore";
 import logic from "./AuthFormLogic";
+import PasswordModal from "../Auth/module/PasswordModal.vue"
 
 interface Props {
   isSignUp: boolean;
@@ -50,5 +60,5 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const { name, email, password, getActionButton, getPageTitle, signin, } = logic(props, useUserStore);
+const { name, email, password, getActionButton, getPageTitle, movePage, isPasswordModal, passwordModalControl } = logic(props, useUserStore);
 </script>

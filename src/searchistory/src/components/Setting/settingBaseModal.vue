@@ -38,6 +38,8 @@
       <button @click="controlOpen(true, MODAL_TYPE.MEMBER_EDIT)">チームメンバーメールを登録</button>
       <!-- <button @click>更新</button> -->
       <button @click="controlOpen(false, MODAL_TYPE.PERSONAL_SETTING); clearForm()">閉じる</button>
+      <!--■■■■■■■■■■■■■■■■■ パスワード変更 ■■■■■■■■■■■■■■■■■-->
+      <button @click="updatePassword">パスワード変更</button>
     </div>
   </div>
 </template>
@@ -49,7 +51,7 @@ import { useRoute, useRouter } from 'vue-router'
 //firebase
 import { db } from '../../firebase/config';
 import { updateDoc, doc } from 'firebase/firestore';
-import { getAuth, updateEmail, sendEmailVerification, signOut } from 'firebase/auth';
+import { getAuth, updateEmail, sendEmailVerification, sendPasswordResetEmail, signOut } from 'firebase/auth';
 //store
 import useUserStore from "../../store/useUserStore";
 //component
@@ -108,14 +110,27 @@ const updateUserEmail = () => {
         signOut(auth).then(() => {
           location.reload()
         });
-      }).catch((e) => {
-        alert(e)
-      });
+      })
   }).catch((error) => {
+    alert(error)
   });
   cancelEmailEdit();
 }
-
+//■■■■■■■■■■■■■■■■■■■ パスワード変更 ■■■■■■■■■■■■■■■■■■■■
+const updatePassword = () => {
+  if (auth.currentUser === null || auth.currentUser.email === null) return;
+  sendPasswordResetEmail(auth, auth.currentUser.email, actionCodeSettings)
+    .then(() => {
+      alert("パスワード変更メールを送信しました。メール内容に沿ってパスワードを経行してください。");
+      signOut(auth).then(() => {
+        location.reload()
+      });
+    })
+    .catch((error) => {
+      alert("エラーが発生しました。")
+      console.log(error);
+    });
+}
 </script>
 
 <style lang="" scoped>

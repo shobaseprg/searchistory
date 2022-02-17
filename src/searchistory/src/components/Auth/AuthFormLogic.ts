@@ -40,7 +40,7 @@ export default (props: any, useUserStore: any) => {
       updateDoc(userRef, { email: user.email })
     }
   }
-  // サインイン
+  //■■■■■■■■■■■■■■■■■■■ サインイン ■■■■■■■■■■■■■■■■■■■■
   const signin = async () => {
     await signInWithEmailAndPassword(auth, email.value, password.value)
       .then(async (userCredential) => {
@@ -53,7 +53,7 @@ export default (props: any, useUserStore: any) => {
         alert(error.message);
       });
   };
-  // サインアップ
+  //■■■■■■■■■■■■■■■■■■■ サインアップ ■■■■■■■■■■■■■■■■■■■■
   const signup = () => {
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email.value, password.value)
@@ -73,5 +73,24 @@ export default (props: any, useUserStore: any) => {
         alert(error.message);
       });
   }
-  return { name, email, password, createUser, getActionButton, getPageTitle, signin, signup }
+  //■■■■■■■■■■■■■■■■■■■ 移動 ■■■■■■■■■■■■■■■■■■■■
+  const movePage = (isSignUp: boolean) => {
+    switch (isSignUp) {
+      case true:
+        router.push("/signin")
+        break;
+      case false:
+        router.push("/signup")
+        break;
+      default:
+        break;
+    }
+  }
+  //■■■■■■■■■■■■■■■■■■■ パスワード再発行 ■■■■■■■■■■■■■■■■■■■■
+  const isPasswordModal = ref(false);
+
+  const passwordModalControl = (flag: boolean) => {
+    isPasswordModal.value = flag;
+  }
+  return { name, email, password, createUser, getActionButton, getPageTitle, movePage, isPasswordModal, passwordModalControl }
 }
