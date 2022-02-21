@@ -21,7 +21,7 @@ const isAuthPage = () => {
 #app {
   border: solid 3px red;
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   background-color: lightgray;
 }
 </style>

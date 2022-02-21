@@ -1,9 +1,9 @@
 <template>
   <CreateTopicModal v-if="isOpenTopicCreateRef" />
   <!--■■■■■■■■■■■■■■■■■ history-id-search ■■■■■■■■■■■■■■■■■-->
-  <div class="flex justify-center items-center h-[50px]">
+  <div class="flex justify-end mr-3 items-center h-[50px]">
     <div
-      class="flex items-center justify-evenly bg-white border-[1px] border-gray-400 rounded-md pt-[4px] pb-[4px] w-[350px]"
+      class="flex items-center justify-evenly bg-white border-[1px] border-gray-400 pt-[4px] pb-[4px] w-[350px]"
     >
       <!-- form_title -->
       <div class="border-[1px] border-gray-400 bg-gray-200 text-sm p-[1px] h-[25px]">調査履歴ID</div>
@@ -21,9 +21,9 @@
     </div>
   </div>
   <!--■■■■■■■■■■■■■■■■■ topic-list-wrap ■■■■■■■■■■■■■■■■■-->
-  <div class="bg-white h-[calc(100%-110px)]">
+  <div class="bg-red-100 h-[calc(100%-110px)] ml-3 mr-3 border-[1px] border-gray-400">
     <!--================= header-area =================-->
-    <div class="flex p-2 h-[42px]">
+    <div class="flex p-2 h-[42px] mt-5">
       <!------------------- create-topic ------------------->
       <button
         class="bg-red-400 text-gray-50 border-[1px] border-gray-600 text-xs w-[130px] pl-2 pr-2 rounded-full"
@@ -36,7 +36,6 @@
           <div
             class="border-r-[1px] border-gray-400 bg-gray-200 w-[190px] text-center"
           >タイトル or トピックID</div>
-          <div class="w-[5px]"></div>
           <input class="w-[calc(100%-190px)] outline-none" type="text" v-model="filterWord" />
         </div>
         <div class="w-[10px]"></div>
@@ -61,47 +60,59 @@
         </div>
       </div>
     </div>
-    <!--================= topic-list =================-->
-    <div class="bg-red-100 h-[calc(100%-42px)] mr-2 ml-2 p-2">
+    <!--================= トピックリスト =================-->
+    <div class="h-[calc(100%-42px)] p-2">
       <table class="w-[100%]">
-        <!------------------- table-header ------------------->
-        <tr class="h-[20px] bg-gray-300 text-sm">
-          <th class="border-[1px] border-black font-thin w-[210px]">トピックID</th>
-          <th class="border-[1px] border-black font-thin max-w-[400px]">タイトル</th>
-          <th class="border-[1px] border-black font-thin w-[80px]">状態</th>
-          <th class="border-[1px] border-black font-thin w-[60px]">my topic</th>
-          <th class="border-[1px] border-black font-thin w-[120px]">更新日</th>
-          <th class="w-[70px]"></th>
-          <th class="w-[70px]"></th>
+        <!------------------- テーブル-ヘッダー ------------------->
+        <tr class="h-[20px] bg-gray-400 text-sm text-white">
+          <th class="font-thin w-[230px]">トピックID</th>
+          <th class="font-thin max-w-[400px]">タイトル</th>
+          <th class="font-thin w-[80px]">状態</th>
+          <th class="font-thin w-[60px]">my topic</th>
+          <th class="font-thin w-[120px]">更新日</th>
+          <th class="w-[50px]"></th>
+          <th class="w-[50px]"></th>
         </tr>
-        <!------------------- table-body ------------------->
-        <tr v-for="(topic) in matchTopics" :key="topic.docID" class>
+        <!------------------- テーブル-ボディー ------------------->
+        <tr v-for="(topic) in matchTopics" :key="topic.docID">
           <!-- トピックID -->
-          <td class="flex items-center justify-end pr-2">
+          <td
+            class="flex items-center justify-end pr-3 border-t-[1px] border-b-[1px] border-l-[1px] border-gray-400 border-r-[1px] border-r-gray-300"
+          >
             {{ topic.docID }}
             <div class="w-2"></div>
             <CopyButton :copyWord="topic.docID" />
           </td>
           <!-- タイトル -->
-          <td>{{ topic.title }}</td>
+          <td
+            class="border-t-[1px] border-b-[1px] border-gray-400 border-r-[1px] border-r-gray-200"
+          >{{ topic.title }}</td>
           <!-- ステータス変更 -->
-          <td>
+          <td
+            class="border-t-[1px] border-b-[1px] border-gray-400 border-r-[1px] border-r-gray-200"
+          >
             <StatusSelect :status="topic.status" :docID="topic.docID" />
           </td>
-          <td>
+          <td
+            class="border-t-[1px] border-b-[1px] border-gray-400 border-r-[1px] border-r-gray-200"
+          >
             <span class v-if="topic.uid === userStore.uid">✔️</span>
           </td>
           <!-- 更新日 -->
-          <td>{{ topic.updatedAt.format("YYYY/MM/DD H:mm") }}</td>
+          <td
+            class="border-t-[1px] border-b-[1px] border-gray-400 border-r-[1px] border-r-gray-200"
+          >{{ topic.updatedAt.format("YYYY/MM/DD H:mm") }}</td>
           <!-- 事案確認 -->
-          <td>
+          <td class="border-t-[1px] border-b-[1px] border-gray-400">
             <button
               class="bg-blue-700 text-gray-50 border-[1px] border-gray-600 text-xs pl-2 pr-2 rounded-full"
               @click="setTargetTopic(topic); router.push('/history')"
             >確認</button>
           </td>
           <!-- 削除 -->
-          <td>
+          <td
+            class="border-t-[1px] border-b-[1px] border-gray-400 border-r-[1px] border-r-gray-400"
+          >
             <button
               v-if="topic.uid === userStore.uid"
               class="bg-red-600 text-white border-[1px] border-gray-600 text-xs pl-2 pr-2 rounded-full"
@@ -182,11 +193,11 @@ table {
 td {
   text-align: center;
   background: white;
-  border: solid 1px;
   font-size: 13px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 400px;
+  height: 24px;
 }
 </style>
