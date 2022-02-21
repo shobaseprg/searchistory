@@ -1,6 +1,5 @@
 <template>
-  <p>child:{{ selectedStatus }}</p>
-  <select v-model="selectedStatus" v-on:change="statusChange()">
+  <select class="outline-none" v-model="selectedStatus" v-on:change="statusChange()">
     <option :value="TOPIC_STATUS.PENDING">{{ TOPIC_STATUS_WORD[TOPIC_STATUS.PENDING] }}</option>
     <option :value="TOPIC_STATUS.FINISH">{{ TOPIC_STATUS_WORD[TOPIC_STATUS.FINISH] }}</option>
   </select>

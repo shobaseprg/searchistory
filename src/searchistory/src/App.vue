@@ -10,6 +10,7 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const authPage = ["/signin", "/signup", "/"]
+
 const isAuthPage = () => {
   return !authPage.includes(route.path)
 }
@@ -21,5 +22,6 @@ const isAuthPage = () => {
   border: solid 3px red;
   height: 100vh;
   width: 100vw;
+  background-color: lightgray;
 }
 </style>

@@ -1,15 +1,54 @@
 <template>
-  <div class="border-black border-2 flex h-[30px]">
-    <p>{{ userStore.name }}さん</p>
-    <button @click="signout()">ログアウト</button>
-    <p @click="router.push('/home')">home</p>
-    <button @click="controlOpen(true, MODAL_TYPE.PERSONAL_SETTING)">個人設定</button>
-    <!-- <button @click="testtopic()">テストトピック作成</button> -->
-  </div>
   <SettingBaseModal v-if="isOpenPersonalSettingRef" />
   <MemberEdit v-if="isOpenMemberEditRef" />
+  <div class="flex justify-between items-center pl-2 pr-2 h-[60px] bg-gray-400">
+    <!--■■■■■■■■■■■■■■■■■ left_block ■■■■■■■■■■■■■■■■■-->
+    <div class="flex h-[100%] items-center">
+      <!--■■■■■■■■■■■■■■■■■ title ■■■■■■■■■■■■■■■■■-->
+      <div
+        class="w-[170px] h-[30px] text-center border-2 border-black background bg-pink-400 rounded-full leading-[28px] text-sm"
+      >- SEARCHISTORY -</div>
+      <div class="w-[30px]"></div>
+      <!--■■■■■■■■■■■■■■■■■ user_info ■■■■■■■■■■■■■■■■■-->
+      <div class="pl-2 pr-2">
+        <!--================= name =================-->
+        <div class="flex text-xs">
+          <span class="text-gray-300">Name</span>
+          <div class="w-[5px]"></div>
+          <span>{{ userStore.name }}</span>
+        </div>
+        <!--================= email =================-->
+        <div class="flex text-xs">
+          <span class="text-gray-300">Email</span>
+          <div class="w-[5px]"></div>
+          <span>{{ userStore.email }}</span>
+        </div>
+        <!--================= uid =================-->
+        <div class="flex text-xs">
+          <span class="text-gray-300">userID</span>
+          <div class="w-[5px]"></div>
+          <span>{{ userStore.uid }}</span>
+        </div>
+      </div>
+    </div>
+    <!--■■■■■■■■■■■■■■■■■ button_box ■■■■■■■■■■■■■■■■■-->
+    <div class="flex justify-between w-[350px]">
+      <!--================= topic list =================-->
+      <button
+        class="bg-red-400 text-gray-200 border-[1px] border-gray-600 text-xs pl-2 pr-2 rounded-full"
+        @click="router.push('/home')"
+      >トピック一覧</button>
+      <!--================= user_setting =================-->
+      <button
+        class="bg-red-400 text-gray-200 border-[1px] border-gray-600 text-xs pl-2 pr-2 rounded-full"
+        @click="controlOpen(true, MODAL_TYPE.PERSONAL_SETTING)"
+      >ユーザー設定</button>
+      <!--================= logout =================-->
+      <button class="bg-gray-600 text-white text-sm pl-2 pr-2 rounded-sm" @click="signout()">ログアウト</button>
+    </div>
+  </div>
 </template>
-
+<!--■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ SCRIPT ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-->
 <script setup lang="ts">
 //vue plugin
 import { getAuth, signOut } from 'firebase/auth';
@@ -73,23 +112,9 @@ if (uid) {
     })
   });
 }
-
 onBeforeUnmount(() => {
   if (unsubscribe) unsubscribe();
 })
-
-// const testtopic = () => {
-//   const testuid = uid === undefined ? "" : uid;
-//   for (let i = 0; i < 3; i++) {
-//     TopicModel.register(
-//       `topic-title-${i}`,
-//       `topic-content-${i}`,
-//       testuid,
-//       userStore.name,
-//       []
-//     )
-//   }
-// };
 </script>
 
 <style lang="scss" scoped></style>

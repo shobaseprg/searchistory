@@ -32,7 +32,7 @@ export default (props: any, useUserStore: any) => {
   }
 
   const getPageTitle = () => {
-    return props.isSignUp ? "新規登録" : "ログイン";
+    return props.isSignUp ? "SIGN UP" : "SIGN IN";
   }
   const _checkEmail = (user: User) => {
     if (user.email !== userStore.email) {
@@ -42,6 +42,9 @@ export default (props: any, useUserStore: any) => {
   }
   //■■■■■■■■■■■■■■■■■■■ サインイン ■■■■■■■■■■■■■■■■■■■■
   const signin = async () => {
+    console.log("⬇︎【ログ】", "email.value"); console.log(email.value);
+
+
     await signInWithEmailAndPassword(auth, email.value, password.value)
       .then(async (userCredential) => {
         const user = userCredential.user;

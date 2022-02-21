@@ -9,6 +9,7 @@ const isOpenHistoryPreviewRef = ref(false);
 const isOpenPersonalSettingRef = ref(false);
 const isOpenMemberEditRef = ref(false);
 const isOpenAuthorityRef = ref(false);
+const isResetPassWordRef = ref(false);
 
 const MODAL_TYPE = {
   TOPIC_CREATE: 'topicCreate',
@@ -18,7 +19,8 @@ const MODAL_TYPE = {
   HISTORY_PREVIEW: 'HistoryPreview',
   PERSONAL_SETTING: 'personalSetting',
   MEMBER_EDIT: "member_edit",
-  AUTHORITY: "authority"
+  AUTHORITY: "authority",
+  RESET_PASSWORD: "resetPassword"
 
 } as const;
 type MODAL_TYPE = typeof MODAL_TYPE[keyof typeof MODAL_TYPE];
@@ -49,9 +51,12 @@ const controlOpen = (flag: boolean, type: MODAL_TYPE) => {
     case MODAL_TYPE.AUTHORITY:
       isOpenAuthorityRef.value = flag;
       break;
+    case MODAL_TYPE.RESET_PASSWORD:
+      isResetPassWordRef.value = flag;
+      break;
     default:
       break;
   }
 }
 
-export { isOpenTopicCreateRef, isOpenTopicEditRef, isOpenEditRef, isOpenHistoryCreateRef, isOpenHistoryEditRef, isOpenHistoryPreviewRef, isOpenPersonalSettingRef, isOpenMemberEditRef, isOpenAuthorityRef, controlOpen, MODAL_TYPE }
+export { isOpenTopicCreateRef, isOpenTopicEditRef, isOpenEditRef, isOpenHistoryCreateRef, isOpenHistoryEditRef, isOpenHistoryPreviewRef, isOpenPersonalSettingRef, isOpenMemberEditRef, isOpenAuthorityRef, isResetPassWordRef, controlOpen, MODAL_TYPE }

@@ -1,58 +1,53 @@
 <template>
-  <PasswordModal :passwordModalControl="passwordModalControl" v-if="isPasswordModal" />
-  <div class="bg-gray-300 h-[100%] flex justify-center items-center">
-    <div class="border-2 border-red-500 w-[500px] h-[300px]">
-      <p>{{ getPageTitle() }}</p>
-      <!-- 名前 -->
-      <div v-if="isSignUp">
-        <p>名前</p>
-        <input
-          class="w-[300px] h-[50px] mb-10 text-center border-2 border-pink-300 rounded-full duration-75;"
-          type="text"
-          v-model="name"
-        />
-      </div>
-      <!-- メール -->
-      <div>
-        <p>メール</p>
-        <p>{{ email }}</p>
-        <input
-          class="w-[300px] h-[50px] mb-10 text-center border-2 border-pink-300 rounded-full duration-75;"
-          type="text"
-          v-model="email"
-          data-testid="inputEmail"
-        />
-      </div>
-      <!-- パスワード -->
-      <div>
-        <p>パスワード</p>
-        <input
-          class="w-[300px] h-[50px] mb-10 text-center border-2 border-pink-300 rounded-full duration-75;"
-          type="text"
-          v-model="password"
-          data-testid="inputPassword"
-        />
-      </div>
-      <!-- ボタン -->
-      <div>
-        <button @click="getActionButton()">{{ getPageTitle() }}</button>
-      </div>
-      <!-- 移動 -->
-      <div>
-        <button @click="movePage(isSignUp)">{{ isSignUp ? "ログインへ" : "新規登録へ" }}</button>
-      </div>
-      <!-- ボタン -->
-      <div>
-        <button v-if="!isSignUp" @click="passwordModalControl(true)">パスワードをお忘れの場合</button>
-      </div>
+  <!--■■■■■■■■■■■■■■■■■ password modal ■■■■■■■■■■■■■■■■■-->
+  <ResetPasswordModal v-if="isResetPassWordRef" />
+  <!--■■■■■■■■■■■■■■■■■ center wrap ■■■■■■■■■■■■■■■■■-->
+  <div class="flex justify-center items-center flex-col">
+    <!--================= title =================-->
+    <div
+      class="w-[300px] h-[50px] mb-10 text-center border-2 border-black background bg-pink-400 rounded-full leading-[50px] text-xl"
+    >- SEARCHISTORY -</div>
+    <!--=================  center form =================-->
+    <div class="flex flex-col justify-center p-[30px] items-center bg-white w-[350px]">
+      <p class="text-gray-500 text-xl">{{ getPageTitle() }}</p>
+      <!------------------- name ------------------->
+      <InputForm
+        v-if="props.isSignUp"
+        :isSignUp="props.isSignUp"
+        :formModelRef="nameRef()"
+        type="text"
+        formTitle="Name"
+      />
+      <!------------------- mail ------------------->
+      <InputForm :formModelRef="emailRef()" type="text" formTitle="Email" />
+      <!------------------- password ------------------->
+      <InputForm :formModelRef="passwordRef()" type="password" formTitle="Password" />
+      <!------------------- button ------------------->
+      <button
+        class="mt-10 w-[90%] h-8 bg-red-400 text-white"
+        @click="getActionButton()"
+      >{{ getPageTitle() }}</button>
+      <!------------------- move page ------------------->
+      <button
+        class="text-gray-500 text-xs mt-6"
+        @click="movePage(isSignUp)"
+      >{{ isSignUp ? "ログインはこちら" : "新規登録はこちら" }}</button>
+      <!------------------- if forget ------------------->
+      <button
+        v-if="!isSignUp"
+        class="text-gray-500 text-xs mt-3"
+        @click="controlOpen(true, MODAL_TYPE.RESET_PASSWORD)"
+      >パスワードをお忘れの場合</button>
     </div>
   </div>
 </template>
-
+<!--■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ SCRIPT ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-->
 <script setup lang="ts">
 import useUserStore from "../../store/useUserStore";
 import logic from "./AuthFormLogic";
-import PasswordModal from "../Auth/module/PasswordModal.vue"
+import ResetPasswordModal from "../Auth/module/ResetPasswordModal.vue"
+import InputForm from "./module/InputForm.vue"
+import { controlOpen, isResetPassWordRef, MODAL_TYPE } from '../../composable/modalControl';
 
 interface Props {
   isSignUp: boolean;
@@ -60,5 +55,9 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const { name, email, password, getActionButton, getPageTitle, movePage, isPasswordModal, passwordModalControl } = logic(props, useUserStore);
+const nameRef = () => name;
+const emailRef = () => email;
+const passwordRef = () => password;
+
+const { name, email, password, getActionButton, getPageTitle, movePage } = logic(props, useUserStore);
 </script>

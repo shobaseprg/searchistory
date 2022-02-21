@@ -25,9 +25,6 @@ const onSnapList = (
       if (change.type == "added") {
         const addData = getInstanceFunc(change.doc)
         clone.push(addData);
-
-        console.log("addData")
-        console.log(addData)
       }
       // modified
       if (change.type == "modified") {
@@ -37,9 +34,6 @@ const onSnapList = (
         }
         )
         clone[modifyIndex] = modifyData;
-        console.log("modifyData")
-        console.log(modifyData)
-
         if (targetState.value.docID === modifyData.docID) {
           targetStore.setTarget(modifyData);
         }
@@ -51,13 +45,8 @@ const onSnapList = (
           return data.docID === deleteData.docID
         })
         clone.splice(deleteIndex, 1)
-
-        console.log("deleteData")
-        console.log(deleteData)
       }
       list.value = clone;
-      console.log("list.value");
-      console.log(list.value)
     })
     list.value.sort((a, b) => a.updatedAt < b.updatedAt ? 1 : -1)
   })

@@ -1,5 +1,5 @@
 <template>
-  <div class="border-2 border-green-400">
+  <div class="h-[100%] flex items-center justify-center">
     <AuthForm :isSignUp="true"></AuthForm>
   </div>
 </template>

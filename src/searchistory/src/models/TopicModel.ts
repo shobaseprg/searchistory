@@ -29,6 +29,14 @@ const TOPIC_STATUS_WORD = {
   finish: "解決済"
 } as const
 
+const TOPIC_OWNER = {
+  all: "all",
+  me: "me",
+  other: "other"
+} as const
+
+type TopicOwner = "all" | "me" | "other";
+
 import { PostCoreModel, FileInfo } from "./PostCoreModel"
 import { Member } from '../types/Member';
 class TopicModel extends PostCoreModel {
@@ -126,4 +134,4 @@ class TopicModel extends PostCoreModel {
     this.authorizedMemberInfos = await getMemberInfoList(this.authorizedUIDs)
   }
 }
-export { TopicModel, TopicStatus, TOPIC_STATUS, TOPIC_STATUS_WORD };
+export { TopicModel, TopicStatus, TOPIC_STATUS, TOPIC_STATUS_WORD, TOPIC_OWNER, TopicOwner };
