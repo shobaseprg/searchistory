@@ -2,11 +2,11 @@
   <button
     v-if="!isCopied"
     @click="copyIt"
-    class="flex items-center justify-center bg-gray-400 p-[2px] pb-1 h-[14px] w-[45px] text-xs text-white"
+    class="flex items-center justify-center bg-gray-400 p-[2px] pb-1 min-h-[14px] max-h-[14px] min-w-[45px] max-w-[45px] text-xs text-white"
   >copy</button>
   <div
     v-else
-    class="flex items-center justify-center bg-red-600 p-[2px] pb-1 h-[14px] w-[45px] text-xs text-white"
+    class="flex items-center justify-center bg-red-600 p-[2px] pb-1 min-h-[14px] max-h-[14px]min-w-[45px] max-w-[45px] text-xs text-white"
   >copied</div>
 </template>
 

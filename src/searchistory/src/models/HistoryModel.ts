@@ -32,6 +32,7 @@ import { PostCoreModel, FileInfo } from "./PostCoreModel"
 
 class HistoryModel extends PostCoreModel {
   readonly url: string = "";
+  readonly title: string = "";
   readonly status: HistoryStatus = "pending";
   readonly statusWord: HistoryStatusWord = "未調査";
   readonly topicDocID: string = "";
@@ -44,6 +45,7 @@ class HistoryModel extends PostCoreModel {
 
       default:
         this.url = topicObj.url;
+        this.title = topicObj.title;
         this.status = topicObj.status;
         this.statusWord = HISTORY_STATUS_WORD[this.status];
         this.topicDocID = topicObj.topicDocID;
@@ -52,6 +54,7 @@ class HistoryModel extends PostCoreModel {
   // 登録
   static async register(
     url: string,
+    title: string,
     content: string,
     uid: string,
     files: FileInfo[],
@@ -63,6 +66,7 @@ class HistoryModel extends PostCoreModel {
 
     await setDoc(newHistoryRef, {
       url,
+      title,
       content,
       uid,
       status: HISTORY_STATUS.PENDING,
@@ -76,6 +80,7 @@ class HistoryModel extends PostCoreModel {
   // 更新
   static async update(
     url: string,
+    title: string,
     content: string,
     targetHistoryFiles: FileInfo[],
     files: FileInfo[],
@@ -89,15 +94,14 @@ class HistoryModel extends PostCoreModel {
     const { existFiles, deleteFiles } = super.splitFiles(margeFiles, content);
     super.deleteImgFromStorage(deleteFiles);
     const updateHistoryRef = doc(db, 'topic', topicDocID, 'history', docID);
-    console.log("⬇︎【ログ】", "");
     await updateDoc(updateHistoryRef, {
       url,
+      title,
       content,
       files: existFiles,
       updatedAt: serverTimestamp(),
       status
     });
-    console.log("⬇︎【ログ】", "");
   }
   // 削除
   async delete(topicDocID: string) {

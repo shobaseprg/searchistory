@@ -1,19 +1,38 @@
 <template>
-  <!-- モーダル時背景 -->
+  <!--■■■■■■■■■■■■■■■■■ モーダル時背景 ■■■■■■■■■■■■■■■■■-->
   <div
     @click="controlOpen(false, MODAL_TYPE.TOPIC_EDIT)"
     class="z-[2000] w-[100%] h-[100%] bg-opacity-[0.5] fixed left-0 top-0 flex items-center justify-center bg-black"
   >
-    <p>編集</p>
-    <div class="z-[2] w-[50%] p-[1em] bg-white" @click="stopEvent">
-      <p>タイトル</p>
-      <input type="text" v-model="title" />
-      <div>
-        <mavon-editor :toolbars="createToolbar" @imgAdd="imgAdd" language="en" v-model="content" />
+    <!--============= モーダル =============-->
+    <div class="z-[2] w-[90%] h-[90%] p-[1em] bg-white" @click="stopEvent">
+      <!---------- タイトル ---------->
+      <div class="flex border-[1px] border-gray-400 w-[100%]">
+        <div class="border-r-[1px] border-gray-400 bg-gray-200 w-[70px] text-center">タイトル</div>
+        <input class="w-[calc(100%-90px)] outline-none pl-2 pr-2" type="text" v-model="title" />
       </div>
-      <button @click="updateTopic(targetTopic)">更新</button>
-
-      <button @click="controlOpen(false, MODAL_TYPE.TOPIC_EDIT); clearForm()">閉じる</button>
+      <div class="h-[10px]"></div>
+      <!---------- エディターフォーム ---------->
+      <mavon-editor
+        class="h-[calc(100%-60px)]"
+        :toolbars="createToolbar"
+        @imgAdd="imgAdd"
+        language="en"
+        v-model="content"
+      />
+      <div class="flex justify-end mt-2">
+        <!---------- 更新 ---------->
+        <button
+          class="bg-red-400 text-gray-50 border-[1px] border-gray-600 text-xs w-[130px] pl-2 pr-2 rounded-full"
+          @click="updateTopic(targetTopic)"
+        >更新</button>
+        <div class="w-2"></div>
+        <!---------- 閉じる ---------->
+        <button
+          class="bg-gray-600 text-gray-50 border-[1px] border-gray-600 text-xs w-[130px] pl-2 pr-2 rounded-full"
+          @click="controlOpen(false, MODAL_TYPE.TOPIC_EDIT); clearForm()"
+        >閉じる</button>
+      </div>
     </div>
   </div>
 </template>

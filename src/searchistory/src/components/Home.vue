@@ -148,12 +148,10 @@ import setBeforeUser from "../composable/beforeSetUser";
 import directHistory from "../composable/directHistory"
 //model
 import { TopicModel, TOPIC_STATUS, TOPIC_STATUS_WORD, TOPIC_OWNER } from "../models/TopicModel";
-
 //define
 const router = useRouter();
 const auth: Auth = getAuth();
 const currentUser = auth.currentUser;
-
 //define store
 const userStore = useUserStore();
 const targetTopicStore = useTargetTopicStore();

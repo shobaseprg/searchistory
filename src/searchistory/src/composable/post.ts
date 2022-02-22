@@ -25,7 +25,7 @@ const updateTopic = async (targetTopic: TopicModel) => {
 }
 // history登録
 const registerHistory = async (uid: string, topicDocID: string) => {
-  await HistoryModel.register(url.value, content.value, uid, files.value, topicDocID)
+  await HistoryModel.register(url.value, title.value, content.value, uid, files.value, topicDocID)
   clearForm();
   // await TopicModel.updateUpdatedAt(topicDocID)
   alert("登録しました。");
@@ -33,7 +33,7 @@ const registerHistory = async (uid: string, topicDocID: string) => {
 }
 // history更新
 const updateHistory = async (targetHistory: HistoryModel, selectedStatus: HistoryStatus) => {
-  await HistoryModel.update(url.value, content.value, files.value, targetHistory.files, targetHistory.docID, targetHistory.topicDocID, selectedStatus)
+  await HistoryModel.update(url.value, title.value, content.value, files.value, targetHistory.files, targetHistory.docID, targetHistory.topicDocID, selectedStatus)
   clearForm();
   // await TopicModel.updateUpdatedAt(targetHistory.topicDocID)
 
