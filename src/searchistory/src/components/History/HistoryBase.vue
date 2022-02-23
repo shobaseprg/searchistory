@@ -34,10 +34,7 @@
       />
     </div>
     <!--■■■■■■■■■■■■■■■■■ ヒストリーリストエリア ■■■■■■■■■■■■■■■■■-->
-    <div
-      v-if="!isHistoryPreview"
-      class="flex flex-col items-center border-2 border-black ml-2 w-[50%]"
-    >
+    <div v-if="!isHistoryPreview" class="flex flex-col items-center ml-2 w-[50%]">
       <!--============= トップ =============-->
       <div
         class="bg-white border-[1px] border-gray-400 w-[110px] mt-1 mb-1 text-center text-sm"

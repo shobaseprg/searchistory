@@ -41,8 +41,10 @@
         <div class="w-[10px]"></div>
         <!-- 状態 -->
         <div class="flex border-[1px] border-gray-400">
-          <div class="border-r-[1px] border-gray-400 bg-gray-200 w-[40px] text-center">状態</div>
-          <select class="outline-none text-center" v-model="filterStatus">
+          <div
+            class="flex items-center justify-center border-r-[1px] border-gray-400 bg-gray-200 w-[40px] text-center text-xs"
+          >状態</div>
+          <select class="outline-none text-center text-xs" v-model="filterStatus">
             <option :value="TOPIC_STATUS.ALL">{{ TOPIC_STATUS_WORD.all }}</option>
             <option :value="TOPIC_STATUS.PENDING">{{ TOPIC_STATUS_WORD.pending }}</option>
             <option :value="TOPIC_STATUS.FINISH">{{ TOPIC_STATUS_WORD.finish }}</option>
@@ -51,8 +53,10 @@
         <div class="w-[10px]"></div>
         <!-- 作成者 -->
         <div class="flex border-[1px] border-gray-400">
-          <div class="border-r-[1px] border-gray-400 bg-gray-200 w-[60px] text-center">作成者</div>
-          <select class="outline-none text-center" v-model="filterOwner">
+          <div
+            class="flex items-center justify-center border-r-[1px] border-gray-400 bg-gray-200 w-[60px] text-center text-xs"
+          >作成者</div>
+          <select class="outline-none text-center text-xs" v-model="filterOwner">
             <option :value="TOPIC_OWNER.all">全て</option>
             <option :value="TOPIC_OWNER.me">自分</option>
             <option :value="TOPIC_OWNER.other">自分以外</option>
