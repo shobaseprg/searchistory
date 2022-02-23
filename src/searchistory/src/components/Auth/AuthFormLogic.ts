@@ -4,6 +4,9 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, se
 import { doc, setDoc, addDoc, updateDoc } from 'firebase/firestore';
 import { db } from "../../firebase/config";
 import { actionCodeSettings } from "./authOption";
+import { fbErrorHandle } from "../../composable/fbErrorHandle";
+import { signUpVali } from "../../composable/validate";
+
 
 export default (props: any, useUserStore: any) => {
   const userStore = useUserStore();
@@ -42,9 +45,6 @@ export default (props: any, useUserStore: any) => {
   }
   //■■■■■■■■■■■■■■■■■■■ サインイン ■■■■■■■■■■■■■■■■■■■■
   const signin = async () => {
-    console.log("⬇︎【ログ】", "email.value"); console.log(email.value);
-
-
     await signInWithEmailAndPassword(auth, email.value, password.value)
       .then(async (userCredential) => {
         const user = userCredential.user;
@@ -57,7 +57,12 @@ export default (props: any, useUserStore: any) => {
       });
   };
   //■■■■■■■■■■■■■■■■■■■ サインアップ ■■■■■■■■■■■■■■■■■■■■
-  const signup = () => {
+  const signup = async () => {
+    const valiResult = await signUpVali(name.value, email.value, password.value);
+    if (valiResult) {
+      alert(valiResult)
+      return;
+    }
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email.value, password.value)
       .then(async (userCredential) => {
@@ -73,7 +78,7 @@ export default (props: any, useUserStore: any) => {
         }
       })
       .catch((error) => {
-        alert(error.message);
+        fbErrorHandle(error.message);
       });
   }
   //■■■■■■■■■■■■■■■■■■■ 移動 ■■■■■■■■■■■■■■■■■■■■
@@ -96,4 +101,10 @@ export default (props: any, useUserStore: any) => {
     isPasswordModal.value = flag;
   }
   return { name, email, password, createUser, getActionButton, getPageTitle, movePage, isPasswordModal, passwordModalControl }
+
+  //■■■■■■■■■■■■■■■■■ エラーハンドル ■■■■■■■■■■■■■■■■■
+  const errorHandle = (errorMessage: string) => {
+
+  }
+
 }

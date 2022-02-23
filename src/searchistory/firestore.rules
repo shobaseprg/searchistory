@@ -27,6 +27,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /user/{userID} {
       allow get:if isAuth()
+      allow list:if true;
       allow create:if isAuth() &&
                       userID == myUID() &&
                       incomingData().name is string &&
