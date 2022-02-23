@@ -20,7 +20,7 @@ export default (topics: Ref<Array<TopicModel>>, uid: string | undefined) => {
   const docIdFilterWord = ref("");
 
   const isMatchWord = (topic: TopicModel): boolean => {
-    return topic.title.includes(filterWord.value)
+    return topic.title.includes(filterWord.value) || topic.docID.includes(filterWord.value);
   }
   //■■■■■■■■■■■■■■■■■■■ check_filter ■■■■■■■■■■■■■■■■■■■■
   const matchTopics = computed(() => {

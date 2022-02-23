@@ -34,9 +34,9 @@
         <!-- タイトル・ID -->
         <div class="flex border-[1px] border-gray-400 w-[calc(100%-280px)]">
           <div
-            class="border-r-[1px] border-gray-400 bg-gray-200 w-[190px] text-center"
-          >タイトル or トピックID</div>
-          <input class="w-[calc(100%-190px)] outline-none" type="text" v-model="filterWord" />
+            class="flex items-center justify-center border-r-[1px] border-gray-400 bg-gray-200 w-[130px] text-center text-xs"
+          >トピックID or タイトル</div>
+          <input class="w-[calc(100%-130px)] pl-1 outline-none" type="text" v-model="filterWord" />
         </div>
         <div class="w-[10px]"></div>
         <!-- 状態 -->

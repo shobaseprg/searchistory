@@ -6,7 +6,7 @@
   >copy</button>
   <div
     v-else
-    class="flex items-center justify-center bg-red-600 p-[2px] pb-1 min-h-[14px] max-h-[14px]min-w-[45px] max-w-[45px] text-xs text-white"
+    class="flex items-center justify-center bg-red-600 p-[2px] pb-1 min-h-[14px] max-h-[14px] min-w-[45px] max-w-[45px] text-xs text-white"
   >copied</div>
 </template>
 
@@ -35,6 +35,7 @@ const { copyWord } = defineProps<Props>();
 const isCopied = ref(false);
 
 const copyIt = () => {
+  console.log(copyWord);
   navigator.clipboard.writeText(copyWord).then(e => {
     isCopied.value = true;
   });

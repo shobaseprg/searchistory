@@ -28,6 +28,7 @@
           <span class="text-gray-300">userID</span>
           <div class="w-[5px]"></div>
           <span>{{ userStore.uid }}</span>
+          <CopyButton class="border-[1px] border-grey-800" :copyWord="auth.currentUser?.uid ?? ''" />
         </div>
       </div>
     </div>
@@ -61,6 +62,7 @@ import { orderBy, collection, query, where, Unsubscribe, DocumentData, QueryDocu
 import useUserStore from "../../store/useUserStore";
 import useTargetTopicStore from "../../store/useTargetTopicStore"
 //component
+import CopyButton from "../module/CopyButton.vue"
 //composable
 import { controlOpen, MODAL_TYPE, isOpenPersonalSettingRef, isOpenMemberEditRef } from '../../composable/modalControl';
 import SettingBaseModal from "../Setting/settingBaseModal.vue";
