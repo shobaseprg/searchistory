@@ -1,45 +1,50 @@
 <template>
-  <!-- モーダル時背景 -->
+  <!--■■■■■■■■■■■■■■■■■ モーダル時背景 ■■■■■■■■■■■■■■■■■-->
   <div
     @click="controlOpen(false, MODAL_TYPE.PERSONAL_SETTING)"
     class="z-[2000] w-[100%] h-[100%] bg-opacity-[0.5] fixed left-0 top-0 flex items-center justify-center bg-black"
   >
-    <div class="z-[2] w-[50%] p-[1em] bg-white" @click="stopEvent">
-      <p>個人設定</p>
-      <!--■■■■■■■■■■■■■■■■■ 名前 ■■■■■■■■■■■■■■■■■-->
-      <!-- 名前表示 -->
-      <div v-if="!isNameEdit" class="flex">
-        名前:
-        <p>{{ userInfo.name }}</p>
-        <button @click="changeNameEdit(true)">編集</button>
+    <!--■■■■■■■■■■■■■■■■■ モーダル ■■■■■■■■■■■■■■■■■-->
+    <div class="z-[2] w-[690px] p-[1em] bg-white" @click="stopEvent">
+      <div class="flex justify-center">個人設定</div>
+      <div class="h-[10px]"></div>
+      <!--============= 名前 =============-->
+      <SettingForm
+        :isEditMode="isNameEditRef()"
+        formTitle="Name"
+        :displayWord="userInfo.name"
+        :formModel="formNameRef()"
+        :updateFunc="updateName"
+      />
+      <div class="h-[10px]"></div>
+      <!--============= メール =============-->
+      <SettingForm
+        :isEditMode="isEmailEditRef()"
+        formTitle="Email"
+        :displayWord="userInfo.email"
+        :formModel="formEmailRef()"
+        :updateFunc="updateUserEmail"
+      />
+      <div class="h-[10px]"></div>
+      <div class="flex justify-center">
+        <!--============= メンバー追加ボタン =============-->
+        <button
+          class="bg-red-400 text-gray-50 border-[1px] border-gray-600 text-xs h-[25px] pl-2 pr-2 rounded-full"
+          @click="controlOpen(true, MODAL_TYPE.MEMBER_EDIT)"
+        >チームメンバーメールを登録</button>
+        <div class="w-[10px]"></div>
+        <!--============= パスワード変更ボタン =============-->
+        <button
+          class="bg-red-400 text-gray-50 border-[1px] border-gray-600 text-xs h-[25px] pl-2 pr-2 rounded-full"
+          @click="updatePassword"
+        >パスワード変更</button>
+        <div class="w-[10px]"></div>
+        <!--============= 閉じる =============-->
+        <button
+          class="bg-gray-600 text-white text-xs h-[25px] pl-2 pr-2 rounded-full"
+          @click="controlOpen(false, MODAL_TYPE.PERSONAL_SETTING); clearForm()"
+        >閉じる</button>
       </div>
-      <!-- 名前フォーム -->
-      <div v-else class="flex">
-        名前:
-        <input type="text" v-model="formName" class="border-2 border-red-600" />
-        <button @click="cancelNameEdit()">キャンセル</button>
-        <button @click="updateName()">更新</button>
-      </div>
-      <!--■■■■■■■■■■■■■■■■■ メールアドレス ■■■■■■■■■■■■■■■■■-->
-      <!-- メール表示 -->
-      <div v-if="!isEmailEdit" class="flex">
-        メール:
-        <p>{{ userInfo.email }}</p>
-        <button @click="changeEmailEdit(true)">編集</button>
-      </div>
-      <!-- メール表示 -->
-      <div v-else class="flex">
-        メール:
-        <input type="text" v-model="formEmail" class="border-2 border-red-600" />
-        <button @click="cancelEmailEdit()">キャンセル</button>
-        <button @click="updateUserEmail()">更新</button>
-      </div>
-      <!--■■■■■■■■■■■■■■■■■ メンバー更新 ■■■■■■■■■■■■■■■■■-->
-      <button @click="controlOpen(true, MODAL_TYPE.MEMBER_EDIT)">チームメンバーメールを登録</button>
-      <!-- <button @click>更新</button> -->
-      <button @click="controlOpen(false, MODAL_TYPE.PERSONAL_SETTING); clearForm()">閉じる</button>
-      <!--■■■■■■■■■■■■■■■■■ パスワード変更 ■■■■■■■■■■■■■■■■■-->
-      <button @click="updatePassword">パスワード変更</button>
     </div>
   </div>
 </template>
@@ -55,6 +60,7 @@ import { getAuth, updateEmail, sendEmailVerification, sendPasswordResetEmail, si
 //store
 import useUserStore from "../../store/useUserStore";
 //component
+import SettingForm from './module/settingForm.vue';
 //composable
 import { title, content, updateTopic, imgAdd, files, clearForm } from "../../composable/post"
 import { controlOpen, MODAL_TYPE } from "../../composable/modalControl"
@@ -75,11 +81,13 @@ const stopEvent = (event: any) => {
 };
 //■■■■■■■■■■■■■■■■■■■ 名前変更 ■■■■■■■■■■■■■■■■■■■■
 const isNameEdit = ref(false);
+const isNameEditRef = () => isNameEdit;
 const formName = ref(userStore.name);
+const formNameRef = () => formName;
 
-const changeNameEdit = (flag: true) => {
-  isNameEdit.value = flag;
-}
+// const changeNameEdit = (flag: true) => {
+//   isNameEdit.value = flag;
+// }
 const cancelNameEdit = () => {
   isNameEdit.value = false;
   formName.value = userStore.name;
@@ -91,11 +99,13 @@ const updateName = () => {
 }
 //■■■■■■■■■■■■■■■■■■■ メール変更 ■■■■■■■■■■■■■■■■■■■■
 const isEmailEdit = ref(false);
+const isEmailEditRef = () => isEmailEdit;
 const formEmail = ref(userStore.email);
+const formEmailRef = () => formEmail;
 
-const changeEmailEdit = (flag: true) => {
-  isEmailEdit.value = flag;
-}
+// const changeEmailEdit = (flag: true) => {
+//   isEmailEdit.value = flag;
+// }
 const cancelEmailEdit = () => {
   isEmailEdit.value = false;
   formEmail.value = userStore.name;

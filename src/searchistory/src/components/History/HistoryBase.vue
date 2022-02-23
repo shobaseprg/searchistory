@@ -72,8 +72,10 @@
           <div class="w-[5px]"></div>
           <!-- 状態 -->
           <div class="flex border-[1px] border-gray-400">
-            <div class="border-r-[1px] border-gray-400 bg-gray-200 w-[40px] text-center">状態</div>
-            <select v-model="filterStatus">
+            <div
+              class="flex items-center justify-center border-r-[1px] border-gray-400 bg-gray-200 w-[40px] text-center text-xs"
+            >状態</div>
+            <select class="outline-none text-xs" v-model="filterStatus">
               <option :value="HISTORY_STATUS.ALL">{{ HISTORY_STATUS_WORD.all }}</option>
               <option :value="HISTORY_STATUS.PENDING">{{ HISTORY_STATUS_WORD.pending }}</option>
               <option :value="HISTORY_STATUS.UNSOLVED">{{ HISTORY_STATUS_WORD.unsolved }}</option>
@@ -83,8 +85,10 @@
           <div class="w-[5px]"></div>
           <!-- 作成者 -->
           <div class="flex border-[1px] border-gray-400">
-            <div class="border-r-[1px] border-gray-400 bg-gray-200 w-[50px] text-center">作成者</div>
-            <select v-model="filterStatus">
+            <div
+              class="flex items-center justify-center border-r-[1px] border-gray-400 bg-gray-200 w-[50px] text-center text-xs"
+            >作成者</div>
+            <select class="outline-none text-xs" v-model="filterStatus">
               <option :value="HISTORY_STATUS.ALL">{{ HISTORY_STATUS_WORD.all }}</option>
               <option :value="HISTORY_STATUS.PENDING">{{ HISTORY_STATUS_WORD.pending }}</option>
               <option :value="HISTORY_STATUS.UNSOLVED">{{ HISTORY_STATUS_WORD.unsolved }}</option>
