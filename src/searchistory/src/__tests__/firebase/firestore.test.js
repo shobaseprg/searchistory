@@ -67,37 +67,31 @@ describe('userPrivate collection', () => {
     it('create: 認証済みで条件を満たす場合は可能', async () => {
       const { clientDB } = getDB();
       await testing.assertSucceeds(
-        setDoc(doc(clientDB, "userPrivate", uid), { email: "123456789012345678901234567890123456789012345678901234567890", uid })
+        setDoc(doc(clientDB, "userPrivate", uid), { uid, memberUIDs: [] })
       )
     })
     it('create: 未認証では不可。', async () => {
       const { guestClientDB } = getDB();
       await testing.assertFails(
-        setDoc(doc(guestClientDB, "userPrivate", uid), { email: "otherEmail", uid })
+        setDoc(doc(guestClientDB, "userPrivate", uid), { uid, memberUIDs: [] })
       )
     })
     it('create: 認証済み。ドキュメントIDがUIDと異なる値では不可。', async () => {
       const { guestClientDB } = getDB();
       await testing.assertFails(
-        setDoc(doc(guestClientDB, "userPrivate", otherUid), { email: "otherEmail", uid })
+        setDoc(doc(guestClientDB, "userPrivate", otherUid), { uid, memberUIDs: [] })
       )
     })
     it('create: 認証済み。uidフィールドがUIDと異なる値では不可。', async () => {
       const { guestClientDB } = getDB();
       await testing.assertFails(
-        setDoc(doc(guestClientDB, "userPrivate", uid), { email: "otherEmail", uid: otherUid })
-      )
-    })
-    it('create: 認証済み。emailが31文字以上不可。', async () => {
-      const { guestClientDB } = getDB();
-      await testing.assertFails(
-        setDoc(doc(guestClientDB, "userPrivate", uid), { email: "1234567890123456789012345678901", uid: uid })
+        setDoc(doc(guestClientDB, "userPrivate", uid), { uid: otherUid, memberUIDs: [] })
       )
     })
     it('create: 認証済み。許可されたフィールド以外は不可', async () => {
       const { guestClientDB } = getDB();
       await testing.assertFails(
-        setDoc(doc(guestClientDB, "userPrivate", uid), { email: "1234567890123456789012345678901", uid: uid, age: 20 })
+        setDoc(doc(guestClientDB, "userPrivate", uid), { email: "1234567890123456789012345678901", uid: uid, memberUIDs: [] })
       )
     })
   })
@@ -106,43 +100,31 @@ describe('userPrivate collection', () => {
     beforeEach(async () => {
       await testEnv.withSecurityRulesDisabled(async context => {
         const noRuleDB = context.firestore()
-        await setDoc(doc(noRuleDB, "userPrivate", uid), { email: "authEmail", uid })
+        await setDoc(doc(noRuleDB, "userPrivate", uid), { uid, memberUIDs: [otherUid] })
       })
     })
     it('update: 認証済みで条件を満たす場合は可能', async () => {
       const { clientDB } = getDB();
       await testing.assertSucceeds(
-        updateDoc(doc(clientDB, "userPrivate", uid), { email: "changeEmail" })
+        updateDoc(doc(clientDB, "userPrivate", uid), { memberUIDs: [otherUid, "addUID"] })
       )
     })
     it('update: 未認証では不可', async () => {
       const { guestClientDB } = getDB();
       await testing.assertFails(
-        updateDoc(doc(guestClientDB, "userPrivate", uid), { email: "changeEmail" })
+        updateDoc(doc(guestClientDB, "userPrivate", uid), { memberUIDs: [otherUid, "addUID"] })
       )
     })
     it('update: 認証済み。ドキュメントIDがUIDと異なる値では不可。', async () => {
       const { clientDB } = getDB();
       await testing.assertFails(
-        updateDoc(doc(clientDB, "userPrivate", otherUid), { email: "changeEmail" })
-      )
-    })
-    it('update: 認証済み。emailが文字列でない場合不可。', async () => {
-      const { clientDB } = getDB();
-      await testing.assertFails(
-        updateDoc(doc(clientDB, "userPrivate", uid), { email: 0 })
-      )
-    })
-    it('update: 認証済み。emailが61文字以上不可。', async () => {
-      const { clientDB } = getDB();
-      await testing.assertFails(
-        updateDoc(doc(clientDB, "userPrivate", uid), { email: "1234567890123456789012345678901234567890123456789012345678901" })
+        updateDoc(doc(clientDB, "userPrivate", otherUid), { memberUIDs: [otherUid, "addUID"] })
       )
     })
     it('update: 認証済み。許可されたフィールド以外は不可', async () => {
       const { clientDB } = getDB();
       await testing.assertFails(
-        updateDoc(doc(clientDB, "userPrivate", uid), { email: "changeEmail", uid: "changeUID" })
+        updateDoc(doc(clientDB, "userPrivate", uid), { uid: "changeUID" })
       )
     })
   })

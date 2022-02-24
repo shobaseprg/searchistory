@@ -1,15 +1,9 @@
-
-
 import { defineStore } from "pinia";
-import { getFirestore, getDocs, collection, getDoc, doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/config"
 import { getMemberInfoList } from "../composable/getUserInfoFromUID";
-
-// type Member = {
-//   uid: string;
-//   email: string;
-//   name: string;
-// };
+import { getAuth } from 'firebase/auth';
+const auth = getAuth();
 
 export default defineStore("useUserStore", {
   state: () => {
@@ -31,13 +25,13 @@ export default defineStore("useUserStore", {
     async setUserInfo(uid: string) {
       onSnapshot(doc(db, "user", uid), async (doc) => {
         const userData = doc.data() ?? {};
-        this.uid = userData.uid;
+        this.uid = auth.currentUser?.uid ?? "no data";
         this.name = userData.name;
       }
       )
       onSnapshot(doc(db, "userPrivate", uid), async (doc) => {
         const userPrivateData = doc.data() ?? {};
-        this.email = userPrivateData.email;
+        this.email = auth.currentUser?.email ?? "no data";
         this.memberUIDs = userPrivateData.memberUIDs ?? "no data";
         this.memberInfos = await getMemberInfoList(this.memberUIDs);
       }

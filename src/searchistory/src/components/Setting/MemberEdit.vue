@@ -1,6 +1,5 @@
 <template>
   <!--■■■■■■■■■■■■■■■■■ モーダル背景 ■■■■■■■■■■■■■■■■■-->
-
   <div
     @click="controlOpen(false, MODAL_TYPE.MEMBER_EDIT)"
     class="z-[3000] w-[100%] h-[100%] bg-opacity-[0.5] fixed left-0 top-0 flex items-center justify-center"
@@ -41,13 +40,13 @@
           <div class="flex w-[230px] text-[1px]">
             <div class="border-[1px] border-gray-400 bg-gray-200">Name</div>
             <div class="w-[3px]"></div>
-            <div>{{ memberInfo.name }}</div>
+            <div class="flex items-center">{{ memberInfo.name }}</div>
           </div>
           <!-- UID -->
           <div class="flex w-[230px] text-[1px]">
             <div class="border-[1px] border-gray-400 bg-gray-200 text-center w-[20px]">ID</div>
             <div class="w-[3px]"></div>
-            <div>{{ memberInfo.uid }}</div>
+            <div class="flex items-center">{{ memberInfo.uid }}</div>
           </div>
           <!-- 削除ボタン -->
           <button

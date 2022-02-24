@@ -32,12 +32,14 @@ service cloud.firestore {
                       userID == myUID() &&
                       incomingData().name is string &&
                       incomingData().name.size() < 31 &&
+                      incomingData().name.size() > 2 &&
                       incomingData().uid == myUID() &&
                       isAvailableCreateFields(["name","uid"])
       allow update:if isAuth() &&
                       userID == myUID() &&
                       incomingData().name is string &&
                       incomingData().name.size() < 31 &&
+                      incomingData().name.size() > 2 &&
                       isAvailableUpdateFields(['name']);
     }
     // userPrivate
@@ -46,15 +48,11 @@ service cloud.firestore {
                     userID == myUID()
       allow create:if isAuth() &&
                       userID == myUID() &&
-                      incomingData().email is string &&
-                      incomingData().email.size() < 61 &&
                       incomingData().uid == myUID() &&
-                      isAvailableCreateFields(["email","uid","memberUIDs"])
+                      isAvailableCreateFields(["uid","memberUIDs"])
       allow update:if isAuth() &&
                       userID == myUID() &&
-                      incomingData().email is string &&
-                      incomingData().email.size() < 61 &&
-                      isAvailableUpdateFields(['email',"memberUIDs"]);
+                      isAvailableUpdateFields(["memberUIDs"]);
     }
     // topic
     match /topic/{documentID} {

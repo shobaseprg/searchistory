@@ -18,14 +18,13 @@ export default (props: any, useUserStore: any) => {
   const email = ref("");
   const password = ref("");
 
-  const createUser = async (uid: string, email: string) => {
+  const createUser = async (uid: string) => {
     await setDoc(doc(db, 'user', uid), {
       name: name.value,
       uid: uid,
     })
     await setDoc(doc(db, 'userPrivate', uid), {
       uid: uid,
-      email: email,
       memberUIDs: [],
     })
   }
@@ -37,23 +36,23 @@ export default (props: any, useUserStore: any) => {
   const getPageTitle = () => {
     return props.isSignUp ? "SIGN UP" : "SIGN IN";
   }
-  const _checkEmail = (user: User) => {
-    if (user.email !== userStore.email) {
-      const userRef = doc(db, "userPrivate", user.uid);
-      updateDoc(userRef, { email: user.email })
-    }
-  }
+  // const _checkEmail = (user: User) => {
+  //   if (user.email !== userStore.email) {
+  //     const userRef = doc(db, "userPrivate", user.uid);
+  //     updateDoc(userRef, { email: user.email })
+  //   }
+  // }
   //■■■■■■■■■■■■■■■■■■■ サインイン ■■■■■■■■■■■■■■■■■■■■
   const signin = async () => {
     await signInWithEmailAndPassword(auth, email.value, password.value)
       .then(async (userCredential) => {
         const user = userCredential.user;
         await userStore.setUserInfo(user.uid);
-        _checkEmail(user);
+        // _checkEmail(user);
         router.push('/home');
       })
       .catch((error) => {
-        alert(error.message);
+        fbErrorHandle(error.message);
       });
   };
   //■■■■■■■■■■■■■■■■■■■ サインアップ ■■■■■■■■■■■■■■■■■■■■
@@ -67,7 +66,7 @@ export default (props: any, useUserStore: any) => {
     createUserWithEmailAndPassword(auth, email.value, password.value)
       .then(async (userCredential) => {
         const user = userCredential.user;
-        await createUser(user.uid, user.email ?? "");
+        await createUser(user.uid);
         if (auth.currentUser) {
           sendEmailVerification(auth.currentUser, actionCodeSettings)
             .then(() => {
