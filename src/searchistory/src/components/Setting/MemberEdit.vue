@@ -78,8 +78,7 @@ import { controlOpen, MODAL_TYPE, isOpenMemberEditRef } from "../../composable/m
 import useUserStore from "../../store/useUserStore";
 //component
 //composable
-import checkExistUID from "../../composable/checkExistUID";
-
+import { addMemberVali, checkExistUID } from "../../composable/validate"
 //model
 import { Member } from "../../types/Member"
 //define
@@ -99,7 +98,17 @@ const myUserPrivateDocRef = doc(db, "userPrivate", userStore.uid);
 const addMemberUID = async () => {
   const nmu = newMemberUID.value
   newMemberUID.value = "";
-  const { isExist, memberInfo } = await checkExistUID(nmu)
+
+  // バリデーション
+  const result = addMemberVali(nmu, userInfo.value.memberUIDs);
+
+  if (result !== "") {
+    alert(result);
+    return;
+  }
+
+  // 重複チェック
+  const { isExist, memberInfo } = await checkExistUID(nmu);
   if (!isExist) {
     alert("そのユーザーIDは存在しません。");
   } else {

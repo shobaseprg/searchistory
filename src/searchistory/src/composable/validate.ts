@@ -1,6 +1,8 @@
-import { query, where, collection, getDocs } from 'firebase/firestore';
+import { query, where, collection, getDoc, getDocs, doc } from 'firebase/firestore';
 import { db } from "../firebase/config";
+import { getAuth } from 'firebase/auth';
 //■■■■■■■■■■■■■■■■■ モジュール ■■■■■■■■■■■■■■■■■
+
 const _isIncludeSpace = (word: string, target: string) => {
   const spaceReg = /\s/g;
   if (spaceReg.test(target)) {
@@ -17,6 +19,17 @@ const _lengthRange = (title: string, target: string, min: number, max: number) =
   }
 }
 
+
+const checkExistUID = async (uid: string) => {
+  const userSnap = await getDoc(doc(db, "user", uid));
+  if (userSnap.exists() && userSnap.data()) {
+    return { isExist: true, memberInfo: userSnap.data() }
+  } else {
+    return { isExist: false, memberInfo: { name: "", uid: "" } }
+  }
+};
+
+
 // const topicTitleValidsate = (word: string) => {
 //   if (word.length > 10) {
 //     return false;
@@ -25,16 +38,17 @@ const _lengthRange = (title: string, target: string, min: number, max: number) =
 //   }
 // }
 //■■■■■■■■■■■■■■■■■ サインアップ ■■■■■■■■■■■■■■■■■
-const signUpVali = async (inputName: string, inputEmail: string, inputPassword: string) => {
+const nameVali = async (inputName: string) => {
 
   let errorMessage = "";
 
   errorMessage = errorMessage + _lengthRange("ユーザー名", inputName, 3, 30)
   errorMessage = errorMessage + _isIncludeSpace("ユーザー名", inputName)
 
-  if (!errorMessage) {
+  if (errorMessage !== "") {
     return errorMessage;
   }
+
   //============= 重複チェック =============
   const userColRef = collection(db, "user");
   const q = query(userColRef, where("name", "==", inputName));
@@ -44,7 +58,22 @@ const signUpVali = async (inputName: string, inputEmail: string, inputPassword: 
     errorMessage = "そのユーザー名は既に存在しているため、異なる名前を設定してください。";
   }
   return errorMessage;
-
 }
 
-export { signUpVali };
+//■■■■■■■■■■■■■■■■■ メンバー追加 ■■■■■■■■■■■■■■■■■
+const addMemberVali = (uid: string, memberUIDs: string[]) => {
+
+  let errorMessage = "";
+
+  const auth = getAuth();
+
+  if (auth.currentUser?.uid === uid) {
+    errorMessage = errorMessage + "そのIDは自分のIDです。";
+  }
+  if (memberUIDs.includes(uid)) {
+    errorMessage = errorMessage + "そのIDのユーザーは既に登録されています。";
+  }
+  return errorMessage;
+}
+
+export { nameVali, addMemberVali, checkExistUID };

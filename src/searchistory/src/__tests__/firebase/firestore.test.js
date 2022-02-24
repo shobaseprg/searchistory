@@ -4,13 +4,14 @@ import * as testing from '@firebase/rules-unit-testing'
 
 import { doc, collection, setDoc, getDoc, updateDoc, query, where, getDocs, deleteDoc, serverTimestamp } from 'firebase/firestore'
 
+//■■■■■■■■■■■■■■■■■ 事前準備 ■■■■■■■■■■■■■■■■■
 const projectID = v4()
 let testEnv
-const uid = v4()
-const otherUid = v4()
+const uid = "m".repeat(28);
+const otherUid = "o".repeat(28);
+
 
 beforeAll(async () => {
-  // テストプロジェクト環境の作成
   testEnv = await testing.initializeTestEnvironment({
     projectId: projectID,
     firestore: {
@@ -30,18 +31,142 @@ afterAll(async () => {
 })
 
 const getDB = () => {
-  // ログイン情報つきのContextを作成し、そこから Firestore インスタンスを得る
   const authenticatedContext = testEnv.authenticatedContext(uid)
   const clientDB = authenticatedContext.firestore()
 
-  // ゲストContextを作成し、そこから Firestore インスタンスを得る
   const unauthenticatedContext = testEnv.unauthenticatedContext()
   const guestClientDB = unauthenticatedContext.firestore()
   return { clientDB, guestClientDB }
 }
+//■■■■■■■■■■■■■■■■■ user ■■■■■■■■■■■■■■■■■
 
+describe('user collection', () => {
+  const name = "a".repeat(30);
+  const name31 = "a".repeat(31);
+  //============= user get =============
+  describe('get', () => {
+    it('get: 未認証では不可。', async () => {
+      const { guestClientDB } = getDB();
+      await testing.assertFails(
+        getDoc(doc(guestClientDB, "user", uid))
+      )
+    })
+  })
+  //============= user create =============
+  describe('create', () => {
+    const name = "a".repeat(30);
+    const name31 = "a".repeat(31);
+
+    it('create: 認証済みで条件を満たす場合は可能', async () => {
+      const { clientDB } = getDB();
+      await testing.assertSucceeds(
+        setDoc(doc(clientDB, "user", uid), { uid, name })
+      )
+    })
+    it('create: 未認証では不可。', async () => {
+      const { guestClientDB } = getDB();
+      await testing.assertFails(
+        setDoc(doc(guestClientDB, "user", uid), { uid, name })
+      )
+    })
+    it('create: 認証済み。ドキュメントIDがUIDと異なる値では不可。', async () => {
+      const { clientDB } = getDB();
+      await testing.assertFails(
+        setDoc(doc(clientDB, "user", otherUid), { uid, name })
+      )
+    })
+    it('create: 認証済み。uidフィールドがUIDと異なる値では不可。', async () => {
+      const { clientDB } = getDB();
+      await testing.assertFails(
+        setDoc(doc(clientDB, "user", uid), { uid: otherUid, name })
+      )
+    })
+    it('create: 認証済み。許可されたフィールド以外は不可', async () => {
+      const { clientDB } = getDB();
+      await testing.assertFails(
+        setDoc(doc(clientDB, "user", uid), { email: "email", uid: uid, name })
+      )
+    })
+    it('create: 認証済み。nameが文字列以外は不可', async () => {
+      const { clientDB } = getDB();
+      await testing.assertFails(
+        setDoc(doc(clientDB, "user", uid), { uid: uid, name: 111111 })
+      )
+    })
+    it('create: 認証済み。nameが31文字以上は不可', async () => {
+      const { clientDB } = getDB();
+      await testing.assertFails(
+        setDoc(doc(clientDB, "user", uid), { uid: uid, name: name31 })
+      )
+    })
+    it('create: 認証済み。nameが2文字以下は不可', async () => {
+      const { clientDB } = getDB();
+      await testing.assertFails(
+        setDoc(doc(clientDB, "user", uid), { uid: uid, name: "aa" })
+      )
+    })
+    it('create: 認証済み。nameが3文字以下は可能', async () => {
+      const { clientDB } = getDB();
+      await testing.assertSucceeds(
+        setDoc(doc(clientDB, "user", uid), { uid: uid, name: "aaa" })
+      )
+    })
+  })
+  //============= user update =============
+  describe('update', () => {
+    beforeEach(async () => {
+      await testEnv.withSecurityRulesDisabled(async context => {
+        const noRuleDB = context.firestore()
+        await setDoc(doc(noRuleDB, "user", uid), { uid, name })
+      })
+    })
+    it('update: 認証済みで条件を満たす場合は可能', async () => {
+      const { clientDB } = getDB();
+      await testing.assertSucceeds(
+        updateDoc(doc(clientDB, "user", uid), { name: "changeName" })
+      )
+    })
+    it('update: 未認証では不可', async () => {
+      const { guestClientDB } = getDB();
+      await testing.assertFails(
+        updateDoc(doc(guestClientDB, "user", uid), { name: "changeName" })
+      )
+    })
+    it('update: 認証済み。ドキュメントIDがUIDと異なる値では不可。', async () => {
+      const { clientDB } = getDB();
+      await testing.assertFails(
+        updateDoc(doc(clientDB, "user", otherUid), { name: "changeName" })
+      )
+    })
+    it('update: 認証済み。許可されたフィールド以外は不可', async () => {
+      const { clientDB } = getDB();
+      await testing.assertFails(
+        updateDoc(doc(clientDB, "user", uid), { uid: "changeUID" })
+      )
+    })
+    it('update: 認証済み。nameが31文字以上は不可', async () => {
+      const { clientDB } = getDB();
+      await testing.assertFails(
+        updateDoc(doc(clientDB, "user", uid), { name: name31 })
+      )
+    })
+    it('update: 認証済み。nameが2文字以下は不可', async () => {
+      const { clientDB } = getDB();
+      await testing.assertFails(
+        updateDoc(doc(clientDB, "user", uid), { name: "aa" })
+      )
+    })
+    it('update: 認証済み。nameが3文字以下は可能', async () => {
+      const { clientDB } = getDB();
+      await testing.assertSucceeds(
+        updateDoc(doc(clientDB, "user", uid), { name: "aaa" })
+      )
+    })
+  })
+})
+//■■■■■■■■■■■■■■■■■ userPrivate ■■■■■■■■■■■■■■■■■
 describe('userPrivate collection', () => {
-  // get
+  //============= userPrivate get =============
   describe('get', () => {
     it('get: 未認証では不可。', async () => {
       const { guestClientDB } = getDB();
@@ -62,7 +187,7 @@ describe('userPrivate collection', () => {
       )
     })
   })
-  // create
+  //============= userPrivate create =============
   describe('create', () => {
     it('create: 認証済みで条件を満たす場合は可能', async () => {
       const { clientDB } = getDB();
@@ -77,25 +202,25 @@ describe('userPrivate collection', () => {
       )
     })
     it('create: 認証済み。ドキュメントIDがUIDと異なる値では不可。', async () => {
-      const { guestClientDB } = getDB();
+      const { clientDB } = getDB();
       await testing.assertFails(
-        setDoc(doc(guestClientDB, "userPrivate", otherUid), { uid, memberUIDs: [] })
+        setDoc(doc(clientDB, "userPrivate", otherUid), { uid, memberUIDs: [] })
       )
     })
     it('create: 認証済み。uidフィールドがUIDと異なる値では不可。', async () => {
-      const { guestClientDB } = getDB();
+      const { clientDB } = getDB();
       await testing.assertFails(
-        setDoc(doc(guestClientDB, "userPrivate", uid), { uid: otherUid, memberUIDs: [] })
+        setDoc(doc(clientDB, "userPrivate", uid), { uid: otherUid, memberUIDs: [] })
       )
     })
     it('create: 認証済み。許可されたフィールド以外は不可', async () => {
-      const { guestClientDB } = getDB();
+      const { clientDB } = getDB();
       await testing.assertFails(
-        setDoc(doc(guestClientDB, "userPrivate", uid), { email: "1234567890123456789012345678901", uid: uid, memberUIDs: [] })
+        setDoc(doc(clientDB, "userPrivate", uid), { email: "email", uid: uid, memberUIDs: [] })
       )
     })
   })
-  // update
+  //============= userPrivate update =============
   describe('update', () => {
     beforeEach(async () => {
       await testEnv.withSecurityRulesDisabled(async context => {
@@ -129,9 +254,21 @@ describe('userPrivate collection', () => {
     })
   })
 })
-// topic
+//■■■■■■■■■■■■■■■■■ topic ■■■■■■■■■■■■■■■■■
 describe('topic collection', () => {
-  // list
+  // 正常オブジェクト(docID除く)
+  const validObject = {
+    title: "title",
+    content: "content",
+    authorizedUIDs: [uid],
+    files: ["yyyyyyy"],
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+    status: "pending",
+    uid,
+    historyList: [],
+  }
+  //============= topic list =============
   describe('list', () => {
     it('list:authorizedUIDsにログインユーザーのUIDが含まれれば可能 ', async () => {
       const { clientDB } = getDB();
@@ -148,26 +285,116 @@ describe('topic collection', () => {
       )
     })
   })
-  // create
+  //============= topic create =============
   describe('create', () => {
     it('create: 認証済みで条件を満たす場合は可能', async () => {
       const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "topicID");
+      const testObject = { ...validObject, docID: docRef.id };
       await testing.assertSucceeds(
-        setDoc(doc(clientDB, "topic", "topicID"), { title: "title", content: "content", uid, authorizedUIDs: [uid] })
+        setDoc(docRef, testObject)
       )
     })
     it('create: 未認証では不可。', async () => {
       const { guestClientDB } = getDB();
+      const docRef = doc(guestClientDB, "topic", "topicID");
+      const testObject = { ...validObject, docID: docRef.id };
       await testing.assertFails(
-        setDoc(doc(guestClientDB, "topic", "topicID"), { title: "title", content: "content", uid, authorizedUIDs: [uid] })
+        setDoc(docRef, testObject)
       )
     })
+    // uid
     it('create: uidにログインユーザーのUIDと異なる値を与えるのは不可', async () => {
       const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "topicID");
+      const testObject = { ...validObject, docID: docRef.id, uid: otherUid };
       await testing.assertFails(
-        setDoc(doc(clientDB, "topic", "topicID"), { title: "title", content: "content", uid: otherUid, authorizedUIDs: [uid] })
+        setDoc(docRef, testObject)
       )
     })
+    // title
+    it('create: titleが100文字以下は可能', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "topicID");
+      const title = "a".repeat(100);
+      const testObject = { ...validObject, docID: docRef.id, title };
+      await testing.assertSucceeds(
+        setDoc(docRef, testObject)
+      )
+    })
+    it('create: titleが101文字以上は不可', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "topicID");
+      const title = "a".repeat(101);
+      const testObject = { ...validObject, docID: docRef.id, title };
+      await testing.assertFails(
+        setDoc(docRef, testObject)
+      )
+    })
+    it('create: titleが1文字以上は可能', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "topicID");
+      const title = "a".repeat(1);
+      const testObject = { ...validObject, docID: docRef.id, title };
+      await testing.assertSucceeds(
+        setDoc(docRef, testObject)
+      )
+    })
+    it('create: titleが空欄は不可', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "topicID");
+      const title = "";
+      const testObject = { ...validObject, docID: docRef.id, title };
+      await testing.assertFails(
+        setDoc(docRef, testObject)
+      )
+    })
+    // content
+    it('create: contentが10000文字以下は可能', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "topicID");
+      const content = "a".repeat(10000);
+      const testObject = { ...validObject, docID: docRef.id, content };
+      await testing.assertSucceeds(
+        setDoc(docRef, testObject)
+      )
+    })
+    it('create: contentが10001文字以上は不可', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "topicID");
+      const content = "a".repeat(10001);
+      const testObject = { ...validObject, docID: docRef.id, content };
+      await testing.assertFails(
+        setDoc(docRef, testObject)
+      )
+    })
+    it('create: contentが1文字以上は可能', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "topicID");
+      const content = "a".repeat(1);
+      const testObject = { ...validObject, docID: docRef.id, content };
+      await testing.assertSucceeds(
+        setDoc(docRef, testObject)
+      )
+    })
+    it('create: contentが空欄は不可', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "topicID");
+      const content = "";
+      const testObject = { ...validObject, docID: docRef.id, content };
+      await testing.assertFails(
+        setDoc(docRef, testObject)
+      )
+    })
+    it('create: statusがpending以外は不可', async () => {
+      const { clientDB } = getDB();
+      const docRef = doc(clientDB, "topic", "topicID");
+      const testObject = { ...validObject, docID: docRef.id, status: "finish" };
+      await testing.assertFails(
+        setDoc(docRef, testObject)
+      )
+    })
+    // authorizedUIDs
     it('create: authorizedUIDsにログインユーザーのUIDが含まれていない場合は不可', async () => {
       const { clientDB } = getDB();
       await testing.assertFails(
@@ -175,20 +402,34 @@ describe('topic collection', () => {
       )
     })
   })
-  // update
+  //============= topic update =============
   describe('update', () => {
+    const validObject = {
+      title: "title",
+      content: "content",
+      authorizedUIDs: [uid],
+      files: ["yyyyyyy"],
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      status: "pending",
+      uid,
+      historyList: [],
+    }
     // モック作成
     beforeEach(async () => {
       await testEnv.withSecurityRulesDisabled(async context => {
         const noRuleDB = context.firestore()
-        await setDoc(doc(noRuleDB, "topic", "topicID"), { title: "title", content: "content", uid, authorizedUIDs: [uid] })
-        await setDoc(doc(noRuleDB, "topic", "otherUserTopicID"), { title: "title", content: "content", uid: otherUid, authorizedUIDs: [otherUid] })
+        // 自分が作ったドキュメント
+        await setDoc(doc(noRuleDB, "topic", "topicID"), { ...validObject, docID: "topicID" })
+        // 他人が作ったドキュメント
+        const otherObject = { ...validObject, uid: otherUid, authorizedUIDs: [otherUid], docID: "otherUserTopicID" }
+        await setDoc(doc(noRuleDB, "topic", "otherUserTopicID"), otherObject)
       })
     })
     it('update: 認証済みで条件を満たす場合は可能', async () => {
       const { clientDB } = getDB();
       await testing.assertSucceeds(
-        updateDoc(doc(clientDB, "topic", "topicID"), { title: "title", content: "content", authorizedUIDs: [uid] })
+        updateDoc(doc(clientDB, "topic", "topicID"), { title: "changeTitle", content: "changeContent", authorizedUIDs: [uid] })
       )
     })
     it('update: 未認証では不可。', async () => {
@@ -197,20 +438,58 @@ describe('topic collection', () => {
         updateDoc(doc(guestClientDB, "topic", "topicID"), { title: "title", content: "content", authorizedUIDs: [uid] })
       )
     })
-    it('update: uidの変更は不可', async () => {
+    it('update: 許可されていないフィールドは不可', async () => {
       const { clientDB } = getDB();
       await testing.assertFails(
-        updateDoc(doc(clientDB, "topic", "topicID"), { title: "title", content: "content", uid: otherUid, authorizedUIDs: [uid] })
+        updateDoc(doc(clientDB, "topic", "topicID"), { uid: otherUid })
       )
     })
-    it('update: uidフィールドの値がログイン中のユーザーと異なるキュメントは不可', async () => {
+    // title
+    it('update: titleが空欄は不可', async () => {
+      const { clientDB } = getDB();
+      await testing.assertFails(
+        updateDoc(doc(clientDB, "topic", "topicID"), { title: "" })
+      )
+    })
+    it('update: titleが101文字以上は不可', async () => {
+      const { clientDB } = getDB();
+      await testing.assertFails(
+        updateDoc(doc(clientDB, "topic", "topicID"), { title: "a".repeat(101) })
+      )
+    })
+    it('update: titleが100文字は可能', async () => {
+      const { clientDB } = getDB();
+      await testing.assertSucceeds(
+        updateDoc(doc(clientDB, "topic", "topicID"), { title: "a".repeat(100) })
+      )
+    })
+    // content
+    it('update: contentが空欄は不可', async () => {
+      const { clientDB } = getDB();
+      await testing.assertFails(
+        updateDoc(doc(clientDB, "topic", "topicID"), { content: "" })
+      )
+    })
+    it('update: contentが10001文字以上は不可', async () => {
+      const { clientDB } = getDB();
+      await testing.assertFails(
+        updateDoc(doc(clientDB, "topic", "topicID"), { content: "a".repeat(10001) })
+      )
+    })
+    it('update: contetが10000文字は可能', async () => {
+      const { clientDB } = getDB();
+      await testing.assertSucceeds(
+        updateDoc(doc(clientDB, "topic", "topicID"), { content: "a".repeat(10000) })
+      )
+    })
+    it('update: ドキュメントIDの値がログイン中のユーザーと異なるキュメントは不可', async () => {
       const { clientDB } = getDB();
       await testing.assertFails(
         updateDoc(doc(clientDB, "topic", "otherUserTopicID"), { title: "title", content: "content", authorizedUIDs: [uid] })
       )
     })
   })
-  // // delete
+  //============= topic delete =============
   describe('delete', () => {
     // モック作成
     beforeEach(async () => {
@@ -240,8 +519,7 @@ describe('topic collection', () => {
     })
   })
 })
-
-// history
+//■■■■■■■■■■■■■■■■■ history ■■■■■■■■■■■■■■■■■
 describe('history collection', () => {
   // list
   describe('list', () => {

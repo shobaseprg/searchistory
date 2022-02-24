@@ -62,8 +62,9 @@ import useUserStore from "../../store/useUserStore";
 //component
 import SettingForm from './module/settingForm.vue';
 //composable
-import { title, content, updateTopic, imgAdd, files, clearForm } from "../../composable/post"
-import { controlOpen, MODAL_TYPE } from "../../composable/modalControl"
+import { title, content, updateTopic, imgAdd, files, clearForm } from "../../composable/post";
+import { controlOpen, MODAL_TYPE } from "../../composable/modalControl";
+import { nameVali } from "../../composable/validate";
 // option
 import { actionCodeSettings } from "../Auth/authOption";
 //model
@@ -84,18 +85,28 @@ const isNameEdit = ref(false);
 const isNameEditRef = () => isNameEdit;
 const formName = ref(userStore.name);
 const formNameRef = () => formName;
-
-// const changeNameEdit = (flag: true) => {
-//   isNameEdit.value = flag;
-// }
+//============= キャンセル =============
 const cancelNameEdit = () => {
   isNameEdit.value = false;
   formName.value = userStore.name;
 }
-const updateName = () => {
-  const userDocRef = doc(db, "user", userStore.uid);
-  updateDoc(userDocRef, { name: formName.value });
-  cancelNameEdit();
+//============= 更新 =============
+const updateName = async () => {
+
+  const valiResult = await nameVali(formName.value);
+
+  if (valiResult !== "") {
+    alert(valiResult)
+    return;
+  }
+  try {
+    const userDocRef = doc(db, "user", userStore.uid);
+    updateDoc(userDocRef, { name: formName.value });
+    isNameEdit.value = false;
+  } catch (e) {
+    console.log(e);
+    alert(`エラーが発生しました。`);
+  }
 }
 //■■■■■■■■■■■■■■■■■■■ メール変更 ■■■■■■■■■■■■■■■■■■■■
 const isEmailEdit = ref(false);
@@ -103,9 +114,6 @@ const isEmailEditRef = () => isEmailEdit;
 const formEmail = ref(userStore.email);
 const formEmailRef = () => formEmail;
 
-// const changeEmailEdit = (flag: true) => {
-//   isEmailEdit.value = flag;
-// }
 const cancelEmailEdit = () => {
   isEmailEdit.value = false;
   formEmail.value = userStore.name;

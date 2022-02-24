@@ -5,7 +5,7 @@ import { doc, setDoc, addDoc, updateDoc } from 'firebase/firestore';
 import { db } from "../../firebase/config";
 import { actionCodeSettings } from "./authOption";
 import { fbErrorHandle } from "../../composable/fbErrorHandle";
-import { signUpVali } from "../../composable/validate";
+import { nameVali } from "../../composable/validate";
 
 
 export default (props: any, useUserStore: any) => {
@@ -36,12 +36,7 @@ export default (props: any, useUserStore: any) => {
   const getPageTitle = () => {
     return props.isSignUp ? "SIGN UP" : "SIGN IN";
   }
-  // const _checkEmail = (user: User) => {
-  //   if (user.email !== userStore.email) {
-  //     const userRef = doc(db, "userPrivate", user.uid);
-  //     updateDoc(userRef, { email: user.email })
-  //   }
-  // }
+
   //■■■■■■■■■■■■■■■■■■■ サインイン ■■■■■■■■■■■■■■■■■■■■
   const signin = async () => {
     await signInWithEmailAndPassword(auth, email.value, password.value)
@@ -57,8 +52,8 @@ export default (props: any, useUserStore: any) => {
   };
   //■■■■■■■■■■■■■■■■■■■ サインアップ ■■■■■■■■■■■■■■■■■■■■
   const signup = async () => {
-    const valiResult = await signUpVali(name.value, email.value, password.value);
-    if (valiResult) {
+    const valiResult = await nameVali(name.value);
+    if (valiResult !== "") {
       alert(valiResult)
       return;
     }
