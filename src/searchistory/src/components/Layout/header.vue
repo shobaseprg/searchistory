@@ -1,13 +1,14 @@
 <template>
   <SettingBaseModal v-if="isOpenPersonalSettingRef" />
   <MemberEdit v-if="isOpenMemberEditRef" />
-  <div class="flex justify-between items-center pl-2 pr-2 h-[60px] bg-gray-400">
+  <div class="flex justify-between items-center pl-2 pr-2 lg:h-[60px] h-[100px] bg-gray-400">
     <!--■■■■■■■■■■■■■■■■■ left_block ■■■■■■■■■■■■■■■■■-->
-    <div class="flex h-[100%] items-center">
+    <div class="flex h-[100%] items-center md:flex-row flex-col">
       <!--■■■■■■■■■■■■■■■■■ title ■■■■■■■■■■■■■■■■■-->
-      <div
-        class="w-[170px] h-[30px] text-center border-2 border-black background bg-pink-400 rounded-full leading-[28px] text-sm"
-      >- SEARCHISTORY -</div>
+      <button
+        class="w-[170px] h-[30px] text-center border-2 border-black bg-pink-400 rounded-full leading-[28px] text-sm mb-2 mt-2"
+        @click="router.push('/home')"
+      >- SEARCHISTORY -</button>
       <div class="w-[30px]"></div>
       <!--■■■■■■■■■■■■■■■■■ user_info ■■■■■■■■■■■■■■■■■-->
       <div class="pl-2 pr-2">
@@ -33,19 +34,27 @@
       </div>
     </div>
     <!--■■■■■■■■■■■■■■■■■ button_box ■■■■■■■■■■■■■■■■■-->
-    <div class="flex justify-between w-[350px]">
+    <div class="flex md:justify-between items-center w-[450px] lg:flex-row flex-col">
       <!--================= topic list =================-->
       <button
-        class="bg-red-400 text-gray-200 border-[1px] border-gray-600 text-xs pl-2 pr-2 rounded-full"
+        class="bg-red-400 text-gray-200 border-[1px] border-gray-600 text-xs pl-2 pr-2 rounded-full md:w-[110px] w-[200px] mb-[2px]"
         @click="router.push('/home')"
       >トピック一覧</button>
       <!--================= user_setting =================-->
       <button
-        class="bg-red-400 text-gray-200 border-[1px] border-gray-600 text-xs pl-2 pr-2 rounded-full"
+        class="bg-red-400 text-gray-200 border-[1px] border-gray-600 text-xs pl-2 pr-2 rounded-full md:w-[110px] w-[200px] mb-[2px]"
         @click="controlOpen(true, MODAL_TYPE.PERSONAL_SETTING)"
       >ユーザー設定</button>
+      <!--================= manual =================-->
+      <button
+        class="bg-red-400 text-gray-200 border-[1px] border-gray-600 text-xs pl-2 pr-2 rounded-full md:w-[110px] w-[200px] mb-[2px]"
+        @click="gotoManual"
+      >使用方法</button>
       <!--================= logout =================-->
-      <button class="bg-gray-600 text-white text-sm pl-2 pr-2 rounded-sm" @click="signout()">ログアウト</button>
+      <button
+        class="bg-gray-600 text-white text-sm pl-2 pr-2 rounded-sm md:w-[110px] w-[200px] mb-[2px]"
+        @click="signout()"
+      >ログアウト</button>
     </div>
   </div>
 </template>
@@ -117,6 +126,11 @@ if (uid) {
 onBeforeUnmount(() => {
   if (unsubscribe) unsubscribe();
 })
+// マニュアル遷移
+const gotoManual = () => {
+  window.open("https://fito2prg.com/archives/463", '_blank');
+}
+
 </script>
 
 <style lang="scss" scoped></style>

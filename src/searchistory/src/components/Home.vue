@@ -21,7 +21,9 @@
     </div>
   </div>
   <!--■■■■■■■■■■■■■■■■■ topic-list-wrap ■■■■■■■■■■■■■■■■■-->
-  <div class="bg-red-100 h-[calc(100%-110px)] ml-3 mr-3 border-[1px] border-gray-400">
+  <div
+    class="bg-red-100 overflow-y-scroll h-[calc(100%-130px)] ml-3 mr-3 border-[1px] border-gray-400"
+  >
     <!--================= header-area =================-->
     <div class="flex p-2 h-[42px] mt-5">
       <!------------------- create-topic ------------------->
@@ -65,7 +67,7 @@
       </div>
     </div>
     <!--================= トピックリスト =================-->
-    <div class="h-[calc(100%-42px)] p-2">
+    <div class="h-[calc(100%-70px)] p-2">
       <table class="w-[100%]">
         <!------------------- テーブル-ヘッダー ------------------->
         <tr class="h-[20px] bg-gray-400 text-sm text-white">

@@ -23,5 +23,6 @@ const isAuthPage = () => {
   height: 100vh;
   width: 100%;
   background-color: lightgray;
+  min-width: 1000px;
 }
 </style>
