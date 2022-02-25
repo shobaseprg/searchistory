@@ -11,7 +11,9 @@ import {
 
 import { db } from "../firebase/config";
 import { getMemberInfoList } from "../composable/getUserInfoFromUID";
-import { sanitize, reSanitize } from "../composable/sanitize"
+import { sanitize, reSanitize } from "../composable/sanitize";
+import { topicVali } from "../composable/validate";
+import cutWord from "../composable/cutWord";
 
 type TopicStatus = 'all' | 'pending' | 'finish'
 
@@ -61,63 +63,100 @@ class TopicModel extends PostCoreModel {
         this.historyList = topicObj.historyList;
     }
   }
-  // 保存
+  //============= 登録 =============
   static async register(
     title: string,
     content: string,
     uid: string,
     files: FileInfo[]
   ) {
+
+    const valiResult = topicVali(title, content);
+    if (valiResult !== "") {
+      alert(valiResult);
+      return false;
+    }
+
     const { existFiles, deleteFiles } = super.splitFiles(files, content);
     super.deleteImgFromStorage(deleteFiles);
     const newTopicRef = doc(collection(db, 'topic'));
 
-    const scontent = sanitize(content);
-
-    await setDoc(newTopicRef, {
-      title,
-      content: scontent,
-      uid,
-      authorizedUIDs: [uid],
-      status: TOPIC_STATUS.PENDING,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-      docID: newTopicRef.id,
-      files: existFiles,
-      historyList: []
-    });
+    try {
+      await setDoc(newTopicRef, {
+        title,
+        content: sanitize(content),
+        uid,
+        authorizedUIDs: [uid],
+        status: TOPIC_STATUS.PENDING,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        docID: newTopicRef.id,
+        files: existFiles,
+        historyList: []
+      });
+      return true;
+    } catch (e) {
+      console.log(e);
+      alert("エラーが発生しました。");
+      return false;
+    }
   }
-  // 更新
+  //============= 更新 =============
   static async update(
     title: string,
     content: string,
     files: FileInfo[],
     docID: string
   ) {
+
+    const valiResult = topicVali(title, content);
+    if (valiResult !== "") {
+      alert(valiResult);
+      return false;
+    }
+
     const { existFiles, deleteFiles } = super.splitFiles(files, content);
     super.deleteImgFromStorage(deleteFiles);
     const updateTopicRef = doc(db, 'topic', docID);
-    const scontent = sanitize(content);
 
-    await updateDoc(updateTopicRef, {
-      title,
-      content: scontent,
-      files: existFiles,
-      updatedAt: serverTimestamp(),
-    });
-  }
-  // 削除
-  async delete() {
-    const historyColRef = collection(db, 'topic', this.docID, 'history');
-    const querySnapshot = await getDocs(historyColRef);
-    querySnapshot.forEach(async (doc) => {
-      await deleteDoc(doc.ref)
+    try {
+      await updateDoc(updateTopicRef, {
+        title,
+        content: sanitize(content),
+        files: existFiles,
+        updatedAt: serverTimestamp(),
+      });
+      return true;
+    } catch (e) {
+      console.log(e);
+      alert("エラーが発生しました。");
+      return false;
     }
-    )
-    const updateTopicRef = doc(db, 'topic', this.docID);
-    await deleteDoc(updateTopicRef)
+  }
+  //============= 削除 =============
+  async delete() {
+    const shotWord = cutWord(this.title, 20);
+
+    if (!confirm(`${shotWord}を削除しますか?`)) return;
+
+    const historyColRef = collection(db, 'topic', this.docID, 'history');
+    try {
+      const querySnapshot = await getDocs(historyColRef);
+      // 紐づくhistory削除
+      querySnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref)
+      }
+      )
+      // topic削除
+      const updateTopicRef = doc(db, 'topic', this.docID);
+      await deleteDoc(updateTopicRef);
+      alert(`${shotWord}を削除しました。`)
+    } catch (e) {
+      console.log(e);
+      alert("エラーが発生しました。");
+    }
   };
-  // 権限更新
+  //============= 権限更新 =============
   async updateMembers(authorizedMemberInfos: Member[], uid: string) {
     const authorizedUIDs = authorizedMemberInfos.map((info) => {
       return info.uid;

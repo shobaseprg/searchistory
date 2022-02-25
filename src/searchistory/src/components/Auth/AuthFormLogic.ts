@@ -43,7 +43,6 @@ export default (props: any, useUserStore: any) => {
       .then(async (userCredential) => {
         const user = userCredential.user;
         await userStore.setUserInfo(user.uid);
-        // _checkEmail(user);
         router.push('/home');
       })
       .catch((error) => {

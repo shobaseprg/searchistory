@@ -2,7 +2,6 @@ import { query, where, collection, getDoc, getDocs, doc } from 'firebase/firesto
 import { db } from "../firebase/config";
 import { getAuth } from 'firebase/auth';
 //■■■■■■■■■■■■■■■■■ モジュール ■■■■■■■■■■■■■■■■■
-
 const _isIncludeSpace = (word: string, target: string) => {
   const spaceReg = /\s/g;
   if (spaceReg.test(target)) {
@@ -10,7 +9,6 @@ const _isIncludeSpace = (word: string, target: string) => {
   }
   return "";
 }
-
 const _lengthRange = (title: string, target: string, min: number, max: number) => {
   if (target.length > max || target.length < min) {
     return `${title}は${min}文字以上、${max}文字以下で登録してください。`;
@@ -18,8 +16,6 @@ const _lengthRange = (title: string, target: string, min: number, max: number) =
     return "";
   }
 }
-
-
 const checkExistUID = async (uid: string) => {
   const userSnap = await getDoc(doc(db, "user", uid));
   if (userSnap.exists() && userSnap.data()) {
@@ -28,15 +24,6 @@ const checkExistUID = async (uid: string) => {
     return { isExist: false, memberInfo: { name: "", uid: "" } }
   }
 };
-
-
-// const topicTitleValidsate = (word: string) => {
-//   if (word.length > 10) {
-//     return false;
-//   } else {
-//     return true;
-//   }
-// }
 //■■■■■■■■■■■■■■■■■ サインアップ ■■■■■■■■■■■■■■■■■
 const nameVali = async (inputName: string) => {
 
@@ -75,5 +62,19 @@ const addMemberVali = (uid: string, memberUIDs: string[]) => {
   }
   return errorMessage;
 }
-
-export { nameVali, addMemberVali, checkExistUID };
+//■■■■■■■■■■■■■■■■■ topic登録 ■■■■■■■■■■■■■■■■■
+const topicVali = (title: string, content: string) => {
+  let errorMessage = "";
+  errorMessage = errorMessage + _lengthRange("タイトル", title, 1, 100);
+  errorMessage = errorMessage + _lengthRange("内容", content, 1, 10000);
+  return errorMessage;
+}
+//■■■■■■■■■■■■■■■■■ history登録 ■■■■■■■■■■■■■■■■■
+const historyVali = (url: string, title: string, content: string) => {
+  let errorMessage = "";
+  errorMessage = errorMessage + _lengthRange("URL", url, 1, 500);
+  errorMessage = errorMessage + _lengthRange("タイトル", title, 0, 300);
+  errorMessage = errorMessage + _lengthRange("内容", content, 1, 10000);
+  return errorMessage;
+}
+export { nameVali, addMemberVali, checkExistUID, topicVali, historyVali };

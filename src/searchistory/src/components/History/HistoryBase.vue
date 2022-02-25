@@ -143,6 +143,7 @@
               <div class="flex border-[1px] border-gray-400 p-[2px]">
                 <div class="bg-gray-200 w-[70px] text-center">my history</div>
                 <div class="w-[20px] text-center" v-if="history.uid === userStore.uid">✔️</div>
+                <div class="w-[20px]" v-else></div>
               </div>
             </div>
             <div class="h-[5px]"></div>

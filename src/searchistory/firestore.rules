@@ -98,12 +98,34 @@ service cloud.firestore {
         allow list:if isAuth() &&
                         myUID() in getParentTopic(database,documentID).data.authorizedUIDs
         allow create:if isAuth() &&
-                        incomingData().uid == myUID() &&
                         myUID() in getParentTopic(database,documentID).data.authorizedUIDs &&
-                        isAvailableCreateFields(["url","title","content","status","files","updatedAt","createdAt","docID","uid","topicDocID"]);
+                        isAvailableCreateFields(["url","title","content","status","files","updatedAt","createdAt","docID","uid","topicDocID"]) &&
+                        incomingData().url is string &&
+                        incomingData().url.size() < 501 &&
+                        incomingData().url.size() > 0 &&
+                        incomingData().title is string &&
+                        incomingData().title.size() < 301 &&
+                        incomingData().content is string &&
+                        incomingData().content.size() < 10001 &&
+                        incomingData().content.size() > 0 &&
+                        incomingData().status == "pending" &&
+                        incomingData().files is list &&
+                        incomingData().updatedAt is timestamp &&
+                        incomingData().createdAt is timestamp &&
+                        incomingData().docID == historyDocumentID &&
+                        incomingData().uid == myUID() &&
+                        incomingData().topicDocID == documentID;
         allow update:if isAuth() &&
                         myUID() in getParentTopic(database,documentID).data.authorizedUIDs &&
-                        isAvailableUpdateFields(["title","content","status","files","updatedAt"]);
+                        isAvailableUpdateFields(["title","content","status","files","updatedAt"]) &&
+                        incomingData().title is string &&
+                        incomingData().title.size() < 301 &&
+                        incomingData().content is string &&
+                        incomingData().content.size() < 10001 &&
+                        incomingData().content.size() > 0 &&
+                        incomingData().status is string &&
+                        incomingData().files is list &&
+                        incomingData().updatedAt is timestamp;
         allow delete:if isAuth() &&
                         myUID() == getParentTopic(database,documentID).data.uid ||
                         myUID() == existingData().uid;
