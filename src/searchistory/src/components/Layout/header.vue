@@ -1,9 +1,9 @@
 <template>
   <SettingBaseModal v-if="isOpenPersonalSettingRef" />
   <MemberEdit v-if="isOpenMemberEditRef" />
-  <div class="flex justify-between items-center pl-2 pr-2 lg:h-[60px] h-[100px] bg-gray-400">
+  <div class="flex justify-between items-center pl-2 pr-2 h-[60px] bg-gray-400">
     <!--■■■■■■■■■■■■■■■■■ left_block ■■■■■■■■■■■■■■■■■-->
-    <div class="flex h-[100%] items-center md:flex-row flex-col">
+    <div class="flex h-[100%] items-center flex-row">
       <!--■■■■■■■■■■■■■■■■■ title ■■■■■■■■■■■■■■■■■-->
       <button
         class="w-[170px] h-[30px] text-center border-2 border-black bg-pink-400 rounded-full leading-[28px] text-sm mb-2 mt-2"
@@ -33,28 +33,37 @@
         </div>
       </div>
     </div>
-    <!--■■■■■■■■■■■■■■■■■ button_box ■■■■■■■■■■■■■■■■■-->
-    <div class="flex md:justify-between items-center w-[450px] lg:flex-row flex-col">
-      <!--================= topic list =================-->
-      <button
-        class="bg-red-400 text-gray-200 border-[1px] border-gray-600 text-xs pl-2 pr-2 rounded-full md:w-[110px] w-[200px] mb-[2px]"
-        @click="router.push('/home')"
-      >トピック一覧</button>
-      <!--================= user_setting =================-->
-      <button
-        class="bg-red-400 text-gray-200 border-[1px] border-gray-600 text-xs pl-2 pr-2 rounded-full md:w-[110px] w-[200px] mb-[2px]"
-        @click="controlOpen(true, MODAL_TYPE.PERSONAL_SETTING)"
-      >ユーザー設定</button>
-      <!--================= manual =================-->
-      <button
-        class="bg-red-400 text-gray-200 border-[1px] border-gray-600 text-xs pl-2 pr-2 rounded-full md:w-[110px] w-[200px] mb-[2px]"
-        @click="gotoManual"
-      >使用方法</button>
-      <!--================= logout =================-->
-      <button
-        class="bg-gray-600 text-white text-sm pl-2 pr-2 rounded-sm md:w-[110px] w-[200px] mb-[2px]"
-        @click="signout()"
-      >ログアウト</button>
+    <!--■■■■■■■■■■■■■■■■■ ボタングループ ■■■■■■■■■■■■■■■■■-->
+    <div class="flex items-center flex-col w-[500px] lg:flex-row">
+      <!--============= 左 =============-->
+      <div class="flex justify-evenly w-[50%] mb-1 lg:mb-0">
+        <!-- トピック一覧 -->
+        <button
+          class="bg-red-400 text-gray-200 border-[1px] border-gray-600 text-xs pl-2 pr-2 rounded-full w-[110px] h-[20px]"
+          @click="router.push('/home')"
+        >トピック一覧</button>
+        <div class="w-[10px]"></div>
+        <!-- ユーザー設定 -->
+        <button
+          class="bg-red-400 text-gray-200 border-[1px] border-gray-600 text-xs pl-2 pr-2 rounded-full w-[110px] h-[20px]"
+          @click="controlOpen(true, MODAL_TYPE.PERSONAL_SETTING)"
+        >ユーザー設定</button>
+      </div>
+      <div class="w-[10px]"></div>
+      <!--============= 右 =============-->
+      <div class="flex justify-evenly w-[50%]">
+        <!-- 使用方法 -->
+        <button
+          class="bg-red-400 text-gray-200 border-[1px] border-gray-600 text-xs pl-2 pr-2 rounded-full w-[110px] h-[20px]"
+          @click="gotoManual"
+        >使用方法</button>
+        <div class="w-[10px]"></div>
+        <!-- ログアウト -->
+        <button
+          class="bg-gray-600 text-white text-sm pl-2 pr-2 rounded-sm w-[110px] h-[20px]"
+          @click="signout()"
+        >ログアウト</button>
+      </div>
     </div>
   </div>
 </template>

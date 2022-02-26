@@ -1,7 +1,7 @@
 <template>
   <CreateTopicModal v-if="isOpenTopicCreateRef" />
-  <!--■■■■■■■■■■■■■■■■■ history-id-search ■■■■■■■■■■■■■■■■■-->
-  <div class="flex justify-end mr-3 items-center h-[50px]">
+  <!--■■■■■■■■■■■■■■■■■ 履歴検索フォーム ■■■■■■■■■■■■■■■■■-->
+  <div class="flex justify-center lg:justify-end mr-3 items-center h-[50px]">
     <div
       class="flex items-center justify-evenly bg-white border-[1px] border-gray-400 pt-[4px] pb-[4px] w-[350px]"
     >

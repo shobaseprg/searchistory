@@ -85,11 +85,10 @@
             <div
               class="flex items-center justify-center border-r-[1px] border-gray-400 bg-gray-200 w-[50px] text-center text-xs"
             >作成者</div>
-            <select class="outline-none text-xs" v-model="filterStatus">
-              <option :value="HISTORY_STATUS.ALL">{{ HISTORY_STATUS_WORD.all }}</option>
-              <option :value="HISTORY_STATUS.PENDING">{{ HISTORY_STATUS_WORD.pending }}</option>
-              <option :value="HISTORY_STATUS.UNSOLVED">{{ HISTORY_STATUS_WORD.unsolved }}</option>
-              <option :value="HISTORY_STATUS.SOLVED">{{ HISTORY_STATUS_WORD.solved }}</option>
+            <select class="outline-none text-xs" v-model="filterOwner">
+              <option value="all">すべて</option>
+              <option value="my">自分</option>
+              <option value="other">自分以外</option>
             </select>
           </div>
         </div>
@@ -347,7 +346,7 @@ const deleteData = () => {
 };
 const isHistoryPreview = ref(false);
 // ----------------------------- 検索-----------------------------
-const { urlFilterWord, docIdFilterWord, filterStatus, matchHistory } = historyFilter(histories)
+const { urlFilterWord, docIdFilterWord, filterStatus, filterOwner, matchHistory } = historyFilter(histories, userStore.uid)
 </script>
 
 <style scoped>
