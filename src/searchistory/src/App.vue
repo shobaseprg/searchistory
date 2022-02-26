@@ -19,7 +19,6 @@ const isAuthPage = () => {
 <style>
 @import "./css/reset.scss";
 #app {
-  border: solid 3px red;
   height: 100vh;
   width: 100%;
   background-color: lightgray;

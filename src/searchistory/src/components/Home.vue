@@ -20,9 +20,9 @@
       >検索</button>
     </div>
   </div>
-  <!--■■■■■■■■■■■■■■■■■ topic-list-wrap ■■■■■■■■■■■■■■■■■-->
+  <!--■■■■■■■■■■■■■■■■■ トピックリスト枠組み ■■■■■■■■■■■■■■■■■-->
   <div
-    class="bg-red-100 overflow-y-scroll h-[calc(100%-130px)] ml-3 mr-3 border-[1px] border-gray-400"
+    class="bg-red-100 overflow-y-scroll h-[calc(100%-115px)] ml-3 mr-3 border-[1px] border-gray-400"
   >
     <!--================= header-area =================-->
     <div class="flex p-2 h-[42px] mt-5">

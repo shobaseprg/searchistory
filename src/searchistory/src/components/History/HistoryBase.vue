@@ -4,7 +4,7 @@
   <PreviewHistoryModal v-if="isOpenHistoryPreviewRef" />
   <EditHistoryModal v-if="isOpenHistoryEditRef" />
   <AuthorityModal v-if="isOpenAuthorityRef" />
-  <div class="w-[100%] h-[calc(100%-60px)] border-2 border-blue-600 flex p-2">
+  <div class="w-[100%] h-[calc(100%-60px)] flex p-2">
     <!--■■■■■■■■■■■■■■■■■ トピックプレビューエリア ■■■■■■■■■■■■■■■■■-->
     <div class="w-[50%] h-[100%]">
       <!--============= ボタンエリア =============-->
@@ -37,10 +37,12 @@
     <div v-if="!isHistoryPreview" class="flex flex-col items-center ml-2 w-[50%]">
       <!--============= トップ =============-->
       <div
-        class="bg-white border-[1px] border-gray-400 w-[110px] mt-1 mb-1 text-center text-sm"
+        class="bg-white border-[1px] border-gray-400 w-[110px] h-[22px] mt-1 mb-1 text-center text-sm"
       >調査履歴一覧</div>
       <!--============= 履歴一覧枠組み =============-->
-      <div class="border-[1px] border-gray-400 w-[100%] h-[100%] p-2 bg-red-100">
+      <div
+        class="border-[1px] border-gray-400 w-[100%] h-[calc(100%-25px)] p-2 bg-red-100 overflow-y-scroll"
+      >
         <div class="flex justify-center items-center">
           <!-- 追加ボタン -->
           <button
@@ -94,7 +96,7 @@
         </div>
         <div class="h-[10px]"></div>
         <!--============= 履歴一覧 =============-->
-        <div class="w-[100%] h-[calc(100%-80px)]">
+        <div class="w-[100%]">
           <div
             v-for="(history) in matchHistory"
             :key="history.docID"
@@ -175,7 +177,7 @@
       </div>
     </div>
     <!--■■■■■■■■■■■■■■■■■ ヒストリープレビュー ■■■■■■■■■■■■■■■■■-->
-    <div v-else class="flex flex-col items-center border-2 border-black ml-2 w-[50%]">
+    <div v-else class="flex flex-col items-center border-2 border-black ml-2 w-[50%] h-[100%]">
       <!--============= 履歴一覧枠組み =============-->
       <div class="border-[1px] border-gray-400 w-[100%] h-[100%] p-2 bg-red-100">
         <!--============= ボタンエリア =============-->
