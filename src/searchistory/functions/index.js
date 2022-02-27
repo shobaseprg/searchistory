@@ -23,7 +23,7 @@ exports.onHistoryDelete = functions.firestore.document('topics/{topicID}/histori
 exports.onHistoryUpdate = functions.firestore.document('topics/{topicID}/histories/{historyID}').onUpdate(async (change, context) => {
   const parentTopicRef = admin.firestore().collection("topics").doc(context.params.topicID);
   const afterData = change.after.data();
-  if (afterData.status === "solved")
+  if (afterData.status === 2)
     parentTopicRef.update({ updated_at: afterData.updated_at, status: 1 })
   else {
     parentTopicRef.update({ updated_at: afterData.updated_at })

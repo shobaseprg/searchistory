@@ -110,7 +110,8 @@ service cloud.firestore {
                         incomingData().content is string &&
                         incomingData().content.size() < 10001 &&
                         incomingData().content.size() > 0 &&
-                        incomingData().status == "pending" &&
+                        // incomingData().status == "pending" &&
+                        incomingData().status == 0 &&
                         incomingData().files is list &&
                         incomingData().updated_at is timestamp &&
                         incomingData().created_at is timestamp &&
@@ -125,7 +126,7 @@ service cloud.firestore {
                         incomingData().content is string &&
                         incomingData().content.size() < 10001 &&
                         incomingData().content.size() > 0 &&
-                        incomingData().status is string &&
+                        incomingData().status is number &&
                         incomingData().files is list &&
                         incomingData().updated_at is timestamp;
         allow delete:if isAuth() &&

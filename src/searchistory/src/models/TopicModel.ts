@@ -23,13 +23,13 @@ const TOPIC_STATUS = {
   FINISH: 'finish',
 } as const;
 
-const topicStatusList = [TOPIC_STATUS.PENDING, TOPIC_STATUS.FINISH];
+type TopicStatusWord = '全て' | '未解決' | '解決済';
 
-type TopicStatusWord = '全て' | '未決' | '解決済'
+const topicStatusList = [TOPIC_STATUS.PENDING, TOPIC_STATUS.FINISH];
 
 const TOPIC_STATUS_WORD = {
   all: "全て",
-  pending: "未決",
+  pending: "未解決",
   finish: "解決済"
 } as const
 

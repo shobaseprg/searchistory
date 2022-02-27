@@ -22,7 +22,9 @@ const HISTORY_STATUS = {
   SOLVED: 'solved',
 } as const;
 
-type HistoryStatusWord = '全て' | '未調査' | '未解決' | '解決'
+type HistoryStatusWord = '全て' | '未調査' | '未解決' | '解決';
+
+const historyStatusList = [HISTORY_STATUS.PENDING, HISTORY_STATUS.UNSOLVED, HISTORY_STATUS.SOLVED];
 
 const HISTORY_STATUS_WORD = {
   all: "全て",
@@ -49,7 +51,7 @@ class HistoryModel extends PostCoreModel {
       default:
         this.url = topicObj.url;
         this.title = topicObj.title;
-        this.status = topicObj.status;
+        this.status = historyStatusList[topicObj.status];
         this.statusWord = HISTORY_STATUS_WORD[this.status];
         this.topic_doc_id = topicObj.topic_doc_id;
     }
@@ -83,7 +85,7 @@ class HistoryModel extends PostCoreModel {
         title,
         content: sanitize(content),
         uid,
-        status: HISTORY_STATUS.PENDING,
+        status: 0,
         created_at: serverTimestamp(),
         updated_at: serverTimestamp(),
         doc_id: newHistoryRef.id,
@@ -106,7 +108,6 @@ class HistoryModel extends PostCoreModel {
     files: FileInfo[],
     doc_id: string,
     topicDocID: string,
-    status: HistoryStatus
   ) {
     if (title.length === 0) {
       if (!confirm("タイトルが空欄ですがよろしいですか?")) return;
@@ -130,7 +131,6 @@ class HistoryModel extends PostCoreModel {
         content: sanitize(content),
         files: existFiles,
         updated_at: serverTimestamp(),
-        status
       });
       return true;
     } catch (e) {
@@ -146,4 +146,4 @@ class HistoryModel extends PostCoreModel {
     await deleteDoc(updateHistoryRef);
   };
 }
-export { HistoryModel, HistoryStatus, HISTORY_STATUS, HISTORY_STATUS_WORD };
+export { HistoryModel, HistoryStatus, HISTORY_STATUS, HISTORY_STATUS_WORD, historyStatusList };

@@ -527,7 +527,7 @@ describe('histories collection', () => {
     files: ["yyyyyyy"],
     created_at: serverTimestamp(),
     updated_at: serverTimestamp(),
-    status: "pending",
+    status: 0,
     uid,
     authorized_uid_list: [uid],
     history_list: [],
@@ -540,7 +540,7 @@ describe('histories collection', () => {
     files: ["yyyyyyy"],
     created_at: serverTimestamp(),
     updated_at: serverTimestamp(),
-    status: "pending",
+    status: 0,
     uid,
   }
 
