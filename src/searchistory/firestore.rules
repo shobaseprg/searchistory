@@ -72,7 +72,8 @@ service cloud.firestore {
                       myUID() in incomingData().authorized_uid_list &&
                       incomingData().files is list &&
                       incomingData().updated_at is timestamp &&
-                      incomingData().status == "pending" &&
+                      // incomingData().status == "pending" &&
+                      incomingData().status == 0 &&
                       incomingData().doc_id == documentID &&
                       incomingData().created_at is timestamp &&
                       incomingData().history_list is list;
@@ -90,7 +91,8 @@ service cloud.firestore {
                       myUID() in incomingData().authorized_uid_list &&
                       incomingData().files is list &&
                       incomingData().updated_at is timestamp &&
-                      incomingData().status is string;
+                      // incomingData().status is string;
+                      incomingData().status is number;
       allow delete:if isAuth() &&
                       existingData().uid == myUID();
       // topics/histories

@@ -24,7 +24,7 @@ exports.onHistoryUpdate = functions.firestore.document('topics/{topicID}/histori
   const parentTopicRef = admin.firestore().collection("topics").doc(context.params.topicID);
   const afterData = change.after.data();
   if (afterData.status === "solved")
-    parentTopicRef.update({ updated_at: afterData.updated_at, status: "finish" })
+    parentTopicRef.update({ updated_at: afterData.updated_at, status: 1 })
   else {
     parentTopicRef.update({ updated_at: afterData.updated_at })
   }

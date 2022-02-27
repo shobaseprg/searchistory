@@ -10,7 +10,7 @@
 import { computed, ref, watch } from "vue";
 import { db } from "../../firebase/config"
 import { setDoc, doc } from "firebase/firestore";
-import { TOPIC_STATUS, TOPIC_STATUS_WORD, TopicStatus } from "../../models/TopicModel"
+import { TOPIC_STATUS, TOPIC_STATUS_WORD, TopicStatus, topicStatusList } from "../../models/TopicModel"
 
 interface Props {
   status: TopicStatus,
@@ -19,10 +19,10 @@ interface Props {
 const props = defineProps<Props>();
 
 const propsStatus = computed(() => {
-  return props.status
+  return props.status;
 })
 
-const selectedStatus = ref(propsStatus.value)
+const selectedStatus = ref(propsStatus.value);
 
 watch(propsStatus, (value) => {
   selectedStatus.value = value;
@@ -30,7 +30,7 @@ watch(propsStatus, (value) => {
 
 const statusChange = async () => {
   await setDoc(doc(db, "topics", props.doc_id), {
-    status: selectedStatus.value,
+    status: topicStatusList.findIndex(status => status === selectedStatus.value)
   }, { merge: true });
 }
 </script>

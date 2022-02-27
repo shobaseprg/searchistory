@@ -23,6 +23,8 @@ const TOPIC_STATUS = {
   FINISH: 'finish',
 } as const;
 
+const topicStatusList = [TOPIC_STATUS.PENDING, TOPIC_STATUS.FINISH];
+
 type TopicStatusWord = '全て' | '未決' | '解決済'
 
 const TOPIC_STATUS_WORD = {
@@ -57,12 +59,13 @@ class TopicModel extends PostCoreModel {
 
       default:
         this.title = topicObj.title;
-        this.status = topicObj.status;
+        this.status = topicStatusList[topicObj.status];
         this.statusWord = TOPIC_STATUS_WORD[this.status];
         this.authorized_uid_list = topicObj.authorized_uid_list;
         this.history_list = topicObj.history_list;
     }
   }
+
   //============= 登録 =============
   static async register(
     title: string,
@@ -87,7 +90,7 @@ class TopicModel extends PostCoreModel {
         content: sanitize(content),
         uid,
         authorized_uid_list: [uid],
-        status: TOPIC_STATUS.PENDING,
+        status: 0,
         created_at: serverTimestamp(),
         updated_at: serverTimestamp(),
         doc_id: newTopicRef.id,
@@ -173,4 +176,4 @@ class TopicModel extends PostCoreModel {
     this.authorizedMemberInfos = await getMemberInfoList(this.authorized_uid_list)
   }
 }
-export { TopicModel, TopicStatus, TOPIC_STATUS, TOPIC_STATUS_WORD, TOPIC_OWNER, TopicOwner };
+export { TopicModel, TopicStatus, topicStatusList, TOPIC_STATUS, TOPIC_STATUS_WORD, TOPIC_OWNER, TopicOwner };

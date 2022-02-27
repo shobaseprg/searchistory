@@ -263,7 +263,7 @@ describe('topics collection', () => {
     files: ["yyyyyyy"],
     created_at: serverTimestamp(),
     updated_at: serverTimestamp(),
-    status: "pending",
+    status: 0,
     uid,
     history_list: [],
   }
@@ -410,7 +410,7 @@ describe('topics collection', () => {
       files: ["yyyyyyy"],
       created_at: serverTimestamp(),
       updated_at: serverTimestamp(),
-      status: "pending",
+      status: 0,
       uid,
       history_list: [],
     }
