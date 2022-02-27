@@ -80,25 +80,32 @@
           <th class="w-[50px]"></th>
         </tr>
         <!------------------- テーブル-ボディー ------------------->
-        <tr v-for="(topic) in matchTopics" :key="topic.docID">
+        <tr v-for="(topic) in matchTopics" :key="topic.doc_id">
           <!-- トピックID -->
           <td
             class="flex items-center justify-end pr-3 border-t-[1px] border-b-[1px] border-l-[1px] border-gray-400 border-r-[1px] border-r-gray-300"
           >
-            {{ topic.docID }}
+            {{ topic.doc_id }}
             <div class="w-2"></div>
-            <CopyButton :copyWord="topic.docID" />
+            <CopyButton :copyWord="topic.doc_id" />
           </td>
           <!-- タイトル -->
           <td
             class="border-t-[1px] border-b-[1px] border-gray-400 border-r-[1px] border-r-gray-200"
           >{{ topic.title }}</td>
           <!-- ステータス変更 -->
+          <!-- 自分のトピック -->
           <td
+            v-if="topic.uid === userStore.uid"
             class="border-t-[1px] border-b-[1px] border-gray-400 border-r-[1px] border-r-gray-200"
           >
-            <StatusSelect :status="topic.status" :docID="topic.docID" />
+            <StatusSelect :status="topic.status" :doc_id="topic.doc_id" />
           </td>
+          <!-- 他人のトピック -->
+          <td
+            v-else
+            class="border-t-[1px] border-b-[1px] border-gray-400 border-r-[1px] border-r-gray-200"
+          >{{ topic.status }}</td>
           <td
             class="border-t-[1px] border-b-[1px] border-gray-400 border-r-[1px] border-r-gray-200"
           >
@@ -107,7 +114,7 @@
           <!-- 更新日 -->
           <td
             class="border-t-[1px] border-b-[1px] border-gray-400 border-r-[1px] border-r-gray-200"
-          >{{ topic.updatedAt.format("YYYY/MM/DD H:mm") }}</td>
+          >{{ topic.updated_at.format("YYYY/MM/DD H:mm") }}</td>
           <!-- 事案確認 -->
           <td class="border-t-[1px] border-b-[1px] border-gray-400">
             <button
@@ -176,7 +183,7 @@ const deleteData = (topic: TopicModel) => {
 const historyID = ref("");
 const getDirectHistory = async () => {
   for (let i = 0; i < topics.value.length; i++) {
-    if (topics.value[i].historyList.includes(historyID.value)) {
+    if (topics.value[i].history_list.includes(historyID.value)) {
       setTargetTopic(topics.value[i])
       directHistory.value = historyID.value;
       router.push('/history');

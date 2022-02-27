@@ -22,9 +22,9 @@ class PostCoreModel {
   readonly files: FileInfo[] = [];
   readonly uid: string = "";
   readonly name: string = "";
-  readonly createdAt: moment.Moment = moment();
-  readonly updatedAt: moment.Moment = moment();
-  readonly docID: string = "";
+  readonly created_at: moment.Moment = moment();
+  readonly updated_at: moment.Moment = moment();
+  readonly doc_id: string = "";
 
   constructor(topicObj: DocumentData | "default") {
     switch (typeof topicObj) {
@@ -36,9 +36,9 @@ class PostCoreModel {
         this.uid = topicObj.uid;
         this.name = topicObj.uid;
         this.files = topicObj.files;
-        this.createdAt = moment(topicObj.createdAt.toDate());
-        this.updatedAt = moment(topicObj.updatedAt.toDate());
-        this.docID = topicObj.docID;
+        this.created_at = moment(topicObj.created_at.toDate());
+        this.updated_at = moment(topicObj.updated_at.toDate());
+        this.doc_id = topicObj.doc_id;
     }
   }
 

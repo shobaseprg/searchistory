@@ -14,7 +14,7 @@ import { TOPIC_STATUS, TOPIC_STATUS_WORD, TopicStatus } from "../../models/Topic
 
 interface Props {
   status: TopicStatus,
-  docID: string,
+  doc_id: string,
 }
 const props = defineProps<Props>();
 
@@ -29,7 +29,7 @@ watch(propsStatus, (value) => {
 })
 
 const statusChange = async () => {
-  await setDoc(doc(db, "topic", props.docID), {
+  await setDoc(doc(db, "topics", props.doc_id), {
     status: selectedStatus.value,
   }, { merge: true });
 }

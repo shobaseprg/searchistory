@@ -99,7 +99,7 @@
         <div class="w-[100%]">
           <div
             v-for="(history) in matchHistory"
-            :key="history.docID"
+            :key="history.doc_id"
             class="border-[1px] border-gray-400 bg-white p-1 mb-1 text-[1px]"
           >
             <!---------- 1行目 ---------->
@@ -111,20 +111,20 @@
                 <div class="flex justify-center items-center bg-gray-200 w-[57px]">履歴ID</div>
                 <div
                   class="w-[calc(100%-53px)] bg-white overflow-hidden overflow-ellipsis whitespace-nowrap"
-                >{{ history.docID }}</div>
-                <CopyButton :copyWord="history.docID" />
+                >{{ history.doc_id }}</div>
+                <CopyButton :copyWord="history.doc_id" />
               </div>
               <!-- <div class="w-[2px]"></div> -->
               <!-- 状態 -->
               <div class="flex border-[1px] border-gray-400 p-[2px]">
                 <div class="bg-gray-200 w-[40px] text-center">状態</div>
-                <StatusSelect :status="history.status" :docID="history.docID" />
+                <StatusSelect :status="history.status" :doc_id="history.doc_id" />
               </div>
               <!-- <div class="w-[2px]"></div> -->
               <!-- 更新日 -->
               <div class="flex border-[1px] border-gray-400 p-[2px]">
                 <div class="bg-gray-200 w-[40px] text-center">更新日</div>
-                <div>{{ history.updatedAt.format("YYYY/MM/DD H:mm") }}</div>
+                <div>{{ history.updated_at.format("YYYY/MM/DD H:mm") }}</div>
               </div>
             </div>
             <div class="h-[5px]"></div>
@@ -199,18 +199,18 @@
               <div class="flex justify-center items-center bg-gray-200 w-[57px]">履歴ID</div>
               <div
                 class="w-[calc(100%-53px)] bg-white overflow-hidden overflow-ellipsis whitespace-nowrap"
-              >{{ targetHistory.docID }}</div>
-              <CopyButton :copyWord="targetHistory.docID" />
+              >{{ targetHistory.doc_id }}</div>
+              <CopyButton :copyWord="targetHistory.doc_id" />
             </div>
             <!-- 状態 -->
             <div class="flex border-[1px] border-gray-400 p-[2px]">
               <div class="bg-gray-200 w-[40px] text-center">状態</div>
-              <StatusSelect :status="targetHistory.status" :docID="targetHistory.docID" />
+              <StatusSelect :status="targetHistory.status" :doc_id="targetHistory.doc_id" />
             </div>
             <!-- 更新日 -->
             <div class="flex border-[1px] border-gray-400 p-[2px]">
               <div class="bg-gray-200 w-[40px] text-center">更新日</div>
-              <div>{{ targetHistory.updatedAt.format("YYYY/MM/DD H:mm") }}</div>
+              <div>{{ targetHistory.updated_at.format("YYYY/MM/DD H:mm") }}</div>
             </div>
           </div>
           <div class="h-[5px]"></div>
@@ -318,7 +318,7 @@ let unsubscribe: Unsubscribe;
 const histories = ref<HistoryModel[]>([]);
 
 // リスト取得
-const q = query(collection(db, "topic", targetTopic.value.docID, "history"), orderBy('updatedAt', 'desc'));
+const q = query(collection(db, "topics", targetTopic.value.doc_id, "histories"), orderBy('updated_at', 'desc'));
 
 const getInstanceFunc = (doc: QueryDocumentSnapshot<DocumentData>) => {
   return new HistoryModel(doc.data(({ serverTimestamps: "estimate" })));
@@ -344,7 +344,7 @@ const setTargetHistory = (history: HistoryModel) => {
 }
 // 削除
 const deleteData = () => {
-  targetHistory.value.delete(targetTopic.value.docID)
+  targetHistory.value.delete(targetTopic.value.doc_id)
 };
 const isHistoryPreview = ref(false);
 // ----------------------------- 検索-----------------------------

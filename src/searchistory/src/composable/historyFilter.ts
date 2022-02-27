@@ -21,7 +21,7 @@ export default (histories: Ref<HistoryModel[]>, uid: string | undefined) => {
   const matchHistory = computed(() => {
     return histories.value.filter((history) => {
       return history.url.includes(urlFilterWord.value) &&
-        history.docID.includes(docIdFilterWord.value) &&
+        history.doc_id.includes(docIdFilterWord.value) &&
         isStatusMatch(history) &&
         isOwnerMatch(history);
     }

@@ -45,9 +45,9 @@ class TopicModel extends PostCoreModel {
   readonly title: string = "";
   readonly status: TopicStatus = TOPIC_STATUS.PENDING;
   readonly statusWord: TopicStatusWord = TOPIC_STATUS_WORD.pending;
-  readonly authorizedUIDs: Array<string> = [];
+  readonly authorized_uid_list: Array<string> = [];
   authorizedMemberInfos: Array<Member> = [];
-  readonly historyList: Array<string> = [];
+  readonly history_list: Array<string> = [];
 
   constructor(topicObj: DocumentData | "default") {
     super(topicObj);
@@ -59,8 +59,8 @@ class TopicModel extends PostCoreModel {
         this.title = topicObj.title;
         this.status = topicObj.status;
         this.statusWord = TOPIC_STATUS_WORD[this.status];
-        this.authorizedUIDs = topicObj.authorizedUIDs;
-        this.historyList = topicObj.historyList;
+        this.authorized_uid_list = topicObj.authorized_uid_list;
+        this.history_list = topicObj.history_list;
     }
   }
   //============= 登録 =============
@@ -79,20 +79,20 @@ class TopicModel extends PostCoreModel {
 
     const { existFiles, deleteFiles } = super.splitFiles(files, content);
     super.deleteImgFromStorage(deleteFiles);
-    const newTopicRef = doc(collection(db, 'topic'));
+    const newTopicRef = doc(collection(db, 'topics'));
 
     try {
       await setDoc(newTopicRef, {
         title,
         content: sanitize(content),
         uid,
-        authorizedUIDs: [uid],
+        authorized_uid_list: [uid],
         status: TOPIC_STATUS.PENDING,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        docID: newTopicRef.id,
+        created_at: serverTimestamp(),
+        updated_at: serverTimestamp(),
+        doc_id: newTopicRef.id,
         files: existFiles,
-        historyList: []
+        history_list: []
       });
       return true;
     } catch (e) {
@@ -106,7 +106,7 @@ class TopicModel extends PostCoreModel {
     title: string,
     content: string,
     files: FileInfo[],
-    docID: string
+    doc_id: string
   ) {
 
     const valiResult = topicVali(title, content);
@@ -117,14 +117,14 @@ class TopicModel extends PostCoreModel {
 
     const { existFiles, deleteFiles } = super.splitFiles(files, content);
     super.deleteImgFromStorage(deleteFiles);
-    const updateTopicRef = doc(db, 'topic', docID);
+    const updateTopicRef = doc(db, 'topics', doc_id);
 
     try {
       await updateDoc(updateTopicRef, {
         title,
         content: sanitize(content),
         files: existFiles,
-        updatedAt: serverTimestamp(),
+        updated_at: serverTimestamp(),
       });
       return true;
     } catch (e) {
@@ -139,7 +139,7 @@ class TopicModel extends PostCoreModel {
 
     if (!confirm(`${shotWord}を削除しますか?`)) return;
 
-    const historyColRef = collection(db, 'topic', this.docID, 'history');
+    const historyColRef = collection(db, 'topics', this.doc_id, 'histories');
     try {
       const querySnapshot = await getDocs(historyColRef);
       // 紐づくhistory削除
@@ -148,7 +148,7 @@ class TopicModel extends PostCoreModel {
       }
       )
       // topic削除
-      const updateTopicRef = doc(db, 'topic', this.docID);
+      const updateTopicRef = doc(db, 'topics', this.doc_id);
       await deleteDoc(updateTopicRef);
       alert(`${shotWord}を削除しました。`)
     } catch (e) {
@@ -158,19 +158,19 @@ class TopicModel extends PostCoreModel {
   };
   //============= 権限更新 =============
   async updateMembers(authorizedMemberInfos: Member[], uid: string) {
-    const authorizedUIDs = authorizedMemberInfos.map((info) => {
+    const authorized_uid_list = authorizedMemberInfos.map((info) => {
       return info.uid;
     }
     )
-    authorizedUIDs.push(uid)
-    const updateTopicRef = doc(db, 'topic', this.docID);
+    authorized_uid_list.push(uid)
+    const updateTopicRef = doc(db, 'topics', this.doc_id);
     await updateDoc(updateTopicRef, {
-      authorizedUIDs
+      authorized_uid_list
     });
   }
   // 最新のメンバー情報を格納
   async setMemberInfo() {
-    this.authorizedMemberInfos = await getMemberInfoList(this.authorizedUIDs)
+    this.authorizedMemberInfos = await getMemberInfoList(this.authorized_uid_list)
   }
 }
 export { TopicModel, TopicStatus, TOPIC_STATUS, TOPIC_STATUS_WORD, TOPIC_OWNER, TopicOwner };

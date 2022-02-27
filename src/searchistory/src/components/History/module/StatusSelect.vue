@@ -16,18 +16,18 @@ import useTargetTopicStore from "../../../store/useTargetTopicStore";
 
 interface Props {
   status: HistoryStatus,
-  docID: string,
+  doc_id: string,
 }
-const { status, docID } = defineProps<Props>();
+const { status, doc_id } = defineProps<Props>();
 
 const targetTopicStore = useTargetTopicStore();
 
 const selectedStatus = ref(status);
 
 const statusChange = async () => {
-  await updateDoc(doc(db, "topic", targetTopicStore.targetTopic.docID, "history", docID), {
+  await updateDoc(doc(db, "topics", targetTopicStore.targetTopic.doc_id, "histories", doc_id), {
     status: selectedStatus.value,
-    updatedAt: serverTimestamp(),
+    updated_at: serverTimestamp(),
   });
 }
 </script>

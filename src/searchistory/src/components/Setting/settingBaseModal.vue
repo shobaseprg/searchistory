@@ -100,7 +100,7 @@ const updateName = async () => {
     return;
   }
   try {
-    const userDocRef = doc(db, "user", userStore.uid);
+    const userDocRef = doc(db, "users", userStore.uid);
     updateDoc(userDocRef, { name: formName.value });
     isNameEdit.value = false;
   } catch (e) {

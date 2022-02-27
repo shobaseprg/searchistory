@@ -34,6 +34,7 @@ const routes = [
     component: HistoryBase,
     meta: { requiredAuth: true }
   },
+  { path: '/:pathMatch(.*)*', name: 'NotFound', redirect: '/' },
 ];
 
 const router = createRouter({
@@ -53,6 +54,7 @@ router.beforeEach((to, from, next) => {
       } else {
         if (!user.emailVerified && from.fullPath !== "/signup") {
           console.log(from.fullPath);
+          console.log(from);
           alert("該当のEmailは認証されていません。");
           next({ path: '/signin' })
         } else {

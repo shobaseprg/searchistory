@@ -38,7 +38,7 @@ class HistoryModel extends PostCoreModel {
   readonly title: string = "";
   readonly status: HistoryStatus = "pending";
   readonly statusWord: HistoryStatusWord = "未調査";
-  readonly topicDocID: string = "";
+  readonly topic_doc_id: string = "";
 
   constructor(topicObj: DocumentData | "default") {
     super(topicObj);
@@ -51,7 +51,7 @@ class HistoryModel extends PostCoreModel {
         this.title = topicObj.title;
         this.status = topicObj.status;
         this.statusWord = HISTORY_STATUS_WORD[this.status];
-        this.topicDocID = topicObj.topicDocID;
+        this.topic_doc_id = topicObj.topic_doc_id;
     }
   }
   //============= 登録 =============
@@ -75,7 +75,7 @@ class HistoryModel extends PostCoreModel {
 
     const { existFiles, deleteFiles } = super.splitFiles(files, content);
     super.deleteImgFromStorage(deleteFiles);
-    const newHistoryRef = doc(collection(db, 'topic', topicDocID, 'history'));
+    const newHistoryRef = doc(collection(db, 'topics', topicDocID, 'histories'));
 
     try {
       await setDoc(newHistoryRef, {
@@ -84,11 +84,11 @@ class HistoryModel extends PostCoreModel {
         content: sanitize(content),
         uid,
         status: HISTORY_STATUS.PENDING,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        docID: newHistoryRef.id,
+        created_at: serverTimestamp(),
+        updated_at: serverTimestamp(),
+        doc_id: newHistoryRef.id,
         files: existFiles,
-        topicDocID
+        topic_doc_id: topicDocID
       });
       return true;
     } catch (e) {
@@ -104,7 +104,7 @@ class HistoryModel extends PostCoreModel {
     content: string,
     targetHistoryFiles: FileInfo[],
     files: FileInfo[],
-    docID: string,
+    doc_id: string,
     topicDocID: string,
     status: HistoryStatus
   ) {
@@ -122,14 +122,14 @@ class HistoryModel extends PostCoreModel {
       const margeFiles = [...targetHistoryFiles, ...files]
       const { existFiles, deleteFiles } = super.splitFiles(margeFiles, content);
       super.deleteImgFromStorage(deleteFiles);
-      const updateHistoryRef = doc(db, 'topic', topicDocID, 'history', docID);
+      const updateHistoryRef = doc(db, 'topics', topicDocID, 'histories', doc_id);
 
       await updateDoc(updateHistoryRef, {
         url,
         title,
         content: sanitize(content),
         files: existFiles,
-        updatedAt: serverTimestamp(),
+        updated_at: serverTimestamp(),
         status
       });
       return true;
@@ -142,7 +142,7 @@ class HistoryModel extends PostCoreModel {
   //============= 削除 =============
   async delete(topicDocID: string) {
     if (!confirm(`この調査履歴を削除しますか?`)) return;
-    const updateHistoryRef = doc(db, 'topic', topicDocID, 'history', this.docID);
+    const updateHistoryRef = doc(db, 'topics', topicDocID, 'histories', this.doc_id);
     await deleteDoc(updateHistoryRef);
   };
 }

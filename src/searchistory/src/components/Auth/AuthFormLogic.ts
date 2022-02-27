@@ -19,13 +19,13 @@ export default (props: any, useUserStore: any) => {
   const password = ref("");
 
   const createUser = async (uid: string) => {
-    await setDoc(doc(db, 'user', uid), {
+    await setDoc(doc(db, 'users', uid), {
       name: name.value,
       uid: uid,
     })
-    await setDoc(doc(db, 'userPrivate', uid), {
+    await setDoc(doc(db, 'private_users', uid), {
       uid: uid,
-      memberUIDs: [],
+      member_uid_list: [],
     })
   }
 
@@ -64,7 +64,7 @@ export default (props: any, useUserStore: any) => {
         if (auth.currentUser) {
           sendEmailVerification(auth.currentUser, actionCodeSettings)
             .then(() => {
-              alert("確認メールを送りました。メールを確認後ログインしてください。")
+              alert("確認メールを送りました。メールを確認後ログインしてください。確認メールが届かない場合は、サインイン画面より再送を行ってください。")
             }).catch((e) => {
               alert(e)
             });
@@ -74,6 +74,23 @@ export default (props: any, useUserStore: any) => {
         fbErrorHandle(error.message);
       });
   }
+  //■■■■■■■■■■■■■■■■■■■ 再送する。 ■■■■■■■■■■■■■■■■■■■■
+  const reSend = async () => {
+    await signInWithEmailAndPassword(auth, email.value, password.value)
+      .then(async () => {
+        if (auth.currentUser) {
+          sendEmailVerification(auth.currentUser, actionCodeSettings)
+            .then(() => {
+              alert("確認メールを送りました。メールを確認後ログインしてください。確認メールが届かない場合は、サインイン画面より再送を行ってください。")
+            }).catch((e) => {
+              alert(e)
+            });
+        }
+      })
+      .catch((error) => {
+        fbErrorHandle(error.message);
+      });
+  };
   //■■■■■■■■■■■■■■■■■■■ 移動 ■■■■■■■■■■■■■■■■■■■■
   const movePage = (isSignUp: boolean) => {
     switch (isSignUp) {
@@ -93,11 +110,10 @@ export default (props: any, useUserStore: any) => {
   const passwordModalControl = (flag: boolean) => {
     isPasswordModal.value = flag;
   }
-  return { name, email, password, createUser, getActionButton, getPageTitle, movePage, isPasswordModal, passwordModalControl }
-
   //■■■■■■■■■■■■■■■■■ エラーハンドル ■■■■■■■■■■■■■■■■■
   const errorHandle = (errorMessage: string) => {
-
   }
+
+  return { name, email, password, createUser, getActionButton, getPageTitle, movePage, reSend, isPasswordModal, passwordModalControl }
 
 }

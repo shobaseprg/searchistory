@@ -1,5 +1,5 @@
 <template>
-  <Header v-if="isAuthPage()"></Header>
+  <Header v-if="isOnHeaderPage()"></Header>
   <router-view></router-view>
 </template>
 
@@ -9,10 +9,10 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
-const authPage = ["/signin", "/signup", "/"]
+const onHeaderPage = ["/home", "/history"]
 
-const isAuthPage = () => {
-  return !authPage.includes(route.path)
+const isOnHeaderPage = () => {
+  return onHeaderPage.includes(route.path)
 }
 </script>
 

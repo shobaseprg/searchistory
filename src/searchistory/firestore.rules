@@ -21,10 +21,10 @@ service cloud.firestore {
     return incomingData().diff(existingData()).affectedKeys().hasOnly(FieldList)
   }
   function getParentTopic(database,documentID){
-    return get(/databases/$(database)/documents/topic/$(documentID))
+    return get(/databases/$(database)/documents/topics/$(documentID))
   }
   match /databases/{database}/documents {
-    match /user/{userID} {
+    match /users/{userID} {
       allow get:if isAuth()
       allow list:if true;
       allow create:if isAuth() &&
@@ -41,26 +41,26 @@ service cloud.firestore {
                       incomingData().name.size() < 31 &&
                       incomingData().name.size() > 2 ;
     }
-    // userPrivate
-    match /userPrivate/{userID} {
+    // private_users
+    match /private_users/{userID} {
       allow get:if isAuth() &&
                     userID == myUID();
       allow create:if isAuth() &&
-                      isAvailableCreateFields(["uid","memberUIDs"]) &&
+                      isAvailableCreateFields(["uid","member_uid_list"]) &&
                       userID == myUID() &&
                       incomingData().uid == myUID();
       allow update:if isAuth() &&
-                      isAvailableUpdateFields(["memberUIDs"]) &&
+                      isAvailableUpdateFields(["member_uid_list"]) &&
                       userID == myUID();
     }
-    // topic
-    match /topic/{documentID} {
+    // topics
+    match /topics/{documentID} {
       allow get:if isAuth() &&
-                    myUID() in existingData().authorizedUIDs;
+                    myUID() in existingData().authorized_uid_list;
       allow list:if isAuth() &&
-                    myUID() in existingData().authorizedUIDs;
+                    myUID() in existingData().authorized_uid_list;
       allow create:if isAuth() &&
-                      isAvailableCreateFields(["title","content","authorizedUIDs","files","createdAt","updatedAt","status","uid","docID","historyList"]) &&
+                      isAvailableCreateFields(["title","content","authorized_uid_list","files","created_at","updated_at","status","uid","doc_id","history_list"]) &&
                       incomingData().uid == myUID() &&
                       incomingData().title is string &&
                       incomingData().title.size() < 101 &&
@@ -68,38 +68,38 @@ service cloud.firestore {
                       incomingData().content is string &&
                       incomingData().content.size() < 10001 &&
                       incomingData().content.size() > 0 &&
-                      incomingData().authorizedUIDs is list &&
-                      myUID() in incomingData().authorizedUIDs &&
+                      incomingData().authorized_uid_list is list &&
+                      myUID() in incomingData().authorized_uid_list &&
                       incomingData().files is list &&
-                      incomingData().updatedAt is timestamp &&
+                      incomingData().updated_at is timestamp &&
                       incomingData().status == "pending" &&
-                      incomingData().docID == documentID &&
-                      incomingData().createdAt is timestamp &&
-                      incomingData().historyList is list;
+                      incomingData().doc_id == documentID &&
+                      incomingData().created_at is timestamp &&
+                      incomingData().history_list is list;
       allow update:if isAuth() &&
                       existingData().uid == myUID() &&
-                      myUID() in incomingData().authorizedUIDs &&
-                      isAvailableUpdateFields(["title","content","authorizedUIDs","files","updatedAt","status"]) &&
+                      myUID() in incomingData().authorized_uid_list &&
+                      isAvailableUpdateFields(["title","content","authorized_uid_list","files","updated_at","status"]) &&
                       incomingData().title is string &&
                       incomingData().title.size() < 101 &&
                       incomingData().title.size() > 0 &&
                       incomingData().content is string &&
                       incomingData().content.size() < 10001 &&
                       incomingData().content.size() > 0 &&
-                      incomingData().authorizedUIDs is list &&
-                      myUID() in incomingData().authorizedUIDs &&
+                      incomingData().authorized_uid_list is list &&
+                      myUID() in incomingData().authorized_uid_list &&
                       incomingData().files is list &&
-                      incomingData().updatedAt is timestamp &&
+                      incomingData().updated_at is timestamp &&
                       incomingData().status is string;
       allow delete:if isAuth() &&
                       existingData().uid == myUID();
-      // topic/history
-      match /history/{historyDocumentID}{
+      // topics/histories
+      match /histories/{historyDocumentID}{
         allow list:if isAuth() &&
-                        myUID() in getParentTopic(database,documentID).data.authorizedUIDs
+                        myUID() in getParentTopic(database,documentID).data.authorized_uid_list
         allow create:if isAuth() &&
-                        myUID() in getParentTopic(database,documentID).data.authorizedUIDs &&
-                        isAvailableCreateFields(["url","title","content","status","files","updatedAt","createdAt","docID","uid","topicDocID"]) &&
+                        myUID() in getParentTopic(database,documentID).data.authorized_uid_list &&
+                        isAvailableCreateFields(["url","title","content","status","files","updated_at","created_at","doc_id","uid","topic_doc_id"]) &&
                         incomingData().url is string &&
                         incomingData().url.size() < 501 &&
                         incomingData().url.size() > 0 &&
@@ -110,14 +110,14 @@ service cloud.firestore {
                         incomingData().content.size() > 0 &&
                         incomingData().status == "pending" &&
                         incomingData().files is list &&
-                        incomingData().updatedAt is timestamp &&
-                        incomingData().createdAt is timestamp &&
-                        incomingData().docID == historyDocumentID &&
+                        incomingData().updated_at is timestamp &&
+                        incomingData().created_at is timestamp &&
+                        incomingData().doc_id == historyDocumentID &&
                         incomingData().uid == myUID() &&
-                        incomingData().topicDocID == documentID;
+                        incomingData().topic_doc_id == documentID;
         allow update:if isAuth() &&
-                        myUID() in getParentTopic(database,documentID).data.authorizedUIDs &&
-                        isAvailableUpdateFields(["title","content","status","files","updatedAt"]) &&
+                        myUID() in getParentTopic(database,documentID).data.authorized_uid_list &&
+                        isAvailableUpdateFields(["title","content","status","files","updated_at"]) &&
                         incomingData().title is string &&
                         incomingData().title.size() < 301 &&
                         incomingData().content is string &&
@@ -125,7 +125,7 @@ service cloud.firestore {
                         incomingData().content.size() > 0 &&
                         incomingData().status is string &&
                         incomingData().files is list &&
-                        incomingData().updatedAt is timestamp;
+                        incomingData().updated_at is timestamp;
         allow delete:if isAuth() &&
                         myUID() == getParentTopic(database,documentID).data.uid ||
                         myUID() == existingData().uid;

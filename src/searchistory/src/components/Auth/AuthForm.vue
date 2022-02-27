@@ -38,6 +38,8 @@
         class="text-gray-500 text-xs mt-3"
         @click="controlOpen(true, MODAL_TYPE.RESET_PASSWORD)"
       >パスワードをお忘れの場合</button>
+      <!------------------- 再送 ------------------->
+      <button v-if="!props.isSignUp" class="text-gray-500 text-xs mt-3" @click="reSend">認証メールを再送する場合</button>
     </div>
   </div>
 </template>
@@ -49,6 +51,8 @@ import ResetPasswordModal from "../Auth/module/ResetPasswordModal.vue"
 import InputForm from "./module/InputForm.vue"
 import { controlOpen, isResetPassWordRef, MODAL_TYPE } from '../../composable/modalControl';
 
+console.log("ver.1.2");
+
 interface Props {
   isSignUp: boolean;
 }
@@ -59,5 +63,5 @@ const nameRef = () => name;
 const emailRef = () => email;
 const passwordRef = () => password;
 
-const { name, email, password, getActionButton, getPageTitle, movePage } = logic(props, useUserStore);
+const { name, email, password, getActionButton, getPageTitle, movePage, reSend } = logic(props, useUserStore);
 </script>

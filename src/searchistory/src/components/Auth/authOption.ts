@@ -1,5 +1,5 @@
 const actionCodeSettings = {
-  url: "http://localhost:3000/home",
+  url: "https://searchistory.web.app",
 }
 
 export { actionCodeSettings };

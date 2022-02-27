@@ -30,7 +30,7 @@
         <!---------- 更新 ---------->
         <button
           class="bg-red-400 text-gray-50 border-[1px] border-gray-600 text-xs w-[130px] pl-2 pr-2 rounded-full"
-          @click="registerHistory(userStore.uid, targetTopicStore.targetTopic.docID)"
+          @click="registerHistory(userStore.uid, targetTopicStore.targetTopic.doc_id)"
         >登録</button>
         <div class="w-2"></div>
         <!---------- 閉じる ---------->

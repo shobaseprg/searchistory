@@ -121,12 +121,12 @@ onMounted(() => {
     return userStore.uid !== memberInfo.uid;
   }
   )
-  const authorizedMemberUIDs = authorizedMemberInfosRemoveMe.value.map((memberInfo) => {
+  const authorizedMemberUidList = authorizedMemberInfosRemoveMe.value.map((memberInfo) => {
     return memberInfo.uid
   }
   )
   outMembers.value = [...userStore.memberInfos].filter((memberInfo) => {
-    return !authorizedMemberUIDs.includes(memberInfo.uid)
+    return !authorizedMemberUidList.includes(memberInfo.uid)
   })
 })
 

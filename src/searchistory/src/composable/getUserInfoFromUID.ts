@@ -10,15 +10,15 @@ import {
 import { db } from "../firebase/config";
 
 const getUserInfo = async (uid: string) => {
-  const userDocRef = doc(db, "user", uid);
+  const userDocRef = doc(db, "users", uid);
   const snap = await getDoc(userDocRef);
   return snap.exists() ? snap.data() : { name: "", uid: "" }
 }
 
-const getMemberInfoList = async (memberUIDs: string[]) => {
+const getMemberInfoList = async (memberUidList: string[]) => {
   const array = [];
-  for (let i = 0; i < memberUIDs.length; i++) {
-    const memberInfoData = await getUserInfo(memberUIDs[i]);
+  for (let i = 0; i < memberUidList.length; i++) {
+    const memberInfoData = await getUserInfo(memberUidList[i]);
     const memberInfo = {
       uid: typeof memberInfoData.uid === "string" ? memberInfoData.uid : "",
       name: typeof memberInfoData.name === "string" ? memberInfoData.name : "",

@@ -93,14 +93,14 @@ const userInfo = computed(() => {
 
 // メンバー追加
 const newMemberUID = ref("");
-const myUserPrivateDocRef = doc(db, "userPrivate", userStore.uid);
+const myUserPrivateDocRef = doc(db, "private_users", userStore.uid);
 
 const addMemberUID = async () => {
   const nmu = newMemberUID.value
   newMemberUID.value = "";
 
   // バリデーション
-  const result = addMemberVali(nmu, userInfo.value.memberUIDs);
+  const result = addMemberVali(nmu, userInfo.value.member_uid_list);
 
   if (result !== "") {
     alert(result);
@@ -114,9 +114,9 @@ const addMemberUID = async () => {
   } else {
     const result = window.confirm(`${memberInfo.name}さんを追加しますか？`);
     if (result) {
-      userInfo.value.memberUIDs.push(memberInfo.uid);
+      userInfo.value.member_uid_list.push(memberInfo.uid);
       await setDoc(myUserPrivateDocRef, {
-        memberUIDs: userInfo.value.memberUIDs
+        member_uid_list: userInfo.value.member_uid_list
       }, { merge: true });
       alert("追加しました。");
     }
@@ -128,12 +128,12 @@ const deleteMember = async (memberInfo: Member) => {
   const result = window.confirm(`${memberInfo.name}さんを削除しますか？`);
   if (!result) return;
 
-  const deletedMembers = userInfo.value.memberUIDs.filter((memberUID) => {
+  const deletedMembers = userInfo.value.member_uid_list.filter((memberUID) => {
     return memberUID !== memberInfo.uid;
   }
   )
   await setDoc(myUserPrivateDocRef, {
-    memberUIDs: deletedMembers
+    member_uid_list: deletedMembers
   }, { merge: true });
 };
 

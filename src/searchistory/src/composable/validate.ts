@@ -17,7 +17,7 @@ const _lengthRange = (title: string, target: string, min: number, max: number) =
   }
 }
 const checkExistUID = async (uid: string) => {
-  const userSnap = await getDoc(doc(db, "user", uid));
+  const userSnap = await getDoc(doc(db, "users", uid));
   if (userSnap.exists() && userSnap.data()) {
     return { isExist: true, memberInfo: userSnap.data() }
   } else {
@@ -37,7 +37,7 @@ const nameVali = async (inputName: string) => {
   }
 
   //============= 重複チェック =============
-  const userColRef = collection(db, "user");
+  const userColRef = collection(db, "users");
   const q = query(userColRef, where("name", "==", inputName));
   const userDocs = await getDocs(q);
 
@@ -48,7 +48,7 @@ const nameVali = async (inputName: string) => {
 }
 
 //■■■■■■■■■■■■■■■■■ メンバー追加 ■■■■■■■■■■■■■■■■■
-const addMemberVali = (uid: string, memberUIDs: string[]) => {
+const addMemberVali = (uid: string, member_uid_list: string[]) => {
 
   let errorMessage = "";
 
@@ -57,7 +57,7 @@ const addMemberVali = (uid: string, memberUIDs: string[]) => {
   if (auth.currentUser?.uid === uid) {
     errorMessage = errorMessage + "そのIDは自分のIDです。";
   }
-  if (memberUIDs.includes(uid)) {
+  if (member_uid_list.includes(uid)) {
     errorMessage = errorMessage + "そのIDのユーザーは既に登録されています。";
   }
   return errorMessage;
