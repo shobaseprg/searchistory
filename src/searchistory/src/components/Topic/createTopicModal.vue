@@ -12,9 +12,10 @@
         <input class="w-[calc(100%-90px)] outline-none pl-2 pr-2" type="text" v-model="title" />
       </div>
       <div class="h-[10px]"></div>
+      <div class="text-[5px]">コードブロックを記載する際は文頭の```の後の言語名を入力してください。</div>
       <!---------- エディターフォーム ---------->
       <mavon-editor
-        class="h-[calc(100%-60px)]"
+        class="h-[calc(100%-70px)]"
         :toolbars="createToolbar"
         @imgAdd="imgAdd"
         language="en"
