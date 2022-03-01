@@ -9,7 +9,7 @@
       <!---------- URL ---------->
       <div class="flex border-[1px] border-gray-400 w-[100%]">
         <div class="border-r-[1px] border-gray-400 bg-gray-200 w-[70px] text-center">URL</div>
-        <input class="w-[calc(100%-90px)] outline-none pl-2 pr-2" type="text" v-model="url" />
+        <div class="w-[100%] pl-2 pr-2 bg-gray-200">{{ url }}</div>
       </div>
       <div class="h-[10px]"></div>
       <!---------- タイトル ---------->
@@ -32,7 +32,7 @@
         <!---------- 更新 ---------->
         <button
           class="bg-red-400 text-gray-50 border-[1px] border-gray-600 text-xs w-[130px] pl-2 pr-2 rounded-full"
-          @click="updateHistory(targetHistory, selectedStatus)"
+          @click="updateHistory(targetHistory)"
         >更新</button>
         <div class="w-2"></div>
         <!---------- 閉じる ---------->

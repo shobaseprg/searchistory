@@ -31,7 +31,7 @@
         <button
           class="bg-red-400 text-gray-50 border-[1px] border-gray-600 text-xs h-[25px] pl-2 pr-2 rounded-full"
           @click="controlOpen(true, MODAL_TYPE.MEMBER_EDIT)"
-        >チームメンバーメールを登録</button>
+        >メンバーを登録</button>
         <div class="w-[10px]"></div>
         <!--============= パスワード変更ボタン =============-->
         <button
@@ -65,6 +65,7 @@ import SettingForm from './module/settingForm.vue';
 import { title, content, updateTopic, imgAdd, files, clearForm } from "../../composable/post";
 import { controlOpen, MODAL_TYPE } from "../../composable/modalControl";
 import { nameVali } from "../../composable/validate";
+import { fbErrorHandle } from '../../composable/fbErrorHandle';
 // option
 import { actionCodeSettings } from "../Auth/authOption";
 //model
@@ -130,7 +131,7 @@ const updateUserEmail = () => {
         });
       })
   }).catch((error) => {
-    alert(error)
+    fbErrorHandle(error);
   });
   cancelEmailEdit();
 }

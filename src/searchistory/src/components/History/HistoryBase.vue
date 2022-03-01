@@ -88,7 +88,7 @@
               class="flex items-center justify-center border-r-[1px] border-gray-400 bg-gray-200 w-[50px] text-center text-xs"
             >作成者</div>
             <select class="outline-none text-xs" v-model="filterOwner">
-              <option value="all">すべて</option>
+              <option value="all">全て</option>
               <option value="my">自分</option>
               <option value="other">自分以外</option>
             </select>

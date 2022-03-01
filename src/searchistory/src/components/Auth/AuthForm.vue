@@ -51,7 +51,7 @@ import ResetPasswordModal from "../Auth/module/ResetPasswordModal.vue"
 import InputForm from "./module/InputForm.vue"
 import { controlOpen, isResetPassWordRef, MODAL_TYPE } from '../../composable/modalControl';
 
-console.log("ver.1.2");
+console.log("ver.1.3");
 
 interface Props {
   isSignUp: boolean;

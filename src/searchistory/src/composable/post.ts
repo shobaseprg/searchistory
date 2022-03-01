@@ -38,8 +38,8 @@ const registerHistory = async (uid: string, topic_doc_id: string) => {
   controlOpen(false, MODAL_TYPE.HISTORY_CREATE);
 }
 // history更新
-const updateHistory = async (targetHistory: HistoryModel, selectedStatus: HistoryStatus) => {
-  const result = await HistoryModel.update(url.value, title.value, content.value, files.value, targetHistory.files, targetHistory.doc_id, targetHistory.topic_doc_id, selectedStatus);
+const updateHistory = async (targetHistory: HistoryModel) => {
+  const result = await HistoryModel.update(url.value, title.value, content.value, files.value, targetHistory.files, targetHistory.doc_id, targetHistory.topic_doc_id);
   if (!result) return;
   clearForm();
   alert("更新しました。");
