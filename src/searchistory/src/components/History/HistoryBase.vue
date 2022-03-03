@@ -335,7 +335,6 @@ onBeforeMount(async () => {
 });
 
 onBeforeUnmount(() => {
-  console.log("unmount")
   unsubscribe();
 })
 // ターゲットヒストリーセット

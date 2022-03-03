@@ -99,7 +99,6 @@ const targetTopicStore = useTargetTopicStore()
 // サインアウト
 const signout = () => {
   signOut(auth).then(() => {
-    console.log("ログアウト")
     router.push("/")
     location.reload()
   });

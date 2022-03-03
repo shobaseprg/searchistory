@@ -53,8 +53,6 @@ router.beforeEach((to, from, next) => {
         next({ path: '/signin' });
       } else {
         if (!user.emailVerified && from.fullPath !== "/signup") {
-          console.log(from.fullPath);
-          console.log(from);
           alert("該当のEmailは認証されていません。");
           next({ path: '/signin' })
         } else {

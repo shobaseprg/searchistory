@@ -47,7 +47,7 @@ class PostCoreModel {
       const deleteRef = ref(storage, `images/${file.id}`);
       deleteObject(deleteRef).then(() => {
       }).catch((error) => {
-        console.log(error);
+        alert(error);
       });
     });
   }
